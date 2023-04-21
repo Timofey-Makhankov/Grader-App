@@ -9,6 +9,8 @@ This Features are _Still in Progress_. **Not FINAL**
 - Save Grades for each subject
 - Get the average of the given subject Grade
 - Export the Data in either a JSON or CSV Format
+- rounding to full or .5 grade
+- easily manage grades
 
 ## Database Schema
 
@@ -17,37 +19,42 @@ This Features are _Still in Progress_. **Not FINAL**
 title: Grader Database
 ---
 erDiagram
-    Grade{
-        INT id PK
-        VARCHAR(255) exam
+    Exam{
+        UUID id PK
+        VARCHAR(255) name
+        VARCHAR(255) description
         FLOAT grade
         FLOAT weight
         DATE date
-        INT fk_subject FK
-    }
-    Subject{
-        int id PK
-        VARCHAR(255) subject
-        INT fk_class FK
-    }
-    Teacher{
-        INT id PK
-        VARCHAR(255) lastname
-        VARCHAR(255) firstname
-    }
-    School{
-        INT id PK
-        VARCHAR(255) name
-        VARCHAR(255) address
-    }
-    Class{
-        INT id PK
-        INT fk_school FK
-        INt fk_teacher FK
+        UUID modul_id FK
     }
 
-    Grade}o--o{Subject : contains
-    Subject||--||Class : has
-    Class||--||Teacher : has
-    Class||--||School : in
+    Module{
+        UUID id PK
+        VARCHAR(255) name
+        VARCHAR(255) description
+        INT division_id FK
+    }
+
+    School{
+        UUID id PK
+        VARCHAR(255) name
+        VARCHAR(255) address
+        VARCHAR(20) zip
+        VARCHAR(255) city
+    }
+
+    Division{
+        UUID id PK
+        VARCHAR(255) name
+        VARCHAR(255) teacher_lastname
+        VARCHAR(255) teacher_firstname
+        INT school_id FK
+    }
+
+    Module}o--||Division : "Zero to Many"
+    Division}|--||School : "One to Many"
+    Exam}|--||Module : "One to Many"
 ```
+
+in SQLlite hat es kein uuid type, muss als string oder blob speichern
