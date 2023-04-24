@@ -17,12 +17,12 @@ import ch.timofey.grader.db.domain.school.School
 @Database(entities = [Division::class, Exam::class, Module::class, School::class], version = 1)
 @TypeConverters(Converter::class)
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun divisionDao(): DivisionDao
-    abstract fun examDao(): ExamDao
-    abstract fun moduleDao(): ModuleDao
-    abstract fun schoolDao(): SchoolDao
+    abstract val divisionDao: DivisionDao
+    abstract val examDao: ExamDao
+    abstract val moduleDao: ModuleDao
+    abstract val schoolDao: SchoolDao
 
-    companion object {
+    /*companion object {
         @Volatile
         private var INSTANCE: RoomDatabase? = null
 
@@ -41,5 +41,5 @@ abstract class AppDatabase: RoomDatabase() {
                 return instance
             }
         }
-    }
+    }*/
 }

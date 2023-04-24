@@ -5,19 +5,20 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import ch.timofey.grader.db.domain.module.Module
+import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 @Dao
 interface ModuleDao {
     @Query("SELECT * FROM module")
-    fun getAll(): List<Module>
+    fun getAll(): Flow<List<Module>>
 
     @Query("SELECT * FROM module WHERE id LIKE :id")
-    fun getById(id: UUID): Module
+    suspend fun getById(id: UUID): Module?
 
     @Insert
-    fun insert(division: Module)
+    suspend fun insert(module: Module)
 
     @Delete
-    fun delete(division: Module)
+    suspend fun delete(module: Module)
 }
