@@ -14,5 +14,5 @@ data class Exam(
     @ColumnInfo(name = "grade") val grade: Double,
     @ColumnInfo(name = "weight") val weight: Double,
     @ColumnInfo(name = "date") val date: Date,
-    @ColumnInfo(name = "modul_id") val modul: UUID
+    @ColumnInfo(name = "module_id") val module: UUID
 )
