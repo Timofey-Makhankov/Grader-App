@@ -7,7 +7,7 @@ import java.util.UUID
 
 @Entity(tableName = "school")
 data class School(
-    @PrimaryKey val id: UUID,
+    @PrimaryKey(autoGenerate = false) val id: UUID,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "zip") val zipCode: String,

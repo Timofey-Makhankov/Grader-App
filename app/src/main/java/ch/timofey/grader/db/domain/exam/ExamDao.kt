@@ -3,21 +3,20 @@ package ch.timofey.grader.db.domain.exam
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 @Dao
 interface ExamDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun save(exam: Exam)
+    @Delete
+    suspend fun delete(exam: Exam)
     @Query("SELECT * FROM exam")
     fun getAll(): Flow<List<Exam>>
 
     @Query("SELECT * FROM exam WHERE id LIKE :id")
-    fun getById(id: UUID): Exam?
-
-    @Insert
-    fun insert(exam: Exam)
-
-    @Delete
-    fun delete(exam: Exam)
+    suspend fun getById(id: UUID): Exam?
 }

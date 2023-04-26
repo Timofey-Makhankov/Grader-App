@@ -7,9 +7,9 @@ import java.util.UUID
 
 @Entity(tableName = "division")
 data class Division(
-    @PrimaryKey val id: UUID,
+    @PrimaryKey(autoGenerate = false) val id: UUID,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "teacher_lastname") val teacherLastname: String,
     @ColumnInfo(name = "teacher_firstname") val teacherFirstname: String,
-    @ColumnInfo(name ="school_id") val schoolId: UUID
+    @ColumnInfo(name = "school_id") val schoolId: UUID
 )
