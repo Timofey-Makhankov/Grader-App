@@ -1,11 +1,12 @@
 package ch.timofey.grader.db.domain.division
 
+import ch.timofey.grader.db.domain.relations.DivisionWithModules
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 class DivisionRepositoryImpl(private val divisionDao: DivisionDao): DivisionRepository{
-    override suspend fun insertDivision(division: Division) {
-        divisionDao.insert(division)
+    override suspend fun saveDivision(division: Division) {
+        divisionDao.save(division)
     }
 
     override suspend fun deleteDivision(division: Division) {
@@ -18,5 +19,13 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao): DivisionRepo
 
     override fun getAllDivisions(): Flow<List<Division>> {
         return divisionDao.getAll()
+    }
+
+    override fun getAllWithModules(): Flow<List<DivisionWithModules>> {
+        return divisionDao.getAllWithModules()
+    }
+
+    override suspend fun getWithModulesById(id: UUID): DivisionWithModules? {
+        return divisionDao.getWithModulesById(id)
     }
 }

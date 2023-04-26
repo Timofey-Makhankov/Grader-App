@@ -7,7 +7,7 @@ import java.util.UUID
 
 @Entity(tableName = "module")
 data class Module(
-    @PrimaryKey val id: UUID,
+    @PrimaryKey(autoGenerate = false) val id: UUID,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "division_id") val divisionId: UUID
