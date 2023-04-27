@@ -4,7 +4,7 @@ import ch.timofey.grader.db.domain.relations.DivisionWithModules
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
-class DivisionRepositoryImpl(private val divisionDao: DivisionDao): DivisionRepository{
+class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRepository {
     override suspend fun saveDivision(division: Division) {
         divisionDao.save(division)
     }

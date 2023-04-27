@@ -14,10 +14,13 @@ import java.util.UUID
 interface ModuleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(module: Module)
+
     @Delete
     suspend fun delete(module: Module)
+
     @Query("SELECT * FROM module")
     fun getAll(): Flow<List<Module>>
+
     @Query("SELECT * FROM module WHERE id LIKE :id")
     suspend fun getById(id: UUID): Module?
 

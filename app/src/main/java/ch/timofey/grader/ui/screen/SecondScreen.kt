@@ -17,8 +17,7 @@ import ch.timofey.grader.ui.navigation.Screen
 @Composable
 fun SecondScreen(navController: NavController) {
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -33,6 +32,6 @@ fun SecondScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewSecondScreen(){
+fun PreviewSecondScreen() {
     SecondScreen(navController = rememberNavController())
 }

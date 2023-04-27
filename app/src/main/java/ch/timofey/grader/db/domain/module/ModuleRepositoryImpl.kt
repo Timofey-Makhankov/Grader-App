@@ -4,7 +4,7 @@ import ch.timofey.grader.db.domain.relations.ModuleWithExams
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
-class ModuleRepositoryImpl(private val moduleDao: ModuleDao): ModuleRepository {
+class ModuleRepositoryImpl(private val moduleDao: ModuleDao) : ModuleRepository {
     override suspend fun saveModule(module: Module) {
         moduleDao.save(module)
     }

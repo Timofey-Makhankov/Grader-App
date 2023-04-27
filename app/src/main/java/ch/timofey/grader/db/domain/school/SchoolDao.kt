@@ -17,6 +17,7 @@ interface SchoolDao {
 
     @Delete
     suspend fun delete(school: School)
+
     @Query("SELECT * FROM school")
     fun getAll(): Flow<List<School>>
 
