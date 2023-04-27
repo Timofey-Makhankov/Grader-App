@@ -24,9 +24,7 @@ object AppModule {
     @Singleton
     fun provideTodoDatabase(app: Application): AppDatabase {
         return Room.databaseBuilder(
-            app,
-            AppDatabase::class.java,
-            "grader_database"
+            app, AppDatabase::class.java, "grader_database"
         ).build()
     }
 

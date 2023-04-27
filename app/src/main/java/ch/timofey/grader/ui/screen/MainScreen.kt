@@ -17,8 +17,7 @@ import ch.timofey.grader.ui.navigation.Screen
 @Composable
 fun MainScreen(navController: NavController) {
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -33,6 +32,6 @@ fun MainScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewMainScreen(){
+fun PreviewMainScreen() {
     MainScreen(navController = rememberNavController())
 }

@@ -17,6 +17,7 @@ interface DivisionDao {
 
     @Delete
     suspend fun delete(division: Division)
+
     @Query("SELECT * FROM division")
     fun getAll(): Flow<List<Division>>
 

@@ -6,10 +6,7 @@ import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.db.domain.module.Module
 
 data class DivisionWithModules(
-    @Embedded val division: Division,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "division_id"
-    )
-    val modules: List<Module>
+    @Embedded val division: Division, @Relation(
+        parentColumn = "id", entityColumn = "division_id"
+    ) val modules: List<Module>
 )

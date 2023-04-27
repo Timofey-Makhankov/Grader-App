@@ -12,8 +12,10 @@ import java.util.UUID
 interface ExamDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(exam: Exam)
+
     @Delete
     suspend fun delete(exam: Exam)
+
     @Query("SELECT * FROM exam")
     fun getAll(): Flow<List<Exam>>
 
