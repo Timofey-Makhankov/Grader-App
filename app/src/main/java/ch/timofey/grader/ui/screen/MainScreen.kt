@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ch.timofey.grader.ui.components.Greeting
+import ch.timofey.grader.ui.components.SchoolCard
 import ch.timofey.grader.ui.navigation.Screen
 
 @Composable
@@ -22,6 +23,7 @@ fun MainScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Greeting(name = "MainActivity")
+        SchoolCard(isChecked = true)
         Button(onClick = {
             navController.navigate(Screen.SecondScreen.route)
         }) {
