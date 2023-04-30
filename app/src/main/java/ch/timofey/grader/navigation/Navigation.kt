@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.navigation
+package ch.timofey.grader.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
