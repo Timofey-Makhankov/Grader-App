@@ -10,7 +10,7 @@ import java.util.UUID
 data class Exam(
     @PrimaryKey(autoGenerate = false) val id: UUID,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "description") val description: String,
+    @ColumnInfo(name = "description") val description: String?,
     @ColumnInfo(name = "grade") val grade: Double,
     @ColumnInfo(name = "weight") val weight: Double,
     @ColumnInfo(name = "date") val date: Date,

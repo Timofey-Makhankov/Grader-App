@@ -2,6 +2,7 @@ package ch.timofey.grader.db.domain.school
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.util.UUID
 
@@ -11,5 +12,6 @@ data class School(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "zip") val zipCode: String,
-    @ColumnInfo(name = "city") val city: String
+    @ColumnInfo(name = "city") val city: String,
+    @Ignore val isCheckingAverage: Boolean = false
 )

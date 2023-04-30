@@ -3,7 +3,12 @@ package ch.timofey.grader
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import ch.timofey.grader.ui.navigation.Navigation
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import ch.timofey.grader.navigation.Navigation
 import ch.timofey.grader.ui.theme.GraderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,7 +18,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GraderTheme {
-                Navigation()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Navigation()
+                }
             }
         }
     }
