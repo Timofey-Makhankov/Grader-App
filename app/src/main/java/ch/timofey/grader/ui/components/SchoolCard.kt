@@ -26,10 +26,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ch.timofey.grader.ui.theme.GraderTheme
-import ch.timofey.grader.ui.theme.backgroundOffWhite
-import ch.timofey.grader.ui.theme.textHidden
-import ch.timofey.grader.ui.theme.textMain
+import ch.timofey.grader.theme.GraderTheme
+import ch.timofey.grader.theme.backgroundOffWhite
+import ch.timofey.grader.theme.spacing
+import ch.timofey.grader.theme.textHidden
+import ch.timofey.grader.theme.textMain
 
 @Composable
 fun SchoolCard(
@@ -41,14 +42,12 @@ fun SchoolCard(
 ) {
     val checkedState = remember { mutableStateOf(isChecked) }
     Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
+        modifier = modifier, colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
-        shape = MaterialTheme.shapes.large
+        ), shape = MaterialTheme.shapes.large
     ) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(MaterialTheme.spacing.small)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -56,8 +55,7 @@ fun SchoolCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge
+                    text = title, style = MaterialTheme.typography.titleLarge
                 )
                 Checkbox(
                     checked = checkedState.value,
@@ -66,10 +64,9 @@ fun SchoolCard(
                 )
             }
             Text(
-                text = description?:"",
-                style = MaterialTheme.typography.bodyMedium
+                text = description ?: "", style = MaterialTheme.typography.bodyMedium
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Average Grade: $grade",
@@ -94,16 +91,13 @@ private fun PreviewSchoolCard() {
 }
 
 @Preview(
-    showBackground = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 private fun PreviewSchoolCardDarkMode() {
     GraderTheme {
         SchoolCard(
-            isChecked = false,
-            title = "Mathematics",
-            grade = 5.0
+            isChecked = false, title = "Mathematics", grade = 5.0
         )
     }
 }

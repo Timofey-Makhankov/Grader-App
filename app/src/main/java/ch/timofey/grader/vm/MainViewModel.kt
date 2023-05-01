@@ -14,21 +14,22 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repository: SchoolRepository
-): ViewModel() {
+) : ViewModel() {
     val schools = repository.getAllSchools()
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun onEvent(event: MainEvent){
-        when(event){
-            is MainEvent.OnCreateSchool -> {
-                /*TODO*/
+    fun onEvent(event: MainEvent) {
+        when (event) {
+            is MainEvent.OnCreateSchool -> {/*TODO*/
             }
-            else -> {/*TODO*/}
+
+            else -> {/*TODO*/
+            }
         }
     }
 
-    private fun sendUiEvent(event: UiEvent){
+    private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
         }
