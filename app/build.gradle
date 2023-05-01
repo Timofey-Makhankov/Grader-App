@@ -21,11 +21,6 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
-        }
     }
 
     buildTypes {
@@ -92,6 +87,9 @@ dependencies {
 
     // MVVM
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+
+    // system bars customization
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
 }
 
 kapt { correctErrorTypes true }

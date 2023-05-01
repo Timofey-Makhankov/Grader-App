@@ -12,7 +12,11 @@ import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.db.domain.school.School
 
-@Database(entities = [Division::class, Exam::class, Module::class, School::class], version = 1)
+@Database(
+    entities = [Division::class, Exam::class, Module::class, School::class],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(Converter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract val divisionDao: DivisionDao
