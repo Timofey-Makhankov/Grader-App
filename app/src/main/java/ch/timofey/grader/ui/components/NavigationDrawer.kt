@@ -14,8 +14,7 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import ch.timofey.grader.theme.spacing
+import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.MenuItem
 
 @OptIn(ExperimentalMaterial3Api::class)
