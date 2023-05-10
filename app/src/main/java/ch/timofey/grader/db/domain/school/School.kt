@@ -2,7 +2,6 @@ package ch.timofey.grader.db.domain.school
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.util.UUID
 
@@ -10,6 +9,7 @@ import java.util.UUID
 data class School(
     @PrimaryKey(autoGenerate = false) val id: UUID,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "description") val description: String?,
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "zip") val zipCode: String,
     @ColumnInfo(name = "city") val city: String,
