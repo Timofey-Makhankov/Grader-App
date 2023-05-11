@@ -21,7 +21,8 @@ fun SecondScreen(
     navController: NavController
 ) {
     FloatingActionButton(
-        onClick = { /*TODO*/ }
+        onFABClick = { /*TODO*/ },
+        onAppBarClick = {}
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(it),
