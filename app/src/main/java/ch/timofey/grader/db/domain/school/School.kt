@@ -13,5 +13,4 @@ data class School(
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "zip") val zipCode: String,
     @ColumnInfo(name = "city") val city: String,
-    //@Ignore val isCheckingAverage: Boolean = false
 )

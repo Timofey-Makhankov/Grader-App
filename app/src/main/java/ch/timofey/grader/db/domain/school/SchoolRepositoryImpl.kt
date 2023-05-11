@@ -21,7 +21,7 @@ class SchoolRepositoryImpl(private val schoolDao: SchoolDao) : SchoolRepository 
         return schoolDao.getAll()
     }
 
-    override suspend fun getAllSchoolsWithDivisions(): Flow<List<SchoolWithDivisions>> {
+    override fun getAllSchoolsWithDivisions(): Flow<List<SchoolWithDivisions>> {
         return schoolDao.getAllWithDivisions()
     }
 

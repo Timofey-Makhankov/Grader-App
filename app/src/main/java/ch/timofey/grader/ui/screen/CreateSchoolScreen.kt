@@ -36,8 +36,8 @@ fun CreateSchoolScreen(
     onEvent: (CreateSchoolEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onPopBackStack: () -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -54,16 +54,13 @@ fun CreateSchoolScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
+    Scaffold(topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(CreateSchoolEvent.OnReturnBack) },
             icon = Icons.Default.ArrowBack,
             contentDescription = "Go back to School Screen"
         )
-    },
-        snackbarHost = { SnackbarHost(snackBarHostState) }
-    ) {
+    }, snackbarHost = { SnackbarHost(snackBarHostState) }) {
         Column(
             modifier = Modifier
                 .padding(it)
@@ -71,19 +68,16 @@ fun CreateSchoolScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Create School",
-                style = MaterialTheme.typography.titleLarge
+                text = "Create School", style = MaterialTheme.typography.titleLarge
             )
-            OutlinedTextField(
-                value = state.name,
+            OutlinedTextField(value = state.name,
                 label = { Text(text = "Name") },
                 onValueChange = { name -> onEvent(CreateSchoolEvent.OnNameChange(name)) },
                 modifier = Modifier.padding(
                     top = MaterialTheme.spacing.medium
                 )
             )
-            OutlinedTextField(
-                value = state.description,
+            OutlinedTextField(value = state.description,
                 label = { Text(text = "Description") },
                 onValueChange = { description ->
                     onEvent(
@@ -96,24 +90,21 @@ fun CreateSchoolScreen(
                     top = MaterialTheme.spacing.medium
                 )
             )
-            OutlinedTextField(
-                value = state.address,
+            OutlinedTextField(value = state.address,
                 label = { Text(text = "Address") },
                 onValueChange = { address -> onEvent(CreateSchoolEvent.OnAddressChange(address)) },
                 modifier = Modifier.padding(
                     top = MaterialTheme.spacing.medium
                 )
             )
-            OutlinedTextField(
-                value = state.zip,
+            OutlinedTextField(value = state.zip,
                 label = { Text(text = "Zip") },
                 onValueChange = { zip -> onEvent(CreateSchoolEvent.OnZipChange(zip)) },
                 modifier = Modifier.padding(
                     top = MaterialTheme.spacing.medium
                 )
             )
-            OutlinedTextField(
-                value = state.city,
+            OutlinedTextField(value = state.city,
                 label = { Text(text = "City") },
                 onValueChange = { city -> onEvent(CreateSchoolEvent.OnCityChange(city)) },
                 modifier = Modifier.padding(
@@ -137,14 +128,13 @@ fun CreateSchoolScreen(
 @Composable
 private fun PreviewCreateSchoolScreen() {
     GraderTheme {
-        CreateSchoolScreen(
-            state = CreateSchoolState(
-                name = "Technische Berufsschule Zürich"
-            ),
+        CreateSchoolScreen(state = CreateSchoolState(
+            name = "Technische Berufsschule Zürich"
+        ),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onPopBackStack = {}
-        )
+            onPopBackStack = {},
+            snackBarHostState = remember { SnackbarHostState() })
     }
 }
 
@@ -152,11 +142,10 @@ private fun PreviewCreateSchoolScreen() {
 @Composable
 private fun PreviewDarkModeCreateSchoolScreen() {
     GraderTheme {
-        CreateSchoolScreen(
-            state = CreateSchoolState(),
+        CreateSchoolScreen(state = CreateSchoolState(),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onPopBackStack = {}
-        )
+            onPopBackStack = {},
+            snackBarHostState = remember { SnackbarHostState() })
     }
 }
