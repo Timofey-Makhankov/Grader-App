@@ -1,5 +1,5 @@
 package ch.timofey.grader.ui.event
 
-sealed class MainEvent{
-    object OnCreateSchool: MainEvent()
+sealed class MainEvent {
+    object OnCreateSchool : MainEvent()
 }

@@ -11,17 +11,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    onNavigationIconClick: () -> Unit,
-    icon: ImageVector,
-    contentDescription: String
+    onNavigationIconClick: () -> Unit, icon: ImageVector, contentDescription: String
 ) {
-    TopAppBar(
-        title = {},
-        colors = TopAppBarDefaults.mediumTopAppBarColors(),
-        navigationIcon = {
-            IconButton(onClick = onNavigationIconClick) {
-                Icon(imageVector = icon, contentDescription = contentDescription)
-            }
+    TopAppBar(title = {}, colors = TopAppBarDefaults.mediumTopAppBarColors(), navigationIcon = {
+        IconButton(onClick = onNavigationIconClick) {
+            Icon(imageVector = icon, contentDescription = contentDescription)
         }
-    )
+    })
 }

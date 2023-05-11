@@ -20,12 +20,11 @@ import ch.timofey.grader.ui.components.FloatingActionButton
 fun SecondScreen(
     navController: NavController
 ) {
-    FloatingActionButton(
-        onFABClick = { /*TODO*/ },
-        onAppBarClick = {}
-    ) {
+    FloatingActionButton(onFABClick = { /*TODO*/ }, onAppBarClick = {}) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(it),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
