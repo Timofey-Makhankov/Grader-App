@@ -39,9 +39,10 @@ class CreateSchoolViewModel @Inject constructor(
                     city = _uiState.value.city
                 )
                 println(newSchool)
-                /*viewModelScope.launch {
+                viewModelScope.launch {
                     repository.saveSchool(newSchool)
-                }*/
+                }
+                sendUiEvent(UiEvent.ShowSnackBar(message = "The School was Created"))
                 sendUiEvent(UiEvent.PopBackStack)
             }
             is CreateSchoolEvent.OnNameChange -> {

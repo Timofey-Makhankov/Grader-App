@@ -30,7 +30,7 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             repository.getAllSchools().collect{
-                _uiState.value = MainState(it)
+                _uiState.value = _uiState.value.copy(schoolList = it)
             }
         }
     }

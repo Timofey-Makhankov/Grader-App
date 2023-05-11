@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -15,8 +16,9 @@ import androidx.compose.ui.Modifier
 @Composable
 fun FloatingActionButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit, content:
-    @Composable (PaddingValues) -> Unit
+    onFABClick: () -> Unit,
+    onAppBarClick: () -> Unit,
+    content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -24,13 +26,13 @@ fun FloatingActionButton(
             AppBar(
                 icon = Icons.Default.Menu,
                 contentDescription = "Toggle Drawer",
-                onNavigationIconClick = {}
+                onNavigationIconClick = onAppBarClick
             )
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             androidx.compose.material3.FloatingActionButton(
-                onClick = onClick
+                onClick = onFABClick
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add, contentDescription = "Create a new School"

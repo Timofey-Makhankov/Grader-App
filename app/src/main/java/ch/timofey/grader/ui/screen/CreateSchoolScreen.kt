@@ -11,9 +11,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,24 +37,33 @@ fun CreateSchoolScreen(
     uiEvent: Flow<UiEvent>,
     onPopBackStack: () -> Unit,
 ) {
-    LaunchedEffect(key1 = true){
-        uiEvent.collect{event ->
-            when(event){
+    val snackBarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(key1 = true) {
+        uiEvent.collect { event ->
+            when (event) {
                 is UiEvent.PopBackStack -> {
                     onPopBackStack()
                 }
+
+                is UiEvent.ShowSnackBar -> {
+                    snackBarHostState.showSnackbar(message = event.message)
+                }
+
                 else -> Unit
             }
         }
     }
 
-    Scaffold(topBar = {
+    Scaffold(
+        topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(CreateSchoolEvent.OnReturnBack) },
             icon = Icons.Default.ArrowBack,
             contentDescription = "Go back to School Screen"
         )
-    }) {
+    },
+        snackbarHost = { SnackbarHost(snackBarHostState) }
+    ) {
         Column(
             modifier = Modifier
                 .padding(it)
@@ -62,35 +74,46 @@ fun CreateSchoolScreen(
                 text = "Create School",
                 style = MaterialTheme.typography.titleLarge
             )
-            OutlinedTextField(value = state.name,
+            OutlinedTextField(
+                value = state.name,
                 label = { Text(text = "Name") },
                 onValueChange = { name -> onEvent(CreateSchoolEvent.OnNameChange(name)) },
                 modifier = Modifier.padding(
                     top = MaterialTheme.spacing.medium
                 )
             )
-            OutlinedTextField(value = state.description,
+            OutlinedTextField(
+                value = state.description,
                 label = { Text(text = "Description") },
-                onValueChange = { description -> onEvent(CreateSchoolEvent.OnDescriptionChange(description)) },
+                onValueChange = { description ->
+                    onEvent(
+                        CreateSchoolEvent.OnDescriptionChange(
+                            description
+                        )
+                    )
+                },
                 modifier = Modifier.padding(
                     top = MaterialTheme.spacing.medium
                 )
             )
-            OutlinedTextField(value = state.address,
+            OutlinedTextField(
+                value = state.address,
                 label = { Text(text = "Address") },
                 onValueChange = { address -> onEvent(CreateSchoolEvent.OnAddressChange(address)) },
                 modifier = Modifier.padding(
                     top = MaterialTheme.spacing.medium
                 )
             )
-            OutlinedTextField(value = state.zip,
+            OutlinedTextField(
+                value = state.zip,
                 label = { Text(text = "Zip") },
                 onValueChange = { zip -> onEvent(CreateSchoolEvent.OnZipChange(zip)) },
                 modifier = Modifier.padding(
                     top = MaterialTheme.spacing.medium
                 )
             )
-            OutlinedTextField(value = state.city,
+            OutlinedTextField(
+                value = state.city,
                 label = { Text(text = "City") },
                 onValueChange = { city -> onEvent(CreateSchoolEvent.OnCityChange(city)) },
                 modifier = Modifier.padding(
