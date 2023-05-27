@@ -17,6 +17,10 @@ class SchoolRepositoryImpl(private val schoolDao: SchoolDao) : SchoolRepository 
         return schoolDao.getById(id)
     }
 
+    override suspend fun updateIsSelectedSchool(id: UUID, value: Boolean) {
+        return schoolDao.updateIsSelected(id, value)
+    }
+
     override fun getAllSchools(): Flow<List<School>> {
         return schoolDao.getAll()
     }

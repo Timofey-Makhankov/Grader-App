@@ -24,6 +24,9 @@ interface SchoolDao {
     @Query("SELECT * FROM school WHERE id LIKE :id")
     suspend fun getById(id: UUID): School?
 
+    @Query("UPDATE school SET is_selected = :value WHERE :id LIKE id")
+    suspend fun updateIsSelected(id: UUID, value: Boolean)
+
     @Transaction
     @Query("SELECT * FROM school")
     fun getAllWithDivisions(): Flow<List<SchoolWithDivisions>>

@@ -11,13 +11,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ch.timofey.grader.ui.screen.CreateSchoolScreen
-import ch.timofey.grader.ui.screen.MainScreen
-import ch.timofey.grader.ui.screen.SecondScreen
-import ch.timofey.grader.ui.screen.SettingsScreen
-import ch.timofey.grader.ui.vm.CreateSchoolViewModel
-import ch.timofey.grader.ui.vm.MainViewModel
-import ch.timofey.grader.ui.vm.SettingsViewModel
+import ch.timofey.grader.ui.screen.create_school.CreateSchoolScreen
+import ch.timofey.grader.ui.screen.settings.SettingsScreen
+import ch.timofey.grader.ui.screen.create_school.CreateSchoolViewModel
+import ch.timofey.grader.ui.screen.school_list.SchoolListScreen
+import ch.timofey.grader.ui.screen.school_list.SchoolListViewModel
+import ch.timofey.grader.ui.screen.settings.SettingsViewModel
+import ch.timofey.grader.ui.screen.share.ShareScreen
+import ch.timofey.grader.ui.screen.share.ShareViewModel
 
 @Composable
 fun Navigation() {
@@ -26,9 +27,9 @@ fun Navigation() {
     val snackBarHostState = remember { SnackbarHostState() }
     NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
         composable(route = Screen.MainScreen.route) {
-            val viewModel = hiltViewModel<MainViewModel>()
+            val viewModel = hiltViewModel<SchoolListViewModel>()
             val state by viewModel.uiState.collectAsState()
-            MainScreen(
+            SchoolListScreen(
                 drawerState = drawerState,
                 onEvent = viewModel::onEvent,
                 state = state,
@@ -38,9 +39,6 @@ fun Navigation() {
                 },
                 snackBarHostState = snackBarHostState
             )
-        }
-        composable(route = Screen.SecondScreen.route) {
-            SecondScreen(navController = navController)
         }
         composable(route = Screen.CreateSchoolScreen.route) {
             val viewModel = hiltViewModel<CreateSchoolViewModel>()
@@ -59,8 +57,17 @@ fun Navigation() {
             SettingsScreen(
                 drawerState = drawerState,
                 state = state,
-                snackBarHostState = snackBarHostState,
                 onEvent = viewModel::onEvent,
+                uiEvent = viewModel.uiEvent,
+                onNavigate = {
+                    navController.navigate(it.route)
+                }
+            )
+        }
+        composable(route = Screen.ShareScreen.route){
+            val viewModel = hiltViewModel<ShareViewModel>()
+            ShareScreen(
+                drawerState = drawerState,
                 uiEvent = viewModel.uiEvent,
                 onNavigate = {
                     navController.navigate(it.route)
