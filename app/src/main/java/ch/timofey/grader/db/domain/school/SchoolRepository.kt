@@ -8,6 +8,7 @@ interface SchoolRepository {
     suspend fun saveSchool(school: School)
     suspend fun deleteSchool(school: School)
     suspend fun getSchoolById(id: UUID): School?
+    suspend fun updateIsSelectedSchool(id: UUID, value: Boolean)
     fun getAllSchools(): Flow<List<School>>
     fun getAllSchoolsWithDivisions(): Flow<List<SchoolWithDivisions>>
     suspend fun getSchoolWithModulesById(id: UUID): SchoolWithDivisions?

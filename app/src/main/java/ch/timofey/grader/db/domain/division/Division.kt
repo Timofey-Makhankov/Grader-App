@@ -12,4 +12,5 @@ data class Division(
     @ColumnInfo(name = "teacher_lastname") val teacherLastname: String,
     @ColumnInfo(name = "teacher_firstname") val teacherFirstname: String,
     @ColumnInfo(name = "school_id") val schoolId: UUID,
+    @ColumnInfo(name = "is_selected") val isSelected: Boolean = false,
 )

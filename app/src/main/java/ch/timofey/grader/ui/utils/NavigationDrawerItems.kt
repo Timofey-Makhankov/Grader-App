@@ -21,7 +21,7 @@ object NavigationDrawerItems{
                 title = "Share",
                 contentDescription = "Go to Share Screen",
                 icon = Icons.Default.Share,
-                onNavigate = ""
+                onNavigate = Screen.ShareScreen.route
             ),
             MenuItem(
                 id = "setting",

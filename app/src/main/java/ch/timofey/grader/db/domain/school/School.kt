@@ -13,4 +13,5 @@ data class School(
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "zip") val zipCode: String,
     @ColumnInfo(name = "city") val city: String,
+    @ColumnInfo(name = "is_selected") val isSelected: Boolean = false,
 )
