@@ -1,7 +1,6 @@
 package ch.timofey.grader.navigation
 
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -15,10 +14,11 @@ import androidx.navigation.compose.rememberNavController
 import ch.timofey.grader.ui.screen.CreateSchoolScreen
 import ch.timofey.grader.ui.screen.MainScreen
 import ch.timofey.grader.ui.screen.SecondScreen
+import ch.timofey.grader.ui.screen.SettingsScreen
 import ch.timofey.grader.ui.vm.CreateSchoolViewModel
 import ch.timofey.grader.ui.vm.MainViewModel
+import ch.timofey.grader.ui.vm.SettingsViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
@@ -51,6 +51,20 @@ fun Navigation() {
                 uiEvent = viewModel.uiEvent,
                 onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
+            )
+        }
+        composable(route = Screen.SettingsScreen.route){
+            val viewModel = hiltViewModel<SettingsViewModel>()
+            val state by viewModel.uiState.collectAsState()
+            SettingsScreen(
+                drawerState = drawerState,
+                state = state,
+                snackBarHostState = snackBarHostState,
+                onEvent = viewModel::onEvent,
+                uiEvent = viewModel.uiEvent,
+                onNavigate = {
+                    navController.navigate(it.route)
+                }
             )
         }
     }
