@@ -21,25 +21,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.MenuItem
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationDrawer(
     modifier: Modifier = Modifier,
     drawerState: DrawerState,
     items: List<MenuItem>,
     onItemClick: (MenuItem) -> Unit,
+    currentScreen: Screen,
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
-        modifier = modifier,
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+                modifier = modifier.width(300.dp)
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -68,7 +71,7 @@ fun NavigationDrawer(
                                 contentDescription = item.contentDescription
                             )
                         },
-                        selected = item == items[0],
+                        selected = item.onNavigate == currentScreen.route,
                         onClick = { onItemClick(item) },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )

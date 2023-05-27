@@ -99,5 +99,4 @@ fun GraderTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
             content = content
         )
     }
-
 }

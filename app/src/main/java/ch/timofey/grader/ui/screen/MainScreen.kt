@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.db.domain.school.School
+import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.FloatingActionButton
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.components.SchoolCard
@@ -33,7 +34,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     drawerState: DrawerState,
@@ -59,10 +59,18 @@ fun MainScreen(
             }
         }
     }
-    NavigationDrawer(drawerState = drawerState,
+    NavigationDrawer(
+        drawerState = drawerState,
+        currentScreen = Screen.MainScreen,
         items = NavigationDrawerItems.getNavigationDrawerItems(),
-        onItemClick = {
-            println("Clicked on ${it.title}")
+        onItemClick = { menuItem ->
+            println("Clicked on ${menuItem.title}")
+            if (menuItem.onNavigate != Screen.MainScreen.route){
+                onNavigate(UiEvent.Navigate(menuItem.onNavigate))
+            }
+            scope.launch {
+                drawerState.close()
+            }
         }) {
         FloatingActionButton(onFABClick = { onEvent(MainEvent.OnCreateSchool) }, onAppBarClick = {
             scope.launch {
@@ -88,7 +96,6 @@ fun MainScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewMainScreen() {

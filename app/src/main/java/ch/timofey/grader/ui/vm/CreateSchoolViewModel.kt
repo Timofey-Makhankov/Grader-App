@@ -1,5 +1,8 @@
 package ch.timofey.grader.ui.vm
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.school.School
@@ -8,6 +11,7 @@ import ch.timofey.grader.ui.event.CreateSchoolEvent
 import ch.timofey.grader.ui.event.UiEvent
 import ch.timofey.grader.ui.state.CreateSchoolState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +20,10 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
+@SuppressLint("StaticFieldLeak")
 @HiltViewModel
 class CreateSchoolViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: SchoolRepository
 ) : ViewModel() {
 
@@ -42,8 +48,8 @@ class CreateSchoolViewModel @Inject constructor(
                 viewModelScope.launch {
                     repository.saveSchool(newSchool)
                 }
-                sendUiEvent(UiEvent.ShowSnackBar(message = "The School was Created"))
                 sendUiEvent(UiEvent.PopBackStack)
+                Toast.makeText(context, "School Created", Toast.LENGTH_SHORT).show()
             }
             is CreateSchoolEvent.OnNameChange -> {
                 //_uiState.value.name = event.name
