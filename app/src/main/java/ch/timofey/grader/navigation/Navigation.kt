@@ -11,6 +11,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ch.timofey.grader.ui.screen.calculator.CalculatorScreen
+import ch.timofey.grader.ui.screen.calculator.CalculatorViewModel
 import ch.timofey.grader.ui.screen.create_school.CreateSchoolScreen
 import ch.timofey.grader.ui.screen.settings.SettingsScreen
 import ch.timofey.grader.ui.screen.create_school.CreateSchoolViewModel
@@ -51,7 +53,7 @@ fun Navigation() {
                 snackBarHostState = snackBarHostState
             )
         }
-        composable(route = Screen.SettingsScreen.route){
+        composable(route = Screen.SettingsScreen.route) {
             val viewModel = hiltViewModel<SettingsViewModel>()
             val state by viewModel.uiState.collectAsState()
             SettingsScreen(
@@ -64,7 +66,7 @@ fun Navigation() {
                 }
             )
         }
-        composable(route = Screen.ShareScreen.route){
+        composable(route = Screen.ShareScreen.route) {
             val viewModel = hiltViewModel<ShareViewModel>()
             ShareScreen(
                 drawerState = drawerState,
@@ -72,6 +74,18 @@ fun Navigation() {
                 onNavigate = {
                     navController.navigate(it.route)
                 }
+            )
+        }
+        composable(route = Screen.CalculatorScreen.route){
+            val viewModel = hiltViewModel<CalculatorViewModel>()
+            val state by viewModel.uiState.collectAsState()
+            CalculatorScreen(
+                state = state,
+                onEvent = viewModel::onEvent,
+                onNavigate = {
+                    navController.navigate(it.route)
+                },
+                drawerState = drawerState
             )
         }
     }

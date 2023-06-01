@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -64,7 +63,8 @@ fun NavigationDrawer(
                 }
                 Spacer(Modifier.height(MaterialTheme.spacing.medium))
                 items.forEach { item ->
-                    NavigationDrawerItem(label = { Text(text = item.title) },
+                    NavigationDrawerItem(
+                        label = { Text(text = item.title) },
                         icon = {
                             Icon(
                                 imageVector = item.icon,
