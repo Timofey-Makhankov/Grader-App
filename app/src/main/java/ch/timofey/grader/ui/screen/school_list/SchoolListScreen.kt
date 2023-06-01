@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
@@ -102,7 +101,7 @@ fun SchoolListScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewMainScreen() {
+private fun PreviewMainScreen() {
     GraderTheme {
         SchoolListScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onEvent = {},
@@ -145,14 +144,13 @@ fun PreviewMainScreen() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
     showBackground = true,
     showSystemUi = false
 )
 @Composable
-fun PreviewMainScreenDarkMode() {
+private fun PreviewMainScreenDarkMode() {
     GraderTheme {
         SchoolListScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
             onEvent = {},

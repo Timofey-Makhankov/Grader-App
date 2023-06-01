@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.db.domain.school.School
-import ch.timofey.grader.ui.screen.school_list.SchoolListEvent
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import java.util.UUID
@@ -45,7 +44,7 @@ fun SchoolCard(
     grade: Double
 ) {
     val checkedState = remember { mutableStateOf(school.isSelected) }
-    val expanded = remember { mutableStateOf (isOpen) }
+    val expanded = remember { mutableStateOf(isOpen) }
     Card(
         modifier = Modifier
             .animateContentSize(
@@ -63,7 +62,7 @@ fun SchoolCard(
             .then(modifier),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
+        ),
         shape = MaterialTheme.shapes.large
     ) {
         Column(
@@ -135,7 +134,8 @@ private fun PreviewSchoolCard() {
 }
 
 @Preview(
-    showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES
+    showBackground = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 private fun PreviewSchoolCardDarkMode() {

@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import ch.timofey.grader.navigation.Screen
+import ch.timofey.grader.ui.components.Calculate
 
 object NavigationDrawerItems{
     fun getNavigationDrawerItems(): List<MenuItem> {
@@ -15,6 +16,13 @@ object NavigationDrawerItems{
                 contentDescription = "Go to Home Screen",
                 icon = Icons.Default.Home,
                 onNavigate = Screen.MainScreen.route
+            ),
+            MenuItem(
+                id = "grade_calculator",
+                title = "Grade Calculator",
+                contentDescription = "Go to Custom Grade Calculator",
+                icon = Icons.Calculate,
+                onNavigate = Screen.CalculatorScreen.route
             ),
             MenuItem(
                 id = "share",
