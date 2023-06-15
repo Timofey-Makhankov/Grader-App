@@ -24,7 +24,7 @@ fun ShareScreen(
     drawerState: DrawerState,
     uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit
-){
+) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
@@ -39,9 +39,9 @@ fun ShareScreen(
     }
     NavigationDrawer(
         drawerState = drawerState,
-        items = NavigationDrawerItems.getNavigationDrawerItems(),
+        items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
-            if (menuItem.onNavigate != Screen.ShareScreen.route){
+            if (menuItem.onNavigate != Screen.ShareScreen.route) {
                 onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
             scope.launch {
@@ -50,7 +50,7 @@ fun ShareScreen(
         },
         currentScreen = Screen.ShareScreen
     ) {
-        Scaffold (
+        Scaffold(
             topBar = {
                 AppBar(
                     onNavigationIconClick = { scope.launch { drawerState.open() } },

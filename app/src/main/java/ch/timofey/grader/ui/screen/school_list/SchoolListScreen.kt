@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.navigation.Screen
+import ch.timofey.grader.ui.components.AppBar
 import ch.timofey.grader.ui.components.FloatingActionButton
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.components.SchoolCard
@@ -59,21 +62,33 @@ fun SchoolListScreen(
     NavigationDrawer(
         drawerState = drawerState,
         currentScreen = Screen.MainScreen,
-        items = NavigationDrawerItems.getNavigationDrawerItems(),
+        items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
             println("Clicked on ${menuItem.title}")
-            if (menuItem.onNavigate != Screen.MainScreen.route){
+            if (menuItem.onNavigate != Screen.MainScreen.route) {
                 onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
             scope.launch {
                 drawerState.close()
             }
         }) {
-        FloatingActionButton(onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) }, onAppBarClick = {
-            scope.launch {
-                drawerState.open()
+        FloatingActionButton(
+            onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
+            contentDescription = "Create a new School",
+            appBar = {
+                AppBar(
+                    onNavigationIconClick = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    },
+                    icon = Icons.Default.Menu,
+                    contentDescription = "Toggle Drawer",
+                    appBarTitle = "Schools"
+                )
             }
-        }) {
+        )
+        {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -86,10 +101,20 @@ fun SchoolListScreen(
                         grade = 0.0,
                         school = school,
                         onCheckBoxClick = {
-                            onEvent(SchoolListEvent.OnCheckChange(
-                                id = school.id,
-                                value = !school.isSelected
+                            onEvent(
+                                SchoolListEvent.OnCheckChange(
+                                    id = school.id,
+                                    value = !school.isSelected
+                                )
                             )
+                        },
+                        onLongClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.DivisionScreen.withArgs(
+                                        school.id.toString()
+                                    )
+                                )
                             )
                         }
                     )
@@ -98,6 +123,7 @@ fun SchoolListScreen(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -109,32 +135,32 @@ private fun PreviewMainScreen() {
                 listOf(
                     School(
                         id = UUID.randomUUID(),
-                        name = "",
-                        description = null,
-                        address = "",
-                        zipCode = "",
-                        city = ""
+                        name = "Technische Berufsschule Zürich",
+                        description = "Eine Schule für Informatikern",
+                        address = "Ausstellungsstrasse 70",
+                        zipCode = "8005",
+                        city = "Zürich",
                     ), School(
                         id = UUID.randomUUID(),
-                        name = "",
+                        name = "Schulhaus Riedenhalden",
                         description = null,
-                        address = "",
-                        zipCode = "",
-                        city = ""
+                        address = "Riedenhaldenstrasse 12",
+                        zipCode = "8046",
+                        city = "Zürich"
                     ), School(
                         id = UUID.randomUUID(),
-                        name = "",
+                        name = "Berufsmaturitätsschule Zürich",
                         description = null,
                         address = "",
                         zipCode = "",
-                        city = ""
+                        city = "Zürich"
                     ), School(
                         id = UUID.randomUUID(),
-                        name = "",
+                        name = "Noser Young",
                         description = null,
-                        address = "",
+                        address = "Herostrasse 12",
                         zipCode = "",
-                        city = ""
+                        city = "Zürich"
                     )
                 )
             ),
@@ -152,7 +178,8 @@ private fun PreviewMainScreen() {
 @Composable
 private fun PreviewMainScreenDarkMode() {
     GraderTheme {
-        SchoolListScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
+        SchoolListScreen(
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
             onEvent = {},
             state = SchoolListState(),
             uiEvent = emptyFlow(),

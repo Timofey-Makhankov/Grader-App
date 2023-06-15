@@ -30,5 +30,9 @@ interface DivisionDao {
 
     @Transaction
     @Query("SELECT * FROM division WHERE id LIKE :id")
-    suspend fun getWithModulesById(id: UUID): DivisionWithModules?
+    suspend fun getAllWithModulesById(id: UUID): DivisionWithModules?
+
+    @Transaction
+    @Query("SELECT * FROM division WHERE school_id LIKE :id")
+    fun getAllDivisionsFromSchoolId(id: UUID): Flow<List<Division>>
 }

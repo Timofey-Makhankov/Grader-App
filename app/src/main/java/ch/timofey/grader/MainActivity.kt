@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.app.LocaleManagerCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import ch.timofey.grader.navigation.Navigation
 import ch.timofey.grader.ui.theme.GraderTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +19,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         println("App: ${AppCompatDelegate.getApplicationLocales()}")
-        println("System: ${GraderApp.getContext()?.let { LocaleManagerCompat.getSystemLocales(it) }}")
+        println(
+            "System: ${
+                GraderApp.getContext()?.let { LocaleManagerCompat.getSystemLocales(it) }
+            }"
+        )
+        installSplashScreen()
         setContent {
             GraderTheme {
                 Surface(

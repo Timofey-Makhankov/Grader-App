@@ -1,9 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id "com.google.devtools.ksp"
+    id 'kotlin-kapt'
 }
 
 android {
@@ -15,11 +15,15 @@ android {
         minSdk 28
         targetSdk 33
         versionCode 1
-        versionName "0.0.1-Alpha"
+        versionName "0.0.2-Alpha"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
+        }
+
+        ksp {
+            arg('room.schemaLocation', "$projectDir/schemas")
         }
     }
 
@@ -71,7 +75,7 @@ dependencies {
     implementation "androidx.compose.material3:material3-window-size-class:1.1.0"
 
     // Navigation
-    def nav_version = "2.5.3"
+    def nav_version = "2.6.0"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     // ROOM Database

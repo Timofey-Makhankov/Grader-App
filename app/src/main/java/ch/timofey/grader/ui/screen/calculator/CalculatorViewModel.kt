@@ -30,7 +30,10 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
             is CalculatorEvent.OnGradeChange -> {
                 val currentList: ArrayList<Double> = ArrayList(_uiState.value.grade)
                 currentList[event.id] = event.grade
-                _uiState.value = _uiState.value.copy(grade = currentList.toList(), rowCount = uiState.value.rowCount + 1)
+                _uiState.value = _uiState.value.copy(
+                    grade = currentList.toList(),
+                    rowCount = uiState.value.rowCount + 1
+                )
             }
 
             is CalculatorEvent.OnFieldEmpty -> {
@@ -38,6 +41,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
+
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)

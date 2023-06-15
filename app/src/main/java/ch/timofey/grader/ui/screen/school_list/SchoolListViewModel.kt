@@ -27,18 +27,19 @@ class SchoolListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getAllSchools().collect{
+            repository.getAllSchools().collect {
                 _uiState.value = _uiState.value.copy(schoolList = it)
             }
         }
     }
+
     fun onEvent(event: SchoolListEvent) {
         when (event) {
             is SchoolListEvent.OnCreateSchool -> {
                 sendUiEvent(UiEvent.Navigate(Screen.CreateSchoolScreen.route))
             }
+
             is SchoolListEvent.OnCheckChange -> {
-                println("Inside the oncheck")
                 viewModelScope.launch {
                     repository.updateIsSelectedSchool(id = event.id, value = event.value)
                 }

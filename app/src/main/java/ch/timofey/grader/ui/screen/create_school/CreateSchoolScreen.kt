@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -27,7 +26,6 @@ import ch.timofey.grader.ui.theme.spacing
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateSchoolScreen(
     state: CreateSchoolState,
@@ -68,7 +66,8 @@ fun CreateSchoolScreen(
             Text(
                 text = "Create School", style = MaterialTheme.typography.titleLarge
             )
-            OutlinedTextField(value = state.name,
+            OutlinedTextField(
+                value = state.name,
                 label = { Text(text = "School Name") },
                 onValueChange = { name -> onEvent(CreateSchoolEvent.OnNameChange(name)) },
                 modifier = Modifier.padding(
@@ -76,12 +75,14 @@ fun CreateSchoolScreen(
                 ),
                 singleLine = true
             )
-            OutlinedTextField(value = state.description,
+            OutlinedTextField(
+                value = state.description,
                 label = {
                     Text(
 
                         text = "School Description"
-                    ) },
+                    )
+                },
                 onValueChange = { description ->
                     onEvent(
                         CreateSchoolEvent.OnDescriptionChange(
@@ -95,7 +96,8 @@ fun CreateSchoolScreen(
                 minLines = 1,
                 maxLines = 4
             )
-            OutlinedTextField(value = state.address,
+            OutlinedTextField(
+                value = state.address,
                 label = { Text(text = "Address") },
                 onValueChange = { address -> onEvent(CreateSchoolEvent.OnAddressChange(address)) },
                 modifier = Modifier.padding(
@@ -103,7 +105,8 @@ fun CreateSchoolScreen(
                 ),
                 singleLine = true
             )
-            OutlinedTextField(value = state.zip,
+            OutlinedTextField(
+                value = state.zip,
                 label = { Text(text = "Zip") },
                 onValueChange = { zip -> onEvent(CreateSchoolEvent.OnZipChange(zip)) },
                 modifier = Modifier.padding(
@@ -111,7 +114,8 @@ fun CreateSchoolScreen(
                 ),
                 singleLine = true
             )
-            OutlinedTextField(value = state.city,
+            OutlinedTextField(
+                value = state.city,
                 label = { Text(text = "City") },
                 onValueChange = { city -> onEvent(CreateSchoolEvent.OnCityChange(city)) },
                 modifier = Modifier.padding(

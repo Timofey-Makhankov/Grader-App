@@ -45,21 +45,27 @@ class CreateSchoolViewModel @Inject constructor(
                 sendUiEvent(UiEvent.PopBackStack)
                 Toast.makeText(GraderApp.getContext(), "School Created", Toast.LENGTH_SHORT).show()
             }
+
             is CreateSchoolEvent.OnNameChange -> {
-                _uiState.value =_uiState.value.copy(name = event.name)
+                _uiState.value = _uiState.value.copy(name = event.name)
             }
+
             is CreateSchoolEvent.OnDescriptionChange -> {
                 _uiState.value = _uiState.value.copy(description = event.description)
             }
+
             is CreateSchoolEvent.OnAddressChange -> {
                 _uiState.value = _uiState.value.copy(address = event.address)
             }
+
             is CreateSchoolEvent.OnZipChange -> {
                 _uiState.value = _uiState.value.copy(zip = event.zip)
             }
+
             is CreateSchoolEvent.OnCityChange -> {
                 _uiState.value = _uiState.value.copy(city = event.city)
             }
+
             is CreateSchoolEvent.OnReturnBack -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
