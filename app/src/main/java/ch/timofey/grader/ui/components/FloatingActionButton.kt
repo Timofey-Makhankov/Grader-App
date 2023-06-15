@@ -11,30 +11,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FloatingActionButton(
     modifier: Modifier = Modifier,
     onFABClick: () -> Unit,
-    onAppBarClick: () -> Unit,
+    appBar: @Composable () -> Unit,
+    contentDescription: String,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = {
-            AppBar(
-                icon = Icons.Default.Menu,
-                contentDescription = "Toggle Drawer",
-                onNavigationIconClick = onAppBarClick
-            )
-        },
+        topBar = { appBar() },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             androidx.compose.material3.FloatingActionButton(
                 onClick = onFABClick
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Add, contentDescription = "Create a new School"
+                    imageVector = Icons.Filled.Add, contentDescription = contentDescription
                 )
             }
         },

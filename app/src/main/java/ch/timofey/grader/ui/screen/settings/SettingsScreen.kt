@@ -36,7 +36,7 @@ fun SettingsScreen(
     onEvent: (SettingsEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit
-){
+) {
     val scope = rememberCoroutineScope()
     val expanded = remember { mutableStateOf(false) }
     val value = remember { mutableStateOf("English") }
@@ -54,18 +54,18 @@ fun SettingsScreen(
     NavigationDrawer(
         drawerState = drawerState,
         currentScreen = Screen.SettingsScreen,
-        items = NavigationDrawerItems.getNavigationDrawerItems(),
+        items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
             println("Clicked on ${menuItem.title}")
-            if (menuItem.onNavigate != Screen.SettingsScreen.route){
+            if (menuItem.onNavigate != Screen.SettingsScreen.route) {
                 onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
-            scope.launch{
+            scope.launch {
                 drawerState.close()
             }
         }
     ) {
-        Scaffold (
+        Scaffold(
             topBar = {
                 AppBar(
                     onNavigationIconClick = { scope.launch { drawerState.open() } },

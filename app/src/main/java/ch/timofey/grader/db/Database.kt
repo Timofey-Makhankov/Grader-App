@@ -15,7 +15,7 @@ import ch.timofey.grader.db.domain.school.School
 @Database(
     entities = [Division::class, Exam::class, Module::class, School::class],
     version = 1,
-    exportSchema = false
+    exportSchema = true,
 )
 @TypeConverters(Converter::class)
 abstract class AppDatabase : RoomDatabase() {

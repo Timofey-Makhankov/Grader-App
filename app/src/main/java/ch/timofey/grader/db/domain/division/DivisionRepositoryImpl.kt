@@ -26,6 +26,10 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
     }
 
     override suspend fun getWithModulesById(id: UUID): DivisionWithModules? {
-        return divisionDao.getWithModulesById(id)
+        return divisionDao.getAllWithModulesById(id)
+    }
+
+    override fun getAllModulesFromSchoolId(id: UUID): Flow<List<Division>> {
+        return divisionDao.getAllDivisionsFromSchoolId(id)
     }
 }

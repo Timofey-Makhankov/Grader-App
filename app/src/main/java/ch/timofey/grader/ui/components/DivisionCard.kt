@@ -9,7 +9,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.Checkbox
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,22 +29,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import ch.timofey.grader.db.domain.school.School
+import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import java.util.UUID
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SchoolCard(
+fun DivisionCard(
     modifier: Modifier = Modifier,
+    division: Division,
+    grade: Double,
+    isOpen: Boolean = false,
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
-    isOpen: Boolean = false,
-    school: School,
-    grade: Double
-) {
-    val checkedState = remember { mutableStateOf(school.isSelected) }
+){
+    val checkedState = remember { mutableStateOf(division.isSelected) }
     val expanded = remember { mutableStateOf(isOpen) }
     Card(
         modifier = Modifier
@@ -76,7 +76,7 @@ fun SchoolCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = school.name,
+                    text = division.name,
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -92,45 +92,48 @@ fun SchoolCard(
             }
             Text(
                 modifier = Modifier.padding(end = MaterialTheme.spacing.extraSmall),
-                text = school.description ?: "",
+                text = division.description ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = if (expanded.value) 4 else 2,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            AnimatedVisibility(visible = expanded.value) {
-                Column(modifier = Modifier.animateContentSize()) {
-                    Text(text = school.address)
-                    Text(text = "${school.zipCode}, ${school.city}")
-                }
-            }
-            Text(
+            AnimatedVisibility(visible = expanded.value){}
+            Row (
                 modifier = Modifier.fillMaxWidth(),
-                text = "Average Grade: $grade",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.End
-            )
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                Text(
+                    text = "${division.schoolYear}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = "Average Grade: $grade",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
     }
 }
 
 @Preview(showBackground = false)
 @Composable
-private fun PreviewSchoolCard() {
+private fun DivisionCardPreview(){
     GraderTheme {
-        SchoolCard(
-            school = School(
-                UUID.randomUUID(),
-                "Technische Berufsschule Zürich",
-                "Eine Berufliche Schule, in der mann über technische Fächern Lernt. Diese Schule wird von Lernenden besucht",
-                "",
-                "",
-                "",
-                isSelected = true
+        DivisionCard(
+            division = Division(
+                id = UUID.randomUUID(),
+                name = "Semester 1",
+                description = "lorem Impsum",
+                schoolYear = 2024,
+                //teacherFirstname = "",
+                //teacherLastname = "",
+                schoolId = UUID.randomUUID(),
+                isSelected = false
             ),
-            grade = 6.0,
-            onCheckBoxClick = {},
-            onLongClick = {}
+            grade = 0.0,
+            onLongClick = {},
+            onCheckBoxClick = {}
         )
     }
 }
@@ -140,21 +143,23 @@ private fun PreviewSchoolCard() {
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-private fun PreviewSchoolCardDarkMode() {
+private fun DivisionCardDarkModePreview(){
     GraderTheme {
-        SchoolCard(
-            isOpen = true,
-            school = School(
-                UUID.randomUUID(),
-                "Berufsmaturitätsschule Zürich",
-                "Eine Berufliche Schule, in der mann über technische Fächern Lernt. Diese Schule wird von Lernenden besucht",
-                "Bächlerstrasse 55",
-                "8046",
-                "Zürich"
+        DivisionCard(
+            division = Division(
+                id = UUID.randomUUID(),
+                name = "Semester 3",
+                description = "lorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsum",
+                schoolYear = 2022,
+                //teacherFirstname = "",
+                //teacherLastname = "",
+                schoolId = UUID.randomUUID(),
+                isSelected = true
             ),
-            grade = 5.0,
+            grade = 0.0,
+            onLongClick = {},
             onCheckBoxClick = {},
-            onLongClick = {}
+            isOpen = true
         )
     }
 }

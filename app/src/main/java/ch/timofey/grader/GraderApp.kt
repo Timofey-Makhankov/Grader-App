@@ -13,13 +13,13 @@ class GraderApp : Application() {
         application = this
     }
 
-    companion object{
+    companion object {
         private var application: Application? = null;
         private fun getApplication(): Application? {
             return application
         }
 
-        fun getContext(): Context?{
+        fun getContext(): Context? {
             return getApplication()?.applicationContext
         }
     }

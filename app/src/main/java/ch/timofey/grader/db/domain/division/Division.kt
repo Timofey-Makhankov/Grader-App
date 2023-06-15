@@ -9,8 +9,8 @@ import java.util.UUID
 data class Division(
     @PrimaryKey(autoGenerate = false) val id: UUID,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "teacher_lastname") val teacherLastname: String,
-    @ColumnInfo(name = "teacher_firstname") val teacherFirstname: String,
+    @ColumnInfo(name = "description") val description: String?,
+    @ColumnInfo(name = "school_year", defaultValue = "0") val schoolYear: Int,
     @ColumnInfo(name = "school_id") val schoolId: UUID,
     @ColumnInfo(name = "is_selected") val isSelected: Boolean = false,
 )

@@ -11,4 +11,5 @@ interface DivisionRepository {
     fun getAllDivisions(): Flow<List<Division>>
     fun getAllWithModules(): Flow<List<DivisionWithModules>>
     suspend fun getWithModulesById(id: UUID): DivisionWithModules?
+    fun getAllModulesFromSchoolId(id: UUID): Flow<List<Division>>
 }

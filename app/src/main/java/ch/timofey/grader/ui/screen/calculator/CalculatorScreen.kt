@@ -39,7 +39,7 @@ fun CalculatorScreen(
     NavigationDrawer(
         drawerState = drawerState,
         currentScreen = Screen.CalculatorScreen,
-        items = NavigationDrawerItems.getNavigationDrawerItems(),
+        items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
             println("Clicked on ${menuItem.title}")
             if (menuItem.onNavigate != Screen.CalculatorScreen.route) {

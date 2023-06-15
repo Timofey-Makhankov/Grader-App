@@ -19,8 +19,8 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun onEvent(event: SettingsEvent){
-        when(event){
+    fun onEvent(event: SettingsEvent) {
+        when (event) {
             is SettingsEvent.OnSettingChange -> {
                 //TODO
                 println()

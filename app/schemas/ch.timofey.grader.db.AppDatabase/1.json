@@ -2,55 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6f9deae5d080f1b7eaf905f5f0663ed1",
+    "identityHash": "513b9b45fa6b48f64b14ae52824c3785",
     "entities": [
       {
         "tableName": "division",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `teacher_lastname` TEXT NOT NULL, `teacher_firstname` TEXT NOT NULL, `school_id` BLOB NOT NULL, PRIMARY KEY(`id`))",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "BLOB",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "teacherLastname",
-            "columnName": "teacher_lastname",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "teacherFirstname",
-            "columnName": "teacher_firstname",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "schoolId",
-            "columnName": "school_id",
-            "affinity": "BLOB",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "exam",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `grade` REAL NOT NULL, `weight` REAL NOT NULL, `date` INTEGER NOT NULL, `module_id` BLOB NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `school_year` INTEGER NOT NULL DEFAULT 0, `school_id` BLOB NOT NULL, `is_selected` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -68,7 +24,58 @@
             "fieldPath": "description",
             "columnName": "description",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "schoolYear",
+            "columnName": "school_year",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "schoolId",
+            "columnName": "school_id",
+            "affinity": "BLOB",
             "notNull": true
+          },
+          {
+            "fieldPath": "isSelected",
+            "columnName": "is_selected",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "exam",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `grade` REAL NOT NULL, `weight` REAL NOT NULL, `date` INTEGER NOT NULL, `module_id` BLOB NOT NULL, `is_selected` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "grade",
@@ -93,6 +100,12 @@
             "columnName": "module_id",
             "affinity": "BLOB",
             "notNull": true
+          },
+          {
+            "fieldPath": "isSelected",
+            "columnName": "is_selected",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -106,7 +119,7 @@
       },
       {
         "tableName": "module",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `division_id` BLOB NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `teacher_lastname` TEXT NOT NULL DEFAULT '', `teacher_firstname` TEXT NOT NULL DEFAULT '', `division_id` BLOB NOT NULL, `is_selected` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -124,12 +137,32 @@
             "fieldPath": "description",
             "columnName": "description",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
+          },
+          {
+            "fieldPath": "teacherLastname",
+            "columnName": "teacher_lastname",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "teacherFirstname",
+            "columnName": "teacher_firstname",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "divisionId",
             "columnName": "division_id",
             "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSelected",
+            "columnName": "is_selected",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -144,7 +177,7 @@
       },
       {
         "tableName": "school",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `zip` TEXT NOT NULL, `city` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `address` TEXT NOT NULL, `zip` TEXT NOT NULL, `city` TEXT NOT NULL, `is_selected` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -157,6 +190,12 @@
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "address",
@@ -175,6 +214,12 @@
             "columnName": "city",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "isSelected",
+            "columnName": "is_selected",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -190,7 +235,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6f9deae5d080f1b7eaf905f5f0663ed1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '513b9b45fa6b48f64b14ae52824c3785')"
     ]
   }
 }
