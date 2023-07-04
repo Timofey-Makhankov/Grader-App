@@ -15,7 +15,10 @@ private val darkColorPalette = ColorSchemas.darkColorPalette
 private val lightColorPalette = ColorSchemas.lightColorPalette
 
 @Composable
-fun GraderTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun GraderTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     val useDynamicColors = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val colors = when {
         useDynamicColors && darkTheme -> dynamicDarkColorScheme(LocalContext.current)

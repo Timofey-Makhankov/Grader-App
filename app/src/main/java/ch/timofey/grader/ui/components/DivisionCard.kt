@@ -26,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.db.domain.division.Division
@@ -126,8 +125,6 @@ private fun DivisionCardPreview(){
                 name = "Semester 1",
                 description = "lorem Impsum",
                 schoolYear = 2024,
-                //teacherFirstname = "",
-                //teacherLastname = "",
                 schoolId = UUID.randomUUID(),
                 isSelected = false
             ),
@@ -151,8 +148,6 @@ private fun DivisionCardDarkModePreview(){
                 name = "Semester 3",
                 description = "lorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsum",
                 schoolYear = 2022,
-                //teacherFirstname = "",
-                //teacherLastname = "",
                 schoolId = UUID.randomUUID(),
                 isSelected = true
             ),

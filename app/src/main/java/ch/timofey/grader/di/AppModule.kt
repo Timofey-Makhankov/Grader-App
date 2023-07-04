@@ -1,7 +1,13 @@
 package ch.timofey.grader.di
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.dataStoreFile
 import androidx.room.Room
+import ch.timofey.grader.db.AppSettings
+import ch.timofey.grader.db.AppSettingsSerializer
 import ch.timofey.grader.db.AppDatabase
 import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.division.DivisionRepositoryImpl
@@ -14,8 +20,14 @@ import ch.timofey.grader.db.domain.school.SchoolRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
+
+private const val DATA_STORE_FILE_NAME = "app_settings.pb"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -26,6 +38,17 @@ object AppModule {
         return Room.databaseBuilder(
             app, AppDatabase::class.java, "grader_database"
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideProtoDataStore(@ApplicationContext appContext: Context): DataStore<AppSettings> {
+        return DataStoreFactory.create(
+            serializer = AppSettingsSerializer,
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME) },
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        )
     }
 
     @Provides

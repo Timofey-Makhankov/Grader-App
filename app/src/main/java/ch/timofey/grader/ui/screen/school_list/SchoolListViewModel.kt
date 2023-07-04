@@ -44,6 +44,12 @@ class SchoolListViewModel @Inject constructor(
                     repository.updateIsSelectedSchool(id = event.id, value = event.value)
                 }
             }
+
+            is SchoolListEvent.OnSwipeDelete -> {
+                viewModelScope.launch {
+                    repository.deleteSchool(event.school)
+                }
+            }
         }
     }
 

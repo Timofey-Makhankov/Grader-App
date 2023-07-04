@@ -5,8 +5,8 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.components.Calculate
-import ch.timofey.grader.ui.components.Help
+import ch.timofey.grader.ui.components.icons.Calculate
+import ch.timofey.grader.ui.components.icons.Help
 
 object NavigationDrawerItems {
     val list = listOf(

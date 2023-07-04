@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.components
+package ch.timofey.grader.ui.components.icons
 
 import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
