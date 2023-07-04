@@ -5,5 +5,8 @@ data class CreateSchoolState(
     var description: String = "",
     var address: String = "",
     var zip: String = "",
-    var city: String = ""
+    var city: String = "",
+    var validName: Boolean = true,
+    var nameErrorMessage: String = "",
+    var showSnackBar: Boolean = false
 )

@@ -1,6 +1,8 @@
 package ch.timofey.grader.ui.screen.create_school
 
 import android.widget.Toast
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp
@@ -47,7 +49,19 @@ class CreateSchoolViewModel @Inject constructor(
             }
 
             is CreateSchoolEvent.OnNameChange -> {
-                _uiState.value = _uiState.value.copy(name = event.name)
+                if (event.name.isNotBlank()) {
+                    if (event.name.length > 30) {
+                        sendUiEvent(UiEvent.ShowSnackBar("The Name has to be not over 30 characters long", withDismissAction = true))
+                    } else {
+                        _uiState.value = _uiState.value.copy(name = event.name, validName = true)
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        name = "",
+                        validName = false,
+                        nameErrorMessage = "Please Enter a Name"
+                    )
+                }
             }
 
             is CreateSchoolEvent.OnDescriptionChange -> {

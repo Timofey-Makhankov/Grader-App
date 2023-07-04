@@ -10,6 +10,7 @@ sealed class Screen(var route: String) {
     object SettingsScreen : Screen("settings_screen")
     object ShareScreen : Screen("share_screen")
     object CalculatorScreen : Screen("calculator_screen")
+    object WalkthroughScreen : Screen("walkthrough_screen")
 
     fun withArgs(vararg args: String): String{
         return buildString {

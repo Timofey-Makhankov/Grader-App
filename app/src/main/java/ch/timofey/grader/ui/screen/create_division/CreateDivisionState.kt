@@ -8,6 +8,5 @@ data class CreateDivisionState(
     val year: String = Year.now().value.toString(),
     val validYear: Boolean = true,
     val validName: Boolean = true,
-    val validDescription: Boolean = true,
     val errorMessageYear: String = ""
 )

@@ -114,7 +114,8 @@ fun CreateDivisionScreen(
                         )
                     }
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+
             )
             Button(
                 modifier = Modifier.padding(

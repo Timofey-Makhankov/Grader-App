@@ -1,7 +1,10 @@
 package ch.timofey.grader.ui.screen.settings
 
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.db.AppSettings
+import ch.timofey.grader.db.Language
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor() : ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val dataStore: DataStore<AppSettings>
+) : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState
 
@@ -25,6 +30,14 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
                 //TODO
                 println()
             }
+        }
+    }
+
+    private suspend fun updateLanguage(language: Language){
+        dataStore.updateData {
+            it.copy(
+                language = language
+            )
         }
     }
 
