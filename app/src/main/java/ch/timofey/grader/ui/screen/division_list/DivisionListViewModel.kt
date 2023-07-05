@@ -32,7 +32,7 @@ class DivisionListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getAllModulesFromSchoolId(UUID.fromString(id)).collect {
+            repository.getAllDivisionsFromSchoolId(UUID.fromString(id)).collect {
                 _uiState.value = _uiState.value.copy(divisionList = it)
             }
         }
@@ -44,8 +44,17 @@ class DivisionListViewModel @Inject constructor(
                 sendUiEvent(UiEvent.PopBackStack)
             }
             is DivisionListEvent.OnCreateDivision -> {
-                println("id: $id")
                 sendUiEvent(UiEvent.Navigate(Screen.CreateDivisionScreen.withArgs(id)))
+            }
+            is DivisionListEvent.OnCheckChange -> {
+                viewModelScope.launch {
+                    repository.updateIsSelectedDivision(event.id, event.value)
+                }
+            }
+            is DivisionListEvent.OnSwipeDelete -> {
+                viewModelScope.launch {
+                    repository.deleteDivision(event.division)
+                }
             }
         }
     }

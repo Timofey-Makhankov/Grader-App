@@ -21,6 +21,10 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
         return divisionDao.getAll()
     }
 
+    override suspend fun updateIsSelectedDivision(id: UUID, value: Boolean) {
+        divisionDao.updateIsSelected(id, value)
+    }
+
     override fun getAllWithModules(): Flow<List<DivisionWithModules>> {
         return divisionDao.getAllWithModules()
     }
@@ -29,7 +33,7 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
         return divisionDao.getAllWithModulesById(id)
     }
 
-    override fun getAllModulesFromSchoolId(id: UUID): Flow<List<Division>> {
+    override fun getAllDivisionsFromSchoolId(id: UUID): Flow<List<Division>> {
         return divisionDao.getAllDivisionsFromSchoolId(id)
     }
 }

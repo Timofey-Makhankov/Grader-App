@@ -24,6 +24,9 @@ interface ModuleDao {
     @Query("SELECT * FROM module WHERE id LIKE :id")
     suspend fun getById(id: UUID): Module?
 
+    @Query("UPDATE module SET is_selected = :value WHERE :id LIKE id")
+    suspend fun updateIsSelected(id: UUID, value: Boolean)
+
     @Transaction
     @Query("SELECT * FROM module")
     fun getAllWithExams(): Flow<List<ModuleWithExams>>
