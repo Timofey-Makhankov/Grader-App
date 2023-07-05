@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.division_list
+package ch.timofey.grader.ui.screen.module_list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -14,44 +14,37 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.AppBar
-import ch.timofey.grader.ui.components.DivisionCard
 import ch.timofey.grader.ui.components.FloatingActionButton
+import ch.timofey.grader.ui.components.ModuleCard
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.components.SwipeToDeleteBackground
-import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DivisionListScreen(
+fun ModuleListScreen(
     drawerState: DrawerState,
-    state: DivisionListState,
-    onEvent: (DivisionListEvent) -> Unit,
-    uiEvent: Flow<UiEvent>,
+    state: ModuleListState,
+    onEvent: (ModuleListEvent) -> Unit,
     onPopBackStack: () -> Unit,
+    uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -72,24 +65,24 @@ fun DivisionListScreen(
     }
     NavigationDrawer(
         drawerState = drawerState,
-        currentScreen = Screen.DivisionScreen,
         items = NavigationDrawerItems.list,
+        currentScreen = Screen.ModuleScreen,
         onItemClick = { menuItem ->
-            println("Clicked on ${menuItem.title}")
             onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             scope.launch {
                 drawerState.close()
             }
-        }) {
+        },
+    ) {
         FloatingActionButton(
-            onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
-            contentDescription = "Create a new Division",
+            onFABClick = { /*TODO*/ },
+            contentDescription = "Create a new Module",
             appBar = {
                 AppBar(
-                    onNavigationIconClick = { onEvent(DivisionListEvent.OnReturnBack) },
+                    onNavigationIconClick = { onEvent(ModuleListEvent.OnReturnBack) },
                     icon = Icons.Default.ArrowBack,
                     contentDescription = "Go Back to previous Screen",
-                    appBarTitle = "Divisions"
+                    appBarTitle = "Modules"
                 )
             }
         ) {
@@ -100,12 +93,12 @@ fun DivisionListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(
-                    items = state.divisionList,
-                    key = { division -> division.id }
-                ) { division ->
+                    items = state.moduleList,
+                    key = { module -> module.id }
+                ) { module ->
                     val dismissState = rememberDismissState(positionalThreshold = { 65.dp.toPx() })
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        onEvent(DivisionListEvent.OnSwipeDelete(division))
+                        onEvent(ModuleListEvent.OnSwipeDelete(module))
                     }
                     SwipeToDismiss(
                         modifier = Modifier.padding(vertical = 1.dp),
@@ -114,12 +107,13 @@ fun DivisionListScreen(
                         background = {
                             val color by animateColorAsState(
                                 targetValue = when (dismissState.targetValue) {
+                                    DismissValue.Default -> MaterialTheme.colorScheme.background
                                     DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
                                     else -> MaterialTheme.colorScheme.background
-                                },
-                                label = "Color"
+                                }, label = "Color"
                             )
-                            val isVisible = dismissState.targetValue == DismissValue.DismissedToStart
+                            val isVisible =
+                                dismissState.targetValue == DismissValue.DismissedToStart
                             AnimatedVisibility(
                                 visible = isVisible,
                                 enter = fadeIn(
@@ -137,71 +131,17 @@ fun DivisionListScreen(
                             }
                         },
                         dismissContent = {
-                            DivisionCard(
+                            ModuleCard(
                                 modifier = Modifier.padding(MaterialTheme.spacing.small),
-                                division = division,
+                                module = module,
                                 grade = 0.0,
-                                onCheckBoxClick = {
-                                    onEvent(
-                                        DivisionListEvent.OnCheckChange(
-                                            id = division.id,
-                                            value = !division.isSelected
-                                        )
-                                    )
-                                },
-                                onLongClick = {
-                                    onNavigate(
-                                        UiEvent.Navigate(
-                                            Screen.ModuleScreen.withArgs(
-                                                division.id.toString()
-                                            )
-                                        )
-                                    )
-                                }
+                                onCheckBoxClick = { onEvent(ModuleListEvent.OnCheckChange(module.id, !module.isSelected)) },
+                                onLongClick = { /*TODO*/ }
                             )
                         }
                     )
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun DivisionListScreenPreview() {
-    GraderTheme {
-        DivisionListScreen(
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-            state = DivisionListState(
-                divisionList = listOf(
-                    Division(
-                        id = UUID.randomUUID(),
-                        name = "Semester 1",
-                        description = "Lorem Impsum",
-                        schoolYear = 2023,
-                        schoolId = UUID.randomUUID()
-                    ),
-                    Division(
-                        id = UUID.randomUUID(),
-                        name = "Semester 2",
-                        description = "Lorem Impsum",
-                        schoolYear = 2002,
-                        schoolId = UUID.randomUUID()
-                    ),
-                    Division(
-                        id = UUID.randomUUID(),
-                        name = "Semester 3",
-                        description = "Lorem Impsum",
-                        schoolYear = 2222,
-                        schoolId = UUID.randomUUID()
-                    )
-                )
-            ),
-            onEvent = {},
-            uiEvent = emptyFlow(),
-            onPopBackStack = {},
-            onNavigate = {}
-        )
     }
 }

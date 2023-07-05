@@ -8,6 +8,7 @@ interface ModuleRepository {
     suspend fun saveModule(module: Module)
     suspend fun deleteModule(module: Module)
     suspend fun getModuleById(id: UUID): Module?
+    suspend fun updateIsSelectedModule(id: UUID, value: Boolean)
     fun getAllModules(): Flow<List<Module>>
     fun getAllModulesWithExams(): Flow<List<ModuleWithExams>>
     suspend fun getModuleWithExamsById(id: UUID): ModuleWithExams?

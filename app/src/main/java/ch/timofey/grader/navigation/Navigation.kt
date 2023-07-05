@@ -22,6 +22,8 @@ import ch.timofey.grader.ui.screen.settings.SettingsScreen
 import ch.timofey.grader.ui.screen.create_school.CreateSchoolViewModel
 import ch.timofey.grader.ui.screen.division_list.DivisionListScreen
 import ch.timofey.grader.ui.screen.division_list.DivisionListViewModel
+import ch.timofey.grader.ui.screen.module_list.ModuleListScreen
+import ch.timofey.grader.ui.screen.module_list.ModuleListViewModel
 import ch.timofey.grader.ui.screen.school_list.SchoolListScreen
 import ch.timofey.grader.ui.screen.school_list.SchoolListViewModel
 import ch.timofey.grader.ui.screen.settings.SettingsViewModel
@@ -45,7 +47,6 @@ fun Navigation() {
                 onNavigate = {
                     navController.navigate(it.route)
                 },
-                snackBarHostState = snackBarHostState
             )
         }
         composable(route = Screen.CreateSchoolScreen.route) {
@@ -139,6 +140,31 @@ fun Navigation() {
                     navController.popBackStack()
                 },
                 snackBarHostState = snackBarHostState
+            )
+        }
+        composable(
+            route = Screen.ModuleScreen.route + "/{id}",
+            arguments = listOf(
+                navArgument("id"){
+                    type = NavType.StringType
+                    defaultValue = "None"
+                    nullable = false
+                }
+            )
+        ){
+            val viewModel = hiltViewModel<ModuleListViewModel>()
+            val state by viewModel.uiState.collectAsState()
+            ModuleListScreen(
+                state = state,
+                onEvent = viewModel::onEvent,
+                uiEvent = viewModel.uiEvent,
+                onNavigate = {
+                    navController.navigate(it.route)
+                },
+                drawerState = drawerState,
+                onPopBackStack = {
+                    navController.popBackStack()
+                }
             )
         }
     }

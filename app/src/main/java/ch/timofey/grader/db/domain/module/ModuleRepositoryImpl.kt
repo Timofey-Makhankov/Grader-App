@@ -17,6 +17,10 @@ class ModuleRepositoryImpl(private val moduleDao: ModuleDao) : ModuleRepository 
         return moduleDao.getById(id)
     }
 
+    override suspend fun updateIsSelectedModule(id: UUID, value: Boolean) {
+        moduleDao.updateIsSelected(id, value)
+    }
+
     override fun getAllModules(): Flow<List<Module>> {
         return moduleDao.getAll()
     }

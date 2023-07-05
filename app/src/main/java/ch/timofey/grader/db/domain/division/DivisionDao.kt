@@ -24,6 +24,9 @@ interface DivisionDao {
     @Query("SELECT * FROM division WHERE id LIKE :id")
     suspend fun getById(id: UUID): Division?
 
+    @Query("UPDATE division SET is_selected = :value WHERE :id LIKE id")
+    suspend fun updateIsSelected(id: UUID, value: Boolean)
+
     @Transaction
     @Query("SELECT * FROM division")
     fun getAllWithModules(): Flow<List<DivisionWithModules>>

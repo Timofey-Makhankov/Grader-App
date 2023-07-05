@@ -9,7 +9,8 @@ interface DivisionRepository {
     suspend fun deleteDivision(division: Division)
     suspend fun getDivision(id: UUID): Division?
     fun getAllDivisions(): Flow<List<Division>>
+    suspend fun updateIsSelectedDivision(id: UUID, value: Boolean)
     fun getAllWithModules(): Flow<List<DivisionWithModules>>
     suspend fun getWithModulesById(id: UUID): DivisionWithModules?
-    fun getAllModulesFromSchoolId(id: UUID): Flow<List<Division>>
+    fun getAllDivisionsFromSchoolId(id: UUID): Flow<List<Division>>
 }
