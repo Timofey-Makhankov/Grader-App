@@ -75,7 +75,7 @@ fun ModuleListScreen(
         },
     ) {
         FloatingActionButton(
-            onFABClick = { /*TODO*/ },
+            onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
             contentDescription = "Create a new Module",
             appBar = {
                 AppBar(
@@ -96,7 +96,12 @@ fun ModuleListScreen(
                     items = state.moduleList,
                     key = { module -> module.id }
                 ) { module ->
-                    val dismissState = rememberDismissState(positionalThreshold = { 65.dp.toPx() })
+                    val dismissState = rememberDismissState(
+                        // This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
+                        // That's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
+                        // In this example I want a 70% Threshold and is equal to 8
+                        positionalThreshold = { value -> (value / 8).dp.toPx() }
+                    )
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                         onEvent(ModuleListEvent.OnSwipeDelete(module))
                     }

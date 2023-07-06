@@ -99,7 +99,10 @@ fun ModuleCard(
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             AnimatedVisibility(visible = expanded.value) {
                 Column( modifier = Modifier.animateContentSize() ) {
-                    Text(text = "Teacher: ${module.teacherFirstname} ${module.teacherLastname}")
+                    Text(
+                        modifier = Modifier.padding(bottom = MaterialTheme.spacing.medium),
+                        text = "Teacher: ${module.teacherFirstname} ${module.teacherLastname}"
+                    )
                 }
             }
             Text(

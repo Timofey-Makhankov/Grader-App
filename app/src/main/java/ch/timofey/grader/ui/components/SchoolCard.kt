@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -46,7 +47,7 @@ fun SchoolCard(
 ) {
     val checkedState = remember { mutableStateOf(school.isSelected) }
     val expanded = remember { mutableStateOf(isOpen) }
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .animateContentSize(
                 animationSpec = tween(
@@ -64,7 +65,10 @@ fun SchoolCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
-        shape = MaterialTheme.shapes.large
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        )
     ) {
         Column(
             modifier = Modifier
@@ -91,23 +95,32 @@ fun SchoolCard(
                 )
             }
             Text(
-                modifier = Modifier.padding(end = MaterialTheme.spacing.extraSmall),
+                softWrap = true,
                 text = school.description ?: "",
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = if (expanded.value) 4 else 2,
+                maxLines = if(expanded.value) 4 else 2,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            AnimatedVisibility(visible = expanded.value) {
+            AnimatedVisibility(
+                visible = expanded.value,
+                label = "Extending Button"
+            ) {
                 Column(modifier = Modifier.animateContentSize()) {
-                    Text(text = school.address)
-                    Text(text = "${school.zipCode}, ${school.city}")
+                    Text(
+                        text = school.address,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                    Text(
+                        text = "${school.zipCode}, ${school.city}",
+                        style = MaterialTheme.typography.labelLarge
+                    )
                 }
             }
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Average Grade: $grade",
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.End
             )
         }

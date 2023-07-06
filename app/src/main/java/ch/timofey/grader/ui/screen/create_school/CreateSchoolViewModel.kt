@@ -1,8 +1,6 @@
 package ch.timofey.grader.ui.screen.create_school
 
 import android.widget.Toast
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp

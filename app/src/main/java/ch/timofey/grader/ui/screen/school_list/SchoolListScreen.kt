@@ -19,6 +19,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissDefaults
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -106,7 +107,12 @@ fun SchoolListScreen(
                     items = state.schoolList,
                     key = { school -> school.id }
                 ) { school ->
-                    val dismissState = rememberDismissState(positionalThreshold = { 65.dp.toPx() })
+                    val dismissState = rememberDismissState(
+                        //This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
+                        //that's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
+                        //In this example I want a 70% Threshold and is equal to 8
+                        positionalThreshold = { value -> (value / 8).dp.toPx() }
+                    )
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                         println("Tried to delete School: $school")
                         onEvent(SchoolListEvent.OnSwipeDelete(school))
