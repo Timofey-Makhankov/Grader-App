@@ -1,5 +1,6 @@
 package ch.timofey.grader.ui.screen.module_list
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.module.ModuleRepository
@@ -15,8 +16,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ModuleListViewModel @Inject constructor(
-    private val repository: ModuleRepository
+    private val repository: ModuleRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val divisionId = savedStateHandle.get<String>("id").orEmpty()
+
     private val _uiState = MutableStateFlow(ModuleListState())
     val uiState: StateFlow<ModuleListState> = _uiState
 
@@ -34,7 +38,7 @@ class ModuleListViewModel @Inject constructor(
     fun onEvent(event: ModuleListEvent){
         when (event) {
             is ModuleListEvent.OnFABClick -> {
-                sendUiEvent(UiEvent.Navigate(Screen.CreateModuleScreen.route))
+                sendUiEvent(UiEvent.Navigate(Screen.CreateModuleScreen.withArgs(divisionId)))
             }
             is ModuleListEvent.OnReturnBack -> {
                 sendUiEvent(UiEvent.PopBackStack)

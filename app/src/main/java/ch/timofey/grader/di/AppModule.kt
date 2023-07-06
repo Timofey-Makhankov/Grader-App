@@ -37,7 +37,7 @@ object AppModule {
     fun provideTodoDatabase(app: Application): AppDatabase {
         return Room.databaseBuilder(
             app, AppDatabase::class.java, "grader_database"
-        ).build()
+        ).allowMainThreadQueries().build() // TODO I have to look into the allowMainThreadQueries function
     }
 
     @Provides

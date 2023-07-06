@@ -71,8 +71,7 @@ class CreateDivisionViewModel @Inject constructor(
                         name = _uiState.value.name,
                         description = _uiState.value.description,
                         schoolYear = _uiState.value.year.toInt(),
-                        schoolId = UUID.fromString(id),
-                        isSelected = false
+                        schoolId = UUID.fromString(id)
                     )
                     println(newDivision)
                     viewModelScope.launch {
