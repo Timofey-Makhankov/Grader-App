@@ -17,6 +17,8 @@ import ch.timofey.grader.ui.screen.calculator.CalculatorScreen
 import ch.timofey.grader.ui.screen.calculator.CalculatorViewModel
 import ch.timofey.grader.ui.screen.create_division.CreateDivisionScreen
 import ch.timofey.grader.ui.screen.create_division.CreateDivisionViewModel
+import ch.timofey.grader.ui.screen.create_exam.CreateExamScreen
+import ch.timofey.grader.ui.screen.create_exam.CreateExamViewModel
 import ch.timofey.grader.ui.screen.create_module.CreateModuleScreen
 import ch.timofey.grader.ui.screen.create_module.CreateModuleViewModel
 import ch.timofey.grader.ui.screen.create_school.CreateSchoolScreen
@@ -175,6 +177,21 @@ fun Navigation() {
                 drawerState = drawerState,
                 onPopBackStack = { navController.popBackStack() },
                 onNavigate = { navController.navigate(it.route) })
+        }
+        composable(
+            route = Screen.CreateExamScreen.route + "/{id}", arguments = listOf(navArgument("id") {
+                type = NavType.StringType
+                defaultValue = "None"
+                nullable = false
+            })
+        ) {
+            val viewModel = hiltViewModel<CreateExamViewModel>()
+            val state by viewModel.uiState.collectAsState()
+            CreateExamScreen(
+                state = state,
+                onEvent = viewModel::onEvent,
+                uiEvent = viewModel.uiEvent,
+                onPopBackStack = { navController.popBackStack() })
         }
     }
 }

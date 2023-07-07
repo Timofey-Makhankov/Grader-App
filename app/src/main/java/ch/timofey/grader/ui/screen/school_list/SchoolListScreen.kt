@@ -19,7 +19,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.SwipeToDismissDefaults
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -35,7 +34,7 @@ import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.AppBar
 import ch.timofey.grader.ui.components.FloatingActionButton
 import ch.timofey.grader.ui.components.NavigationDrawer
-import ch.timofey.grader.ui.components.SchoolCard
+import ch.timofey.grader.ui.components.cards.SchoolCard
 import ch.timofey.grader.ui.components.SwipeToDeleteBackground
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.theme.GraderTheme

@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
-import java.util.Date
 import java.util.UUID
 
 @Entity(tableName = "exam")

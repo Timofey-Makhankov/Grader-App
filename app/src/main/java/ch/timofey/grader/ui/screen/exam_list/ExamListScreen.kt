@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.AppBar
-import ch.timofey.grader.ui.components.ExamCard
+import ch.timofey.grader.ui.components.cards.ExamCard
 import ch.timofey.grader.ui.components.FloatingActionButton
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.components.SwipeToDeleteBackground
