@@ -17,6 +17,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.rememberDrawerState
@@ -81,10 +82,14 @@ fun DivisionListScreen(
                 drawerState.close()
             }
         }) {
-        FloatingActionButton(
-            onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
-            contentDescription = "Create a new Division",
-            appBar = {
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
+                    contentDescription = "Create a new Division",
+                )
+            },
+            topBar = {
                 AppBar(
                     onNavigationIconClick = { onEvent(DivisionListEvent.OnReturnBack) },
                     icon = Icons.Default.ArrowBack,
@@ -124,7 +129,8 @@ fun DivisionListScreen(
                                 },
                                 label = "Color"
                             )
-                            val isVisible = dismissState.targetValue == DismissValue.DismissedToStart
+                            val isVisible =
+                                dismissState.targetValue == DismissValue.DismissedToStart
                             AnimatedVisibility(
                                 visible = isVisible,
                                 enter = fadeIn(
@@ -171,6 +177,7 @@ fun DivisionListScreen(
         }
     }
 }
+
 
 @Preview
 @Composable
