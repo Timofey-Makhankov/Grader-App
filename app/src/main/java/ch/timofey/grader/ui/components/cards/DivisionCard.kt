@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.components
+package ch.timofey.grader.ui.components.cards
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility

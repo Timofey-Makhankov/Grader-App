@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.components
+package ch.timofey.grader.ui.components.cards
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
@@ -6,14 +6,12 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,49 +29,58 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import ch.timofey.grader.db.domain.exam.Exam
+import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.UUID
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ExamCard(
-    modifier: Modifier = Modifier, exam: Exam, isOpen: Boolean = false, onCheckBoxClick: () -> Unit
+fun ModuleCard(
+    modifier: Modifier = Modifier,
+    module: Module,
+    grade: Double,
+    isOpen: Boolean = false,
+    onCheckBoxClick: () -> Unit,
+    onLongClick: () -> Unit,
 ) {
-    val checkedState = remember { mutableStateOf(exam.isSelected) }
+    val checkedState = remember { mutableStateOf(module.isSelected) }
     val expanded = remember { mutableStateOf(isOpen) }
-    Card(modifier = Modifier
-        .animateContentSize(
-            animationSpec = tween(
-                durationMillis = 300, easing = LinearOutSlowInEasing
+    Card(
+        modifier = Modifier
+            .animateContentSize(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = LinearOutSlowInEasing
+                )
             )
-        )
-        .clickable { expanded.value = !expanded.value }
-        .then(modifier),
+            .combinedClickable(
+                interactionSource = MutableInteractionSource(),
+                indication = null,
+                onClick = { expanded.value = !expanded.value },
+                onLongClick = { onLongClick() }
+            )
+            .then(modifier),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
-        shape = MaterialTheme.shapes.large) {
+        shape = MaterialTheme.shapes.large
+    ) {
         Column(
             modifier = Modifier.padding(MaterialTheme.spacing.small)
         ) {
-            Row(
+            Row (
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ){
                 Text(
-                    modifier = Modifier.weight(0.9f),
-                    text = exam.name,
+                    text = module.name,
                     style = MaterialTheme.typography.titleLarge,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Checkbox(
-                    modifier = Modifier.align(Alignment.Top),
                     checked = checkedState.value,
                     onCheckedChange = {
                         checkedState.value = it
@@ -84,27 +91,23 @@ fun ExamCard(
             }
             Text(
                 modifier = Modifier.padding(end = MaterialTheme.spacing.extraSmall),
-                text = exam.description ?: "",
+                text = module.description ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = if (expanded.value) 4 else 2,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            AnimatedVisibility(
-                visible = expanded.value
-            ) {
-                Column(modifier = Modifier.animateContentSize()) {
+            AnimatedVisibility(visible = expanded.value) {
+                Column( modifier = Modifier.animateContentSize() ) {
                     Text(
-                        text = "Weight: ${exam.weight}"
-                    )
-                    Text(
-                        text = "Exam taken: ${DateTimeFormatter.ISO_LOCAL_DATE.format(exam.date)}"
+                        modifier = Modifier.padding(bottom = MaterialTheme.spacing.medium),
+                        text = "Teacher: ${module.teacherFirstname} ${module.teacherLastname}"
                     )
                 }
             }
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Grade: ${exam.grade}",
+                text = "Average Grade: $grade",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.End
             )
@@ -114,34 +117,43 @@ fun ExamCard(
 
 @Preview(showBackground = false)
 @Composable
-private fun ExamCardPreview() {
+private fun ModuleCardPreview(){
     GraderTheme {
-        ExamCard(exam = Exam(
-            id = UUID.randomUUID(),
-            name = "",
-            description = "",
-            grade = 1.0,
-            weight = 1.0,
-            date = LocalDate.now(),
-            module = UUID.randomUUID()
-        ), onCheckBoxClick = {})
+        ModuleCard(
+            module = Module(
+                id = UUID.randomUUID(),
+                name = "Chemistry",
+                description = "In this module, we are looking into how the molecular bonds are connected together",
+                isSelected = false,
+                divisionId = UUID.randomUUID(),
+                teacherFirstname = "Daniela",
+                teacherLastname = "Boomer"
+            ),
+            grade = 0.0,
+            onCheckBoxClick = {},
+            onLongClick = {},
+        )
     }
 }
 
 @Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun ExamCardDarkModePreview() {
+private fun ModuleCardDarkModePreview(){
     GraderTheme {
-        ExamCard(
-            exam = Exam(
+        ModuleCard(
+            module = Module(
                 id = UUID.randomUUID(),
-                name = "Lineare Gleichungssysteme, Quadratische Gleichungen",
-                description = "In dieser Prüfung geht es um, das Gleichungssystem und die Quadratische Gleichung",
-                grade = 5.9,
-                weight = 1.0,
-                date = LocalDate.of(2023, 6, 20),
-                module = UUID.randomUUID()
-            ), onCheckBoxClick = {}, isOpen = true
+                name = "Chemistry",
+                description = "In this module, we are looking into how the molecular bonds are connected together",
+                isSelected = true,
+                divisionId = UUID.randomUUID(),
+                teacherFirstname = "Daniela",
+                teacherLastname = "Boomer"
+            ),
+            grade = 0.0,
+            isOpen = true,
+            onCheckBoxClick = {},
+            onLongClick = {},
         )
     }
 }

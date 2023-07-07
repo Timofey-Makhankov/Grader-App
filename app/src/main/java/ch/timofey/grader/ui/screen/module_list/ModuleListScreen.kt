@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.AppBar
 import ch.timofey.grader.ui.components.FloatingActionButton
-import ch.timofey.grader.ui.components.ModuleCard
+import ch.timofey.grader.ui.components.cards.ModuleCard
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.components.SwipeToDeleteBackground
 import ch.timofey.grader.ui.theme.spacing
