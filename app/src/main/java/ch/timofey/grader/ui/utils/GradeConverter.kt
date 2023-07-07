@@ -3,9 +3,12 @@ package ch.timofey.grader.ui.utils
 import ch.timofey.grader.db.domain.exam.Exam
 
 fun getAverage(grades: List<Double>, weights: List<Double>): Double {
+    if (grades.isEmpty() || weights.isEmpty()){
+        return 0.0
+    }
     var gradeSum = 0.0
     var weightSum = 0.0
-    for (index in 0..grades.size) {
+    for (index in grades.indices) {
         gradeSum += grades[index] * weights[index]
         weightSum += weights[index]
     }

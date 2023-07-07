@@ -18,6 +18,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.rememberDrawerState
@@ -79,10 +80,14 @@ fun SchoolListScreen(
                 drawerState.close()
             }
         }) {
-        FloatingActionButton(
-            onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
-            contentDescription = "Create a new School",
-            appBar = {
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
+                    contentDescription = "Create a new School",
+                )
+            },
+            topBar = {
                 AppBar(
                     onNavigationIconClick = {
                         scope.launch {
@@ -94,8 +99,7 @@ fun SchoolListScreen(
                     appBarTitle = "Schools"
                 )
             }
-        )
-        {
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -172,6 +176,7 @@ fun SchoolListScreen(
                     )
                 }
             }
+
         }
     }
 }

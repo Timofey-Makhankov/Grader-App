@@ -16,6 +16,7 @@ import androidx.compose.material3.DismissValue
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
@@ -74,10 +75,14 @@ fun ModuleListScreen(
             }
         },
     ) {
-        FloatingActionButton(
-            onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
-            contentDescription = "Create a new Module",
-            appBar = {
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
+                    contentDescription = "Create a new Module",
+                )
+            },
+            topBar = {
                 AppBar(
                     onNavigationIconClick = { onEvent(ModuleListEvent.OnReturnBack) },
                     icon = Icons.Default.ArrowBack,
@@ -140,7 +145,14 @@ fun ModuleListScreen(
                                 modifier = Modifier.padding(MaterialTheme.spacing.small),
                                 module = module,
                                 grade = 0.0,
-                                onCheckBoxClick = { onEvent(ModuleListEvent.OnCheckChange(module.id, !module.isSelected)) },
+                                onCheckBoxClick = {
+                                    onEvent(
+                                        ModuleListEvent.OnCheckChange(
+                                            module.id,
+                                            !module.isSelected
+                                        )
+                                    )
+                                },
                                 onLongClick = {
                                     onNavigate(
                                         UiEvent.Navigate(
@@ -153,6 +165,8 @@ fun ModuleListScreen(
                     )
                 }
             }
+
         }
+
     }
 }
