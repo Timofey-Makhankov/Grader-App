@@ -7,5 +7,6 @@ interface ExamRepository {
     suspend fun saveExam(exam: Exam)
     suspend fun deleteExam(exam: Exam)
     suspend fun getExamById(id: UUID): Exam?
+    suspend fun updateIsSelectedExam(id: UUID, value: Boolean)
     fun getAllExams(): Flow<List<Exam>>
 }

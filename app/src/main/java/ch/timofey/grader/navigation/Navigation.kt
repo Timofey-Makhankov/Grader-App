@@ -24,6 +24,8 @@ import ch.timofey.grader.ui.screen.settings.SettingsScreen
 import ch.timofey.grader.ui.screen.create_school.CreateSchoolViewModel
 import ch.timofey.grader.ui.screen.division_list.DivisionListScreen
 import ch.timofey.grader.ui.screen.division_list.DivisionListViewModel
+import ch.timofey.grader.ui.screen.exam_list.ExamListScreen
+import ch.timofey.grader.ui.screen.exam_list.ExamListViewModel
 import ch.timofey.grader.ui.screen.module_list.ModuleListScreen
 import ch.timofey.grader.ui.screen.module_list.ModuleListViewModel
 import ch.timofey.grader.ui.screen.school_list.SchoolListScreen
@@ -88,12 +90,13 @@ fun Navigation() {
                 }, drawerState = drawerState
             )
         }
-        composable(route = Screen.DivisionScreen.route + "/{id}",
-            arguments = listOf(navArgument("id") {
+        composable(
+            route = Screen.DivisionScreen.route + "/{id}", arguments = listOf(navArgument("id") {
                 type = NavType.StringType
                 defaultValue = "None"
                 nullable = false
-            })) {
+            })
+        ) {
             val viewModel = hiltViewModel<DivisionListViewModel>()
             val state by viewModel.uiState.collectAsState()
             DivisionListScreen(state = state, onEvent = viewModel::onEvent, onNavigate = {
@@ -103,12 +106,14 @@ fun Navigation() {
             }, drawerState = drawerState, uiEvent = viewModel.uiEvent
             )
         }
-        composable(route = Screen.CreateDivisionScreen.route + "/{id}",
+        composable(
+            route = Screen.CreateDivisionScreen.route + "/{id}",
             arguments = listOf(navArgument("id") {
                 type = NavType.StringType
                 defaultValue = "None"
                 nullable = false
-            })) {
+            })
+        ) {
             val viewModel = hiltViewModel<CreateDivisionViewModel>()
             val state by viewModel.uiState.collectAsState()
             CreateDivisionScreen(state = state,
@@ -118,12 +123,13 @@ fun Navigation() {
                     navController.popBackStack()
                 })
         }
-        composable(route = Screen.ModuleScreen.route + "/{id}",
-            arguments = listOf(navArgument("id") {
+        composable(
+            route = Screen.ModuleScreen.route + "/{id}", arguments = listOf(navArgument("id") {
                 type = NavType.StringType
                 defaultValue = "None"
                 nullable = false
-            })) {
+            })
+        ) {
             val viewModel = hiltViewModel<ModuleListViewModel>()
             val state by viewModel.uiState.collectAsState()
             ModuleListScreen(state = state,
@@ -137,12 +143,14 @@ fun Navigation() {
                     navController.popBackStack()
                 })
         }
-        composable(route = Screen.CreateModuleScreen.route + "/{id}",
+        composable(
+            route = Screen.CreateModuleScreen.route + "/{id}",
             arguments = listOf(navArgument("id") {
                 type = NavType.StringType
                 defaultValue = "None"
                 nullable = false
-            })) {
+            })
+        ) {
             val viewModel = hiltViewModel<CreateModuleViewModel>()
             val state by viewModel.uiState.collectAsState()
             CreateModuleScreen(state = state,
@@ -151,6 +159,22 @@ fun Navigation() {
                 onPopBackStack = {
                     navController.popBackStack()
                 })
+        }
+        composable(
+            route = Screen.ExamScreen.route + "/{id}", arguments = listOf(navArgument("id") {
+                type = NavType.StringType
+                defaultValue = "None"
+                nullable = false
+            })
+        ) {
+            val viewModel = hiltViewModel<ExamListViewModel>()
+            val state by viewModel.uiState.collectAsState()
+            ExamListScreen(state = state,
+                onEvent = viewModel::onEvent,
+                uiEvent = viewModel.uiEvent,
+                drawerState = drawerState,
+                onPopBackStack = { navController.popBackStack() },
+                onNavigate = { navController.navigate(it.route) })
         }
     }
 }
