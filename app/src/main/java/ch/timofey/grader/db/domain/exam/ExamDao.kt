@@ -16,6 +16,9 @@ interface ExamDao {
     @Delete
     suspend fun delete(exam: Exam)
 
+    @Query("UPDATE exam SET is_selected = :value WHERE :id LIKE id")
+    suspend fun updateIsSelected(id: UUID, value: Boolean)
+
     @Query("SELECT * FROM exam")
     fun getAll(): Flow<List<Exam>>
 

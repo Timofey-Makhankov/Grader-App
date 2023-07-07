@@ -3,6 +3,7 @@ package ch.timofey.grader.db.domain.exam
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDate
 import java.util.Date
 import java.util.UUID
 
@@ -13,7 +14,7 @@ data class Exam(
     @ColumnInfo(name = "description") val description: String?,
     @ColumnInfo(name = "grade") val grade: Double,
     @ColumnInfo(name = "weight") val weight: Double,
-    @ColumnInfo(name = "date") val date: Date,
+    @ColumnInfo(name = "date") val date: LocalDate,
     @ColumnInfo(name = "module_id") val module: UUID,
     @ColumnInfo(name = "is_selected") val isSelected: Boolean = false,
 )

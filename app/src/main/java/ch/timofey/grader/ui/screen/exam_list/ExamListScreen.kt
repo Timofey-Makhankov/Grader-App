@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.module_list
+package ch.timofey.grader.ui.screen.exam_list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -27,8 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.AppBar
+import ch.timofey.grader.ui.components.ExamCard
 import ch.timofey.grader.ui.components.FloatingActionButton
-import ch.timofey.grader.ui.components.ModuleCard
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.components.SwipeToDeleteBackground
 import ch.timofey.grader.ui.theme.spacing
@@ -39,13 +39,13 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ModuleListScreen(
-    drawerState: DrawerState,
-    state: ModuleListState,
-    onEvent: (ModuleListEvent) -> Unit,
-    onPopBackStack: () -> Unit,
+fun ExamListScreen(
+    state: ExamListState,
+    onEvent: (ExamListEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
-    onNavigate: (UiEvent.Navigate) -> Unit,
+    drawerState: DrawerState,
+    onPopBackStack: () -> Unit,
+    onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
@@ -64,69 +64,52 @@ fun ModuleListScreen(
         }
     }
     NavigationDrawer(
-        drawerState = drawerState,
-        items = NavigationDrawerItems.list,
-        currentScreen = Screen.ModuleScreen,
-        onItemClick = { menuItem ->
+        drawerState = drawerState, items = NavigationDrawerItems.list, onItemClick = { menuItem ->
             onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             scope.launch {
                 drawerState.close()
             }
-        },
+        }, currentScreen = Screen.ExamScreen
     ) {
-        FloatingActionButton(
-            onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
-            contentDescription = "Create a new Module",
-            appBar = {
-                AppBar(
-                    onNavigationIconClick = { onEvent(ModuleListEvent.OnReturnBack) },
-                    icon = Icons.Default.ArrowBack,
-                    contentDescription = "Go Back to previous Screen",
-                    appBarTitle = "Modules"
-                )
-            }
+        FloatingActionButton(onFABClick = { onEvent(ExamListEvent.OnFABClick) }, appBar = {
+            AppBar(
+                onNavigationIconClick = { onEvent(ExamListEvent.OnBackButtonClick) },
+                icon = Icons.Default.ArrowBack,
+                contentDescription = "Go Back to previous Screen",
+                appBarTitle = "Exams"
+            )
+        }, contentDescription = "Create a new Exam"
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it),
+                    .padding(it)
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(
-                    items = state.moduleList,
-                    key = { module -> module.id }
-                ) { module ->
-                    val dismissState = rememberDismissState(
-                        // This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
-                        // That's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
-                        // In this example I want a 70% Threshold and is equal to 8
-                        positionalThreshold = { value -> (value / 8).dp.toPx() }
-                    )
+                items(items = state.exams, key = { exam -> exam.id }) { exam ->
+                    val dismissState =
+                        rememberDismissState(positionalThreshold = { value -> (value / 8).dp.toPx() })
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        onEvent(ModuleListEvent.OnSwipeDelete(module))
+                        onEvent(ExamListEvent.OnSwipeDelete(exam))
                     }
-                    SwipeToDismiss(
-                        modifier = Modifier.padding(vertical = 1.dp),
+                    SwipeToDismiss(modifier = Modifier.padding(vertical = 1.dp),
                         state = dismissState,
                         directions = setOf(DismissDirection.EndToStart),
                         background = {
                             val color by animateColorAsState(
                                 targetValue = when (dismissState.targetValue) {
-                                    DismissValue.Default -> MaterialTheme.colorScheme.background
                                     DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
                                     else -> MaterialTheme.colorScheme.background
-                                }, label = "Color"
+                                }, label = "Dismiss Color Change"
                             )
                             val isVisible =
                                 dismissState.targetValue == DismissValue.DismissedToStart
                             AnimatedVisibility(
-                                visible = isVisible,
-                                enter = fadeIn(
+                                visible = isVisible, enter = fadeIn(
                                     animationSpec = TweenSpec(
                                         durationMillis = 400
                                     )
-                                ),
-                                exit = fadeOut(
+                                ), exit = fadeOut(
                                     animationSpec = TweenSpec(
                                         durationMillis = 400
                                     )
@@ -136,21 +119,16 @@ fun ModuleListScreen(
                             }
                         },
                         dismissContent = {
-                            ModuleCard(
-                                modifier = Modifier.padding(MaterialTheme.spacing.small),
-                                module = module,
-                                grade = 0.0,
-                                onCheckBoxClick = { onEvent(ModuleListEvent.OnCheckChange(module.id, !module.isSelected)) },
-                                onLongClick = {
-                                    onNavigate(
-                                        UiEvent.Navigate(
-                                            Screen.ExamScreen.withArgs(module.id.toString())
+                            ExamCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
+                                exam = exam,
+                                onCheckBoxClick = {
+                                    onEvent(
+                                        ExamListEvent.OnCheckChange(
+                                            id = exam.id, value = !exam.isSelected
                                         )
                                     )
-                                }
-                            )
-                        }
-                    )
+                                })
+                        })
                 }
             }
         }

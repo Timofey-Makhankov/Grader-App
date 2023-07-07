@@ -16,6 +16,10 @@ class ExamRepositoryImpl(private val examDao: ExamDao) : ExamRepository {
         return examDao.getById(id)
     }
 
+    override suspend fun updateIsSelectedExam(id: UUID, value: Boolean) {
+        examDao.updateIsSelected(id, value)
+    }
+
     override fun getAllExams(): Flow<List<Exam>> {
         return examDao.getAll()
     }

@@ -8,6 +8,7 @@ sealed class Screen(var route: String) {
     object CreateDivisionScreen : Screen("create_division_screen")
     object CreateModuleScreen : Screen("create_module_screen")
     object ExamScreen : Screen("exam_screen")
+    object CreateExamScreen : Screen("create_exam_screen")
     object SettingsScreen : Screen("settings_screen")
     object ShareScreen : Screen("share_screen")
     object CalculatorScreen : Screen("calculator_screen")
