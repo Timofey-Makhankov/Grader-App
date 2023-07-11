@@ -4,5 +4,6 @@ import ch.timofey.grader.db.domain.exam.Exam
 
 data class ExamListState(
     val exams: List<Exam> = emptyList(),
-    val average_grade: String = ""
-)
+    val averageGrade: String = "",
+    val averageGradeIsZero: Boolean? = null
+    )
