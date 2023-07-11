@@ -3,19 +3,16 @@ package ch.timofey.grader.ui.screen.exam_list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.utils.getAverage
-import ch.timofey.grader.ui.utils.getAverageGrade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +39,14 @@ class ExamListViewModel @Inject constructor(
                     val weightList = validExams.map { it.weight }
                     val gradeList = validExams.map { it.grade }
                     val averageGrade =  getAverage(grades = gradeList, weights = weightList).toString()
-                    _uiState.value = _uiState.value.copy(average_grade = averageGrade)
+                    _uiState.value = _uiState.value.copy(averageGrade = averageGrade)
+                    if (_uiState.value.averageGrade.toDouble() == 0.0){
+                        _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
+                    } else {
+                        _uiState.value = _uiState.value.copy(averageGradeIsZero = false)
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
                 }
             }
         }
