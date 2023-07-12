@@ -21,6 +21,10 @@ class ModuleRepositoryImpl(private val moduleDao: ModuleDao) : ModuleRepository 
         moduleDao.updateIsSelected(id, value)
     }
 
+    override suspend fun updateDivisionGradeById(id: UUID, value: Double) {
+        moduleDao.updateDivisionGradeById(id, value)
+    }
+
     override fun getAllModules(): Flow<List<Module>> {
         return moduleDao.getAll()
     }

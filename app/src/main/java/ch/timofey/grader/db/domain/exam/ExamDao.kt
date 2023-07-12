@@ -24,4 +24,7 @@ interface ExamDao {
 
     @Query("SELECT * FROM exam WHERE id LIKE :id")
     suspend fun getById(id: UUID): Exam?
+
+    @Query("UPDATE module SET grade = :value WHERE :id LIKE id")
+    suspend fun updateModuleGradeById(id: UUID, value: Double)
 }

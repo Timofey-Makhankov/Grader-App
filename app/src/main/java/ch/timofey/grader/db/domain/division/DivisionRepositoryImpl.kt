@@ -25,6 +25,10 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
         divisionDao.updateIsSelected(id, value)
     }
 
+    override suspend fun updateSchoolGradeById(id: UUID, value: Double) {
+        divisionDao.updateSchoolGradeById(id, value)
+    }
+
     override fun getAllWithModules(): Flow<List<DivisionWithModules>> {
         return divisionDao.getAllWithModules()
     }

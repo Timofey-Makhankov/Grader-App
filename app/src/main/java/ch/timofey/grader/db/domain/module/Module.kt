@@ -14,4 +14,5 @@ data class Module(
     @ColumnInfo(name = "teacher_firstname", defaultValue = "") val teacherFirstname: String,
     @ColumnInfo(name = "division_id") val divisionId: UUID,
     @ColumnInfo(name = "is_selected") val isSelected: Boolean = false,
+    @ColumnInfo(name = "grade", defaultValue = "0.0") val grade: Double = 0.0,
 )
