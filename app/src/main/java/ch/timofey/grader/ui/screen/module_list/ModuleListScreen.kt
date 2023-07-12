@@ -2,11 +2,16 @@ package ch.timofey.grader.ui.screen.module_list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -15,6 +20,7 @@ import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismiss
@@ -28,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.AppBar
+import ch.timofey.grader.ui.components.BottomAppBar
 import ch.timofey.grader.ui.components.FloatingActionButton
 import ch.timofey.grader.ui.components.cards.ModuleCard
 import ch.timofey.grader.ui.components.NavigationDrawer
@@ -76,11 +83,87 @@ fun ModuleListScreen(
         },
     ) {
         Scaffold(
+            floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
-                FloatingActionButton(
-                    onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
-                    contentDescription = "Create a new Module",
-                )
+                state.averageGradeIsZero?.let {
+                    AnimatedVisibility(
+                        visible = it,
+                        enter = slideInHorizontally(
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                delayMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) { fullWidth -> -fullWidth / 3 }
+                                + fadeIn(
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                delayMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ),
+                        exit = slideOutHorizontally(
+                            animationSpec = tween(
+                                durationMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) { fullWidth -> fullWidth / 3 }
+                                + fadeOut(
+                            animationSpec = tween(
+                                durationMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        )
+                    ) {
+                        FloatingActionButton(
+                            modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
+                            onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
+                            contentDescription = "Create a new Module",
+                        )
+                    }
+                }
+            },
+            bottomBar = {
+                state.averageGradeIsZero?.let {
+                    AnimatedVisibility(
+                        visible = !it,
+                        enter = slideInHorizontally(
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                delayMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) { fullWidth -> -fullWidth / 3 }
+                                + fadeIn(
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                delayMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ),
+                        exit = slideOutHorizontally(
+                            animationSpec = tween(
+                                durationMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) { fullWidth -> fullWidth / 3 }
+                                + fadeOut(
+                            animationSpec = tween(
+                                durationMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        )
+                    ) {
+                        BottomAppBar(
+                            text = "Average Grade: ${state.averageGrade}",
+                            floatingActionButton = {
+                                FloatingActionButton(
+                                    onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
+                                    contentDescription = "Create a new Exam Card"
+                                )
+                            })
+                    }
+                }
             },
             topBar = {
                 AppBar(
@@ -144,7 +227,6 @@ fun ModuleListScreen(
                             ModuleCard(
                                 modifier = Modifier.padding(MaterialTheme.spacing.small),
                                 module = module,
-                                grade = 0.0,
                                 onCheckBoxClick = {
                                     onEvent(
                                         ModuleListEvent.OnCheckChange(

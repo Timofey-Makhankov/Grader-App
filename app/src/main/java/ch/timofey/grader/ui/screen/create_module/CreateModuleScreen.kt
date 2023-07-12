@@ -3,7 +3,10 @@ package ch.timofey.grader.ui.screen.create_module
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -50,6 +53,7 @@ fun CreateModuleScreen(
     }) {
         Column(
             modifier = Modifier
+                .verticalScroll(state = rememberScrollState())
                 .padding(it)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -57,23 +61,38 @@ fun CreateModuleScreen(
             Text(
                 text = "Create Module", style = MaterialTheme.typography.titleLarge
             )
-            OutlinedTextField(modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.name,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnNameChange(value)) },
                 singleLine = true,
                 label = { Text(text = "Module name") })
-            OutlinedTextField(modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.teacherFirstname,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnTeacherFirstnameChange(value)) },
                 singleLine = true,
                 label = { Text(text = "Teacher Firstname") })
-            OutlinedTextField(modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.teacherLastname,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnTeacherLastnameChange(value)) },
                 singleLine = true,
                 label = { Text(text = "Teacher Lastname") })
             OutlinedTextField(
-                modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnDescriptionChange(value)) },
                 label = { Text(text = "Module description") },

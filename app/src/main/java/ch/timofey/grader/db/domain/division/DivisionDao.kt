@@ -27,6 +27,9 @@ interface DivisionDao {
     @Query("UPDATE division SET is_selected = :value WHERE :id LIKE id")
     suspend fun updateIsSelected(id: UUID, value: Boolean)
 
+    @Query("UPDATE school SET grade = :value WHERE :id LIKE id")
+    suspend fun updateSchoolGradeById(id: UUID, value: kotlin.Double)
+
     @Transaction
     @Query("SELECT * FROM division")
     fun getAllWithModules(): Flow<List<DivisionWithModules>>

@@ -9,6 +9,7 @@ interface ModuleRepository {
     suspend fun deleteModule(module: Module)
     suspend fun getModuleById(id: UUID): Module?
     suspend fun updateIsSelectedModule(id: UUID, value: Boolean)
+    suspend fun updateDivisionGradeById(id: UUID, value: Double)
     fun getAllModules(): Flow<List<Module>>
     fun getAllModulesWithExams(): Flow<List<ModuleWithExams>>
     suspend fun getModuleWithExamsById(id: UUID): ModuleWithExams?

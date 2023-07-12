@@ -37,6 +37,9 @@ fun getGradeAndWeightLists(exams: List<Exam>): ExtractedExam{
 
 fun getAverageGrade(grades: List<Double>): Double{
     var total = 0.0
+    if (grades.isEmpty()){
+        return total
+    }
     grades.forEach { grade ->
         total += grade
     }

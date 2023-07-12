@@ -3,11 +3,16 @@ package ch.timofey.grader.ui.screen.school_list
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -17,8 +22,11 @@ import androidx.compose.material3.DismissValue
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.rememberDrawerState
@@ -33,10 +41,12 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.AppBar
+import ch.timofey.grader.ui.components.BottomAppBar
 import ch.timofey.grader.ui.components.FloatingActionButton
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.components.cards.SchoolCard
 import ch.timofey.grader.ui.components.SwipeToDeleteBackground
+import ch.timofey.grader.ui.screen.division_list.DivisionListEvent
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -54,6 +64,7 @@ fun SchoolListScreen(
     onEvent: (SchoolListEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
@@ -61,6 +72,17 @@ fun SchoolListScreen(
             when (event) {
                 is UiEvent.Navigate -> {
                     onNavigate(event)
+                }
+
+                is UiEvent.ShowSnackBar -> {
+                    val result = snackBarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.action,
+                        withDismissAction = event.withDismissAction
+                    )
+                    if (result == SnackbarResult.ActionPerformed){
+                        onEvent(SchoolListEvent.OnUndoDeleteClick)
+                    }
                 }
 
                 else -> Unit
@@ -81,11 +103,87 @@ fun SchoolListScreen(
             }
         }) {
         Scaffold(
+            floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
-                FloatingActionButton(
-                    onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
-                    contentDescription = "Create a new School",
-                )
+                state.averageGradeIsZero?.let {
+                    AnimatedVisibility(
+                        visible = it,
+                        enter = slideInHorizontally(
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                delayMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) { fullWidth -> -fullWidth / 3 }
+                                + fadeIn(
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                delayMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ),
+                        exit = slideOutHorizontally(
+                            animationSpec = tween(
+                                durationMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) { fullWidth -> fullWidth / 3 }
+                                + fadeOut(
+                            animationSpec = tween(
+                                durationMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        )
+                    ) {
+                        FloatingActionButton(
+                            modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
+                            onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
+                            contentDescription = "Create a new School",
+                        )
+                    }
+                }
+            },
+            bottomBar = {
+                state.averageGradeIsZero?.let {
+                    AnimatedVisibility(
+                        visible = !it,
+                        enter = slideInHorizontally(
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                delayMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) { fullWidth -> -fullWidth / 3 }
+                                + fadeIn(
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                delayMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ),
+                        exit = slideOutHorizontally(
+                            animationSpec = tween(
+                                durationMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) { fullWidth -> fullWidth / 3 }
+                                + fadeOut(
+                            animationSpec = tween(
+                                durationMillis = 100,
+                                easing = FastOutSlowInEasing
+                            )
+                        )
+                    ) {
+                        BottomAppBar(
+                            text = "Average Grade: ${state.averageGrade}",
+                            floatingActionButton = {
+                                FloatingActionButton(
+                                    onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
+                                    contentDescription = "Create a new Exam Card"
+                                )
+                            })
+                    }
+                }
             },
             topBar = {
                 AppBar(
@@ -152,7 +250,6 @@ fun SchoolListScreen(
                         dismissContent = {
                             SchoolCard(
                                 modifier = Modifier.padding(MaterialTheme.spacing.small),
-                                grade = 0.0,
                                 school = school,
                                 onCheckBoxClick = {
                                     onEvent(
@@ -198,32 +295,37 @@ private fun PreviewMainScreen() {
                         address = "Ausstellungsstrasse 70",
                         zipCode = "8005",
                         city = "Zürich",
+                        grade = 0.0
                     ), School(
                         id = UUID.randomUUID(),
                         name = "Schulhaus Riedenhalden",
                         description = null,
                         address = "Riedenhaldenstrasse 12",
                         zipCode = "8046",
-                        city = "Zürich"
+                        city = "Zürich",
+                        grade = 0.0
                     ), School(
                         id = UUID.randomUUID(),
                         name = "Berufsmaturitätsschule Zürich",
                         description = null,
                         address = "",
                         zipCode = "",
-                        city = "Zürich"
+                        city = "Zürich",
+                        grade = 0.0
                     ), School(
                         id = UUID.randomUUID(),
                         name = "Noser Young",
                         description = null,
                         address = "Herostrasse 12",
                         zipCode = "",
-                        city = "Zürich"
+                        city = "Zürich",
+                        grade = 0.0
                     )
                 )
             ),
             uiEvent = emptyFlow(),
             onNavigate = {},
+            snackBarHostState = SnackbarHostState()
         )
     }
 }
@@ -242,6 +344,7 @@ private fun PreviewMainScreenDarkMode() {
             state = SchoolListState(),
             uiEvent = emptyFlow(),
             onNavigate = {},
+            snackBarHostState = SnackbarHostState()
         )
     }
 }

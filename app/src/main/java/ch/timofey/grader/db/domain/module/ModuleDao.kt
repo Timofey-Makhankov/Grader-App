@@ -27,6 +27,9 @@ interface ModuleDao {
     @Query("UPDATE module SET is_selected = :value WHERE :id LIKE id")
     suspend fun updateIsSelected(id: UUID, value: Boolean)
 
+    @Query("UPDATE division SET grade = :value WHERE :id LIKE id")
+    suspend fun updateDivisionGradeById(id: UUID, value: Double)
+
     @Transaction
     @Query("SELECT * FROM module")
     fun getAllWithExams(): Flow<List<ModuleWithExams>>

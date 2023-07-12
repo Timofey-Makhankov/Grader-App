@@ -2,9 +2,10 @@ package ch.timofey.grader.ui.screen.create_exam
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -21,8 +22,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -69,25 +68,32 @@ fun CreateExamScreen(
     ) {
         Column(
             modifier = Modifier
+                .verticalScroll(state = rememberScrollState())
                 .padding(it)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "Create Exam", style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
-                modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.name,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnNameChange(value)) },
                 maxLines = 2,
                 label = { Text(text = "Exam Name") }
             )
             OutlinedTextField(
-                modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.date,
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(text = "Exam taken") },
-                placeholder = { Text(text = "YYYY-MM-DD")},
+                placeholder = { Text(text = "YYYY-MM-DD") },
                 trailingIcon = {
                     IconButton(
                         onClick = { openDialog.value = true }
@@ -97,26 +103,35 @@ fun CreateExamScreen(
                 }
             )
             OutlinedTextField(
-                modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.grade,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnGradeChange(value)) },
                 singleLine = true,
-                label = { Text(text = "Exam Grade") }
+                label = { Text(text = "Grade") }
             )
             OutlinedTextField(
-                modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.weight,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnWeightChange(value)) },
                 singleLine = true,
-                label = { Text(text = "Exam Weight") }
+                label = { Text(text = "Weight") }
             )
             OutlinedTextField(
-                modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnDescriptionChange(value)) },
                 singleLine = true,
                 maxLines = 4,
-                label = { Text(text = "Exam Description") }
+                label = { Text(text = "Description") }
             )
             Button(
                 modifier = Modifier.padding(
@@ -131,7 +146,13 @@ fun CreateExamScreen(
                 DatePickerDialog(
                     onDismissRequest = { openDialog.value = false },
                     confirmButton = {
-                        TextButton(onClick = { openDialog.value = false; onEvent(CreateExamEvent.OnSetDate(datePickerState.selectedDateMillis!!))}) {
+                        TextButton(onClick = {
+                            openDialog.value = false; onEvent(
+                            CreateExamEvent.OnSetDate(
+                                datePickerState.selectedDateMillis!!
+                            )
+                        )
+                        }) {
                             Text(text = "OK")
                         }
                     },

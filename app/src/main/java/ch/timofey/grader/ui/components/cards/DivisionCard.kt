@@ -38,7 +38,6 @@ import java.util.UUID
 fun DivisionCard(
     modifier: Modifier = Modifier,
     division: Division,
-    grade: Double,
     isOpen: Boolean = false,
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
@@ -107,7 +106,7 @@ fun DivisionCard(
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "Average Grade: $grade",
+                    text = "Average Grade: ${division.grade}",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -126,9 +125,9 @@ private fun DivisionCardPreview(){
                 description = "lorem Impsum",
                 schoolYear = 2024,
                 schoolId = UUID.randomUUID(),
-                isSelected = false
+                isSelected = false,
+                grade = 0.0
             ),
-            grade = 0.0,
             onLongClick = {},
             onCheckBoxClick = {}
         )
@@ -149,9 +148,9 @@ private fun DivisionCardDarkModePreview(){
                 description = "lorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsum",
                 schoolYear = 2022,
                 schoolId = UUID.randomUUID(),
-                isSelected = true
+                isSelected = true,
+                grade = 0.0
             ),
-            grade = 0.0,
             onLongClick = {},
             onCheckBoxClick = {},
             isOpen = true

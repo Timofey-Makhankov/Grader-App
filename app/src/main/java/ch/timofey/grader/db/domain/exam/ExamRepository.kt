@@ -8,5 +8,6 @@ interface ExamRepository {
     suspend fun deleteExam(exam: Exam)
     suspend fun getExamById(id: UUID): Exam?
     suspend fun updateIsSelectedExam(id: UUID, value: Boolean)
+    suspend fun updateModuleGradeById(id: UUID, value: Double)
     fun getAllExams(): Flow<List<Exam>>
 }

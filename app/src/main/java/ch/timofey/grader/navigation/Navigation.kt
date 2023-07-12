@@ -53,6 +53,7 @@ fun Navigation() {
                 onNavigate = {
                     navController.navigate(it.route)
                 },
+                snackBarHostState = snackBarHostState
             )
         }
         composable(route = Screen.CreateSchoolScreen.route) {

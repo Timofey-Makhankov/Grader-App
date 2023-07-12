@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -56,6 +58,7 @@ fun CreateDivisionScreen(
     ) {
         Column(
             modifier = Modifier
+                .verticalScroll(state = rememberScrollState())
                 .padding(it)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -65,18 +68,20 @@ fun CreateDivisionScreen(
                 style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(
-                modifier = Modifier.padding(
-                    top = MaterialTheme.spacing.medium
-                ),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.name,
                 label = { Text(text = "Division Name") },
                 onValueChange = { name -> onEvent(CreateDivisionEvent.OnNameChange(name)) },
                 singleLine = true
             )
             OutlinedTextField(
-                modifier = Modifier.padding(
-                    top = MaterialTheme.spacing.medium
-                ),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.description,
                 label = { Text(text = "Division Description") },
                 onValueChange = { description ->
@@ -90,9 +95,10 @@ fun CreateDivisionScreen(
                 maxLines = 4
             )
             OutlinedTextField(
-                modifier = Modifier.padding(
-                    top = MaterialTheme.spacing.medium
-                ),
+                modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
                 value = state.year,
                 label = { Text(text = "Division Year") },
                 onValueChange = { year ->

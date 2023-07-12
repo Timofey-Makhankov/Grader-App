@@ -42,8 +42,7 @@ fun SchoolCard(
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
     isOpen: Boolean = false,
-    school: School,
-    grade: Double
+    school: School
 ) {
     val checkedState = remember { mutableStateOf(school.isSelected) }
     val expanded = remember { mutableStateOf(isOpen) }
@@ -98,7 +97,7 @@ fun SchoolCard(
                 softWrap = true,
                 text = school.description ?: "",
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = if(expanded.value) 4 else 2,
+                maxLines = if (expanded.value) 4 else 2,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
@@ -119,7 +118,7 @@ fun SchoolCard(
             }
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Average Grade: $grade",
+                text = "Average Grade: ${school.grade}",
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.End
             )
@@ -141,7 +140,6 @@ private fun PreviewSchoolCard() {
                 "",
                 isSelected = true
             ),
-            grade = 6.0,
             onCheckBoxClick = {},
             onLongClick = {}
         )
@@ -165,7 +163,6 @@ private fun PreviewSchoolCardDarkMode() {
                 "8046",
                 "Zürich"
             ),
-            grade = 5.0,
             onCheckBoxClick = {},
             onLongClick = {}
         )

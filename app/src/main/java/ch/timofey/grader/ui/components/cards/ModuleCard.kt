@@ -39,7 +39,6 @@ import java.util.UUID
 fun ModuleCard(
     modifier: Modifier = Modifier,
     module: Module,
-    grade: Double,
     isOpen: Boolean = false,
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
@@ -107,7 +106,7 @@ fun ModuleCard(
             }
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Average Grade: $grade",
+                text = "Average Grade: ${module.grade}",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.End
             )
@@ -127,9 +126,8 @@ private fun ModuleCardPreview(){
                 isSelected = false,
                 divisionId = UUID.randomUUID(),
                 teacherFirstname = "Daniela",
-                teacherLastname = "Boomer"
+                teacherLastname = "Boomer",
             ),
-            grade = 0.0,
             onCheckBoxClick = {},
             onLongClick = {},
         )
@@ -148,9 +146,8 @@ private fun ModuleCardDarkModePreview(){
                 isSelected = true,
                 divisionId = UUID.randomUUID(),
                 teacherFirstname = "Daniela",
-                teacherLastname = "Boomer"
+                teacherLastname = "Boomer",
             ),
-            grade = 0.0,
             isOpen = true,
             onCheckBoxClick = {},
             onLongClick = {},
