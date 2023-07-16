@@ -33,8 +33,8 @@ import ch.timofey.grader.ui.screen.module_list.ModuleListViewModel
 import ch.timofey.grader.ui.screen.school_list.SchoolListScreen
 import ch.timofey.grader.ui.screen.school_list.SchoolListViewModel
 import ch.timofey.grader.ui.screen.settings.SettingsViewModel
-import ch.timofey.grader.ui.screen.share.ShareScreen
-import ch.timofey.grader.ui.screen.share.ShareViewModel
+import ch.timofey.grader.ui.screen.share.AboutScreen
+import ch.timofey.grader.ui.screen.share.AboutViewModel
 
 @Composable
 fun Navigation() {
@@ -79,8 +79,8 @@ fun Navigation() {
                 })
         }
         composable(route = Screen.ShareScreen.route) {
-            val viewModel = hiltViewModel<ShareViewModel>()
-            ShareScreen(drawerState = drawerState, uiEvent = viewModel.uiEvent, onNavigate = {
+            val viewModel = hiltViewModel<AboutViewModel>()
+            AboutScreen(drawerState = drawerState, uiEvent = viewModel.uiEvent, onNavigate = {
                 navController.navigate(it.route)
             })
         }

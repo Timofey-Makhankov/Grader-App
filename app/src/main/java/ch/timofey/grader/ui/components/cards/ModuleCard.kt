@@ -104,12 +104,14 @@ fun ModuleCard(
                     )
                 }
             }
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Average Grade: ${module.grade}",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.End
-            )
+            if (module.grade != 0.0) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Average Grade: ${module.grade}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.End
+                )
+            }
         }
     }
 }
@@ -147,6 +149,7 @@ private fun ModuleCardDarkModePreview(){
                 divisionId = UUID.randomUUID(),
                 teacherFirstname = "Daniela",
                 teacherLastname = "Boomer",
+                grade = 3.9
             ),
             isOpen = true,
             onCheckBoxClick = {},

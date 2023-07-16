@@ -13,6 +13,10 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
         divisionDao.delete(division)
     }
 
+    override suspend fun updateDivision(division: Division) {
+        divisionDao.update(division)
+    }
+
     override suspend fun getDivision(id: UUID): Division? {
         return divisionDao.getById(id)
     }
@@ -23,6 +27,10 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
 
     override suspend fun updateIsSelectedDivision(id: UUID, value: Boolean) {
         divisionDao.updateIsSelected(id, value)
+    }
+
+    override suspend fun updateOnDeleteDivision(id: UUID, value: Boolean) {
+        divisionDao.updateOnDelete(id, value)
     }
 
     override suspend fun updateSchoolGradeById(id: UUID, value: Double) {

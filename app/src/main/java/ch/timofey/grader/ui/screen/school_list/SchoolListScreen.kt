@@ -46,7 +46,6 @@ import ch.timofey.grader.ui.components.FloatingActionButton
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.components.cards.SchoolCard
 import ch.timofey.grader.ui.components.SwipeToDeleteBackground
-import ch.timofey.grader.ui.screen.division_list.DivisionListEvent
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -80,7 +79,7 @@ fun SchoolListScreen(
                         actionLabel = event.action,
                         withDismissAction = event.withDismissAction
                     )
-                    if (result == SnackbarResult.ActionPerformed){
+                    if (result == SnackbarResult.ActionPerformed) {
                         onEvent(SchoolListEvent.OnUndoDeleteClick)
                     }
                 }

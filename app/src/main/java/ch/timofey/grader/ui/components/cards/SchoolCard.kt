@@ -81,7 +81,7 @@ fun SchoolCard(
                 Text(
                     text = school.name,
                     style = MaterialTheme.typography.titleLarge,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Checkbox(
@@ -116,12 +116,14 @@ fun SchoolCard(
                     )
                 }
             }
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Average Grade: ${school.grade}",
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.End
-            )
+            if (school.grade != 0.0){
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Average Grade: ${school.grade}",
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.End
+                )
+            }
         }
     }
 }
@@ -138,7 +140,8 @@ private fun PreviewSchoolCard() {
                 "",
                 "",
                 "",
-                isSelected = true
+                isSelected = true,
+                grade = 5.6
             ),
             onCheckBoxClick = {},
             onLongClick = {}

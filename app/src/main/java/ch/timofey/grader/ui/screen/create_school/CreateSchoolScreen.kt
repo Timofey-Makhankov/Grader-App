@@ -84,7 +84,6 @@ fun CreateSchoolScreen(
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
-                singleLine = true,
                 isError = !state.validName,
                 supportingText = {
                     if (!state.validName) {
@@ -94,7 +93,8 @@ fun CreateSchoolScreen(
                             color = MaterialTheme.colorScheme.error
                         )
                     }
-                }
+                },
+                minLines = 2
             )
             OutlinedTextField(
                 value = state.address,
@@ -144,8 +144,7 @@ fun CreateSchoolScreen(
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .padding(top = MaterialTheme.spacing.medium)
                     .fillMaxWidth(),
-                minLines = 4,
-                maxLines = 4
+                minLines = 6,
             )
             Button(
                 onClick = { onEvent(CreateSchoolEvent.OnCreateSchool) },

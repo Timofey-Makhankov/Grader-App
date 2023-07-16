@@ -12,12 +12,20 @@ class ExamRepositoryImpl(private val examDao: ExamDao) : ExamRepository {
         examDao.delete(exam)
     }
 
+    override suspend fun updateExam(exam: Exam) {
+        examDao.update(exam)
+    }
+
     override suspend fun getExamById(id: UUID): Exam? {
         return examDao.getById(id)
     }
 
     override suspend fun updateIsSelectedExam(id: UUID, value: Boolean) {
         examDao.updateIsSelected(id, value)
+    }
+
+    override suspend fun updateOnDelete(id: UUID, value: Boolean) {
+        examDao.updateOnDelete(id, value)
     }
 
     override suspend fun updateModuleGradeById(id: UUID, value: Double) {

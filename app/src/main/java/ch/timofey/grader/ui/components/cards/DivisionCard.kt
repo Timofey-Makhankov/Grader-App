@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.db.domain.division.Division
@@ -41,6 +42,7 @@ fun DivisionCard(
     isOpen: Boolean = false,
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ){
     val checkedState = remember { mutableStateOf(division.isSelected) }
     val expanded = remember { mutableStateOf(isOpen) }
@@ -60,7 +62,7 @@ fun DivisionCard(
             )
             .then(modifier),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = containerColor,
         ),
         shape = MaterialTheme.shapes.large
     ) {
@@ -105,10 +107,12 @@ fun DivisionCard(
                     text = "${division.schoolYear}",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Text(
-                    text = "Average Grade: ${division.grade}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                if (division.grade != 0.0){
+                    Text(
+                        text = "Average Grade: ${division.grade}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
     }
@@ -149,7 +153,7 @@ private fun DivisionCardDarkModePreview(){
                 schoolYear = 2022,
                 schoolId = UUID.randomUUID(),
                 isSelected = true,
-                grade = 0.0
+                grade = 4.0
             ),
             onLongClick = {},
             onCheckBoxClick = {},

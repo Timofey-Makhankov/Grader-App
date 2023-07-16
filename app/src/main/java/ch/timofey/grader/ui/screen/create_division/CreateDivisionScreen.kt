@@ -82,23 +82,6 @@ fun CreateDivisionScreen(
                     .padding(top = MaterialTheme.spacing.medium)
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
-                value = state.description,
-                label = { Text(text = "Division Description") },
-                onValueChange = { description ->
-                    onEvent(
-                        CreateDivisionEvent.OnDescriptionChange(
-                            description
-                        )
-                    )
-                },
-                minLines = 1,
-                maxLines = 4
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
                 value = state.year,
                 label = { Text(text = "Division Year") },
                 onValueChange = { year ->
@@ -117,6 +100,21 @@ fun CreateDivisionScreen(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
 
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = MaterialTheme.spacing.large)
+                    .fillMaxWidth(),
+                value = state.description,
+                label = { Text(text = "Division Description") },
+                onValueChange = { description ->
+                    onEvent(
+                        CreateDivisionEvent.OnDescriptionChange(
+                            description
+                        )
+                    )
+                },
+                minLines = 6
             )
             Button(
                 modifier = Modifier.padding(

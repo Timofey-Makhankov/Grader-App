@@ -2,8 +2,8 @@ package ch.timofey.grader.ui.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.icons.Calculate
 import ch.timofey.grader.ui.components.icons.Help
@@ -29,13 +29,13 @@ object NavigationDrawerItems {
             title = "Help",
             contentDescription = "Go to Help Screen",
             icon = Icons.Help,
-            onNavigate = "" // TODO
+            onNavigate = Screen.WalkthroughScreen.route
         ),
         MenuItem(
-            id = "share",
-            title = "Share",
+            id = "about",
+            title = "About",
             contentDescription = "Go to Share Screen",
-            icon = Icons.Default.Share,
+            icon = Icons.Default.Info,
             onNavigate = Screen.ShareScreen.route
         ),
         MenuItem(

@@ -13,12 +13,20 @@ class ModuleRepositoryImpl(private val moduleDao: ModuleDao) : ModuleRepository 
         moduleDao.delete(module)
     }
 
+    override suspend fun updateModule(module: Module) {
+        moduleDao.update(module)
+    }
+
     override suspend fun getModuleById(id: UUID): Module? {
         return moduleDao.getById(id)
     }
 
     override suspend fun updateIsSelectedModule(id: UUID, value: Boolean) {
         moduleDao.updateIsSelected(id, value)
+    }
+
+    override suspend fun updateOnDeleteModule(id: UUID, value: Boolean) {
+        moduleDao.updateOnDelete(id, value)
     }
 
     override suspend fun updateDivisionGradeById(id: UUID, value: Double) {

@@ -1,5 +1,5 @@
 package ch.timofey.grader.ui.screen.share
 
-sealed class ShareEvent {
+sealed class AboutEvent {
 
 }

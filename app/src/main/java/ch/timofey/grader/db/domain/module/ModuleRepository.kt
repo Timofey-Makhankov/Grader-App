@@ -7,8 +7,10 @@ import java.util.UUID
 interface ModuleRepository {
     suspend fun saveModule(module: Module)
     suspend fun deleteModule(module: Module)
+    suspend fun updateModule(module: Module)
     suspend fun getModuleById(id: UUID): Module?
     suspend fun updateIsSelectedModule(id: UUID, value: Boolean)
+    suspend fun updateOnDeleteModule(id: UUID, value: Boolean)
     suspend fun updateDivisionGradeById(id: UUID, value: Double)
     fun getAllModules(): Flow<List<Module>>
     fun getAllModulesWithExams(): Flow<List<ModuleWithExams>>

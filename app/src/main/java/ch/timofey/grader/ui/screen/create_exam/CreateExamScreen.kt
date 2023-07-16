@@ -34,6 +34,7 @@ import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlin.math.min
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,7 +82,7 @@ fun CreateExamScreen(
                     .fillMaxWidth(),
                 value = state.name,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnNameChange(value)) },
-                maxLines = 2,
+                minLines = 2,
                 label = { Text(text = "Exam Name") }
             )
             OutlinedTextField(
@@ -129,8 +130,7 @@ fun CreateExamScreen(
                     .fillMaxWidth(),
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnDescriptionChange(value)) },
-                singleLine = true,
-                maxLines = 4,
+                minLines = 4,
                 label = { Text(text = "Description") }
             )
             Button(

@@ -15,4 +15,5 @@ data class School(
     @ColumnInfo(name = "city") val city: String,
     @ColumnInfo(name = "is_selected") val isSelected: Boolean = false,
     @ColumnInfo(name = "grade", defaultValue = "0.0") val grade: Double = 0.0,
+    @ColumnInfo(name = "on_delete", defaultValue = "false") val onDelete: Boolean = false
 )

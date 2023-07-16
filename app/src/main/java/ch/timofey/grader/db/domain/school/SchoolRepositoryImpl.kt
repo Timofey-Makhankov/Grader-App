@@ -13,12 +13,20 @@ class SchoolRepositoryImpl(private val schoolDao: SchoolDao) : SchoolRepository 
         schoolDao.delete(school)
     }
 
+    override suspend fun updateSchool(school: School) {
+        schoolDao.update(school)
+    }
+
     override suspend fun getSchoolById(id: UUID): School? {
         return schoolDao.getById(id)
     }
 
     override suspend fun updateIsSelectedSchool(id: UUID, value: Boolean) {
         return schoolDao.updateIsSelected(id, value)
+    }
+
+    override suspend fun updateOnDeleteSchool(id: UUID, value: Boolean) {
+        schoolDao.updateOnDelete(id, value)
     }
 
     override fun getAllSchools(): Flow<List<School>> {

@@ -10,12 +10,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShareViewModel @Inject constructor() : ViewModel() {
+class AboutViewModel @Inject constructor() : ViewModel() {
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun onEvent(event: ShareEvent) {
+    fun onEvent(event: AboutEvent) {
 
     }
 
