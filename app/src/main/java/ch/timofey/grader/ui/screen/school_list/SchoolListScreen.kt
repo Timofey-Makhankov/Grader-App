@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SwipeToDismiss
@@ -33,6 +34,8 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,6 +69,12 @@ fun SchoolListScreen(
     snackBarHostState: SnackbarHostState
 ) {
     val scope = rememberCoroutineScope()
+    val deletedSchoolId = remember { mutableStateOf<UUID?>(value = null) }
+    val dismissState = rememberDismissState(
+        //This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
+        //that's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
+        //In this example I want a 70% Threshold and is equal to 8
+        positionalThreshold = { value -> (value / 8).dp.toPx() })
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -74,13 +83,15 @@ fun SchoolListScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
+                    println("Inside show snack bar")
                     val result = snackBarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = event.action,
                         withDismissAction = event.withDismissAction
                     )
                     if (result == SnackbarResult.ActionPerformed) {
-                        onEvent(SchoolListEvent.OnUndoDeleteClick)
+                        dismissState.reset()
+                        onEvent(SchoolListEvent.OnUndoDeleteClick(deletedSchoolId.value!!))
                     }
                 }
 
@@ -88,8 +99,7 @@ fun SchoolListScreen(
             }
         }
     }
-    NavigationDrawer(
-        drawerState = drawerState,
+    NavigationDrawer(drawerState = drawerState,
         currentScreen = Screen.MainScreen,
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
@@ -101,39 +111,31 @@ fun SchoolListScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(
+        Scaffold(snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
-                    AnimatedVisibility(
-                        visible = it,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                delayMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) { fullWidth -> -fullWidth / 3 }
-                                + fadeIn(
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                delayMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ),
-                        exit = slideOutHorizontally(
-                            animationSpec = tween(
-                                durationMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) { fullWidth -> fullWidth / 3 }
-                                + fadeOut(
-                            animationSpec = tween(
-                                durationMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
+                    AnimatedVisibility(visible = it, enter = slideInHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
                         )
-                    ) {
+                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
+                        )
+                    ), exit = slideOutHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    )) {
                         FloatingActionButton(
                             modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                             onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
@@ -144,35 +146,27 @@ fun SchoolListScreen(
             },
             bottomBar = {
                 state.averageGradeIsZero?.let {
-                    AnimatedVisibility(
-                        visible = !it,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                delayMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) { fullWidth -> -fullWidth / 3 }
-                                + fadeIn(
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                delayMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ),
-                        exit = slideOutHorizontally(
-                            animationSpec = tween(
-                                durationMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) { fullWidth -> fullWidth / 3 }
-                                + fadeOut(
-                            animationSpec = tween(
-                                durationMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
+                    AnimatedVisibility(visible = !it, enter = slideInHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
                         )
-                    ) {
+                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
+                        )
+                    ), exit = slideOutHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    )) {
                         BottomAppBar(
                             text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
@@ -195,30 +189,20 @@ fun SchoolListScreen(
                     contentDescription = "Toggle Drawer",
                     appBarTitle = "Schools"
                 )
-            }
-        ) {
+            }) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(
-                    items = state.schoolList,
-                    key = { school -> school.id }
-                ) { school ->
-                    val dismissState = rememberDismissState(
-                        //This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
-                        //that's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
-                        //In this example I want a 70% Threshold and is equal to 8
-                        positionalThreshold = { value -> (value / 8).dp.toPx() }
-                    )
+                items(items = state.schoolList, key = { school -> school.id }) { school ->
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                         println("Tried to delete School: $school")
-                        onEvent(SchoolListEvent.OnSwipeDelete(school))
+                        deletedSchoolId.value = school.id
+                        onEvent(SchoolListEvent.OnSwipeDelete(school.id))
                     }
-                    SwipeToDismiss(
-                        state = dismissState,
+                    SwipeToDismiss(state = dismissState,
                         modifier = Modifier.padding(vertical = 1.dp),
                         directions = setOf(
                             DismissDirection.EndToStart
@@ -233,13 +217,11 @@ fun SchoolListScreen(
                             val isVisible =
                                 dismissState.targetValue == DismissValue.DismissedToStart
                             AnimatedVisibility(
-                                visible = isVisible,
-                                enter = fadeIn(
+                                visible = isVisible, enter = fadeIn(
                                     animationSpec = TweenSpec(
                                         durationMillis = 400
                                     )
-                                ),
-                                exit = fadeOut(
+                                ), exit = fadeOut(
                                     animationSpec = TweenSpec(
                                         durationMillis = 400
                                     )
@@ -247,14 +229,12 @@ fun SchoolListScreen(
                             ) { SwipeToDeleteBackground(color = color) }
                         },
                         dismissContent = {
-                            SchoolCard(
-                                modifier = Modifier.padding(MaterialTheme.spacing.small),
+                            SchoolCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
                                 school = school,
                                 onCheckBoxClick = {
                                     onEvent(
                                         SchoolListEvent.OnCheckChange(
-                                            id = school.id,
-                                            value = !school.isSelected
+                                            id = school.id, value = !school.isSelected
                                         )
                                     )
                                 },
@@ -266,10 +246,8 @@ fun SchoolListScreen(
                                             )
                                         )
                                     )
-                                }
-                            )
-                        }
-                    )
+                                })
+                        })
                 }
             }
 

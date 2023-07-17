@@ -40,5 +40,5 @@ interface SchoolDao {
 
     @Transaction
     @Query("SELECT * FROM school WHERE id LIKE :id")
-    suspend fun getWithExamsById(id: UUID): SchoolWithDivisions?
+    suspend fun getWithDivisionsById(id: UUID): SchoolWithDivisions?
 }

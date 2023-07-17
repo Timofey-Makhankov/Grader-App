@@ -13,5 +13,5 @@ interface SchoolRepository {
     suspend fun updateOnDeleteSchool(id: UUID, value: Boolean)
     fun getAllSchools(): Flow<List<School>>
     fun getAllSchoolsWithDivisions(): Flow<List<SchoolWithDivisions>>
-    suspend fun getSchoolWithModulesById(id: UUID): SchoolWithDivisions?
+    suspend fun getSchoolWithDivisionsById(id: UUID): SchoolWithDivisions?
 }

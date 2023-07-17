@@ -1,6 +1,5 @@
 package ch.timofey.grader.ui.screen.school_list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.school.School
@@ -29,12 +28,12 @@ class SchoolListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SchoolListState())
     val uiState: StateFlow<SchoolListState> = _uiState.asStateFlow()
 
-    private var deletedSchool: School? = null
-
     init {
+        println("starting init")
         viewModelScope.launch {
             repository.getAllSchools().collect { schoolList ->
-                _uiState.value = _uiState.value.copy(schoolList = schoolList)
+                _uiState.value =
+                    _uiState.value.copy(schoolList = schoolList.filter { school -> !school.onDelete })
                 if (schoolList.isNotEmpty()) {
                     val averageGrade = calculateAverageGrade(schoolList)
                     _uiState.value = _uiState.value.copy(averageGrade = averageGrade.toString())
@@ -64,14 +63,20 @@ class SchoolListViewModel @Inject constructor(
 
             is SchoolListEvent.OnSwipeDelete -> {
                 viewModelScope.launch {
-                    deletedSchool = event.school
-                    repository.deleteSchool(event.school)
-                    sendUiEvent(UiEvent.ShowSnackBar("School Deleted"))
+                    repository.updateOnDeleteSchool(event.id, true)
+                    println("After update on delete")
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "School Deleted was deleted", true, "Undo"
+                        )
+                    )
                 }
             }
 
             is SchoolListEvent.OnUndoDeleteClick -> {
-                println("Clicked the undo Button")
+                viewModelScope.launch {
+                    repository.updateOnDeleteSchool(event.id, false)
+                }
             }
         }
     }
