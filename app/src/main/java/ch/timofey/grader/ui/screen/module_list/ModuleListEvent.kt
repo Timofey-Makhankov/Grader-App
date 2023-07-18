@@ -7,5 +7,6 @@ sealed class ModuleListEvent {
     object OnReturnBack : ModuleListEvent()
     object OnFABClick : ModuleListEvent()
     data class OnCheckChange(val id: UUID, val value: Boolean) : ModuleListEvent()
-    data class OnSwipeDelete(val module: Module) : ModuleListEvent()
+    data class OnSwipeDelete(val id: UUID) : ModuleListEvent()
+    data class OnUndoDeleteClick(val id: UUID) : ModuleListEvent()
 }

@@ -23,11 +23,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +49,7 @@ import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,8 +60,16 @@ fun ModuleListScreen(
     onPopBackStack: () -> Unit,
     uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
     val scope = rememberCoroutineScope()
+    val deletedModuleId = remember { mutableStateOf<UUID?>(value = null) }
+    val dismissState = rememberDismissState(
+        // This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
+        // That's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
+        // In this example I want a 70% Threshold and is equal to 8
+        positionalThreshold = { value -> (value / 8).dp.toPx() }
+    )
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -67,7 +81,17 @@ fun ModuleListScreen(
                     onPopBackStack()
                 }
 
-                else -> Unit
+                is UiEvent.ShowSnackBar -> {
+                    val result = snackBarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = event.withDismissAction,
+                        actionLabel = event.action
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        dismissState.reset()
+                        onEvent(ModuleListEvent.OnUndoDeleteClick(deletedModuleId.value!!))
+                    }
+                }
             }
         }
     }
@@ -83,6 +107,7 @@ fun ModuleListScreen(
         },
     ) {
         Scaffold(
+            snackbarHost = { SnackbarHost(snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
@@ -184,14 +209,9 @@ fun ModuleListScreen(
                     items = state.moduleList,
                     key = { module -> module.id }
                 ) { module ->
-                    val dismissState = rememberDismissState(
-                        // This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
-                        // That's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
-                        // In this example I want a 70% Threshold and is equal to 8
-                        positionalThreshold = { value -> (value / 8).dp.toPx() }
-                    )
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        onEvent(ModuleListEvent.OnSwipeDelete(module))
+                        deletedModuleId.value = module.id
+                        onEvent(ModuleListEvent.OnSwipeDelete(module.id))
                     }
                     SwipeToDismiss(
                         modifier = Modifier.padding(vertical = 1.dp),

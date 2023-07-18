@@ -150,7 +150,8 @@ fun Navigation() {
                 drawerState = drawerState,
                 onPopBackStack = {
                     navController.popBackStack()
-                })
+                },
+                snackBarHostState = snackBarHostState)
         }
         composable(
             route = Screen.CreateModuleScreen.route + "/{id}",

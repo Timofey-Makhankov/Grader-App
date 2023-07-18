@@ -33,7 +33,7 @@ class ModuleListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             repository.getAllModules().collect { moduleList ->
-                _uiState.value = _uiState.value.copy(moduleList = moduleList)
+                _uiState.value = _uiState.value.copy(moduleList = moduleList.filter { module -> !module.onDelete })
                 if (moduleList.isNotEmpty()) {
                     val averageGrade = calculateAverageGrade(moduleList)
                     println("calculate Grade: $averageGrade")
@@ -70,7 +70,18 @@ class ModuleListViewModel @Inject constructor(
 
             is ModuleListEvent.OnSwipeDelete -> {
                 viewModelScope.launch {
-                    repository.deleteModule(event.module)
+                    repository.updateOnDeleteModule(event.id, true)
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "Module was deleted", true, "Undo"
+                        )
+                    )
+                }
+            }
+
+            is ModuleListEvent.OnUndoDeleteClick -> {
+                viewModelScope.launch {
+                    repository.updateOnDeleteModule(event.id, false)
                 }
             }
         }
