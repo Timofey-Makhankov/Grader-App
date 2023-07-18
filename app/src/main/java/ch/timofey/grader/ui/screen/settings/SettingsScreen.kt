@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -17,6 +16,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
@@ -106,7 +106,7 @@ fun SettingsScreen(
                     onExpandedChange = { expanded.value = !expanded.value }
                 ) {
                     OutlinedTextField(
-                        value = value.value,
+                        value = state.language,
                         onValueChange = {},
                         label = {
                             Text(
@@ -135,6 +135,10 @@ fun SettingsScreen(
                         }
                     }
                 }
+                Switch(
+                    checked = true,
+                    onCheckedChange = {}
+                )
             }
         }
     }

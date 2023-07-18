@@ -7,7 +7,7 @@ import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.utils.UiEvent
-import ch.timofey.grader.ui.utils.getAverageGrade
+import ch.timofey.grader.ui.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ModuleListViewModel @Inject constructor(
-    private val repository: ModuleRepository,
-    savedStateHandle: SavedStateHandle
+    private val repository: ModuleRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val divisionId = savedStateHandle.get<String>("id").orEmpty()
 
@@ -53,19 +52,22 @@ class ModuleListViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: ModuleListEvent){
+    fun onEvent(event: ModuleListEvent) {
         when (event) {
             is ModuleListEvent.OnFABClick -> {
                 sendUiEvent(UiEvent.Navigate(Screen.CreateModuleScreen.withArgs(divisionId)))
             }
+
             is ModuleListEvent.OnReturnBack -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
+
             is ModuleListEvent.OnCheckChange -> {
                 viewModelScope.launch {
                     repository.updateIsSelectedModule(event.id, event.value)
                 }
             }
+
             is ModuleListEvent.OnSwipeDelete -> {
                 viewModelScope.launch {
                     repository.deleteModule(event.module)
@@ -77,7 +79,8 @@ class ModuleListViewModel @Inject constructor(
     private fun calculateAverageGrade(list: List<Module>): Double {
         val validExams = list.map { it }.filter { it.isSelected }
         val gradeList = validExams.map { it.grade }
-        return getAverageGrade(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
+        return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
+            .toDouble()
     }
 
     private fun sendUiEvent(event: UiEvent) {

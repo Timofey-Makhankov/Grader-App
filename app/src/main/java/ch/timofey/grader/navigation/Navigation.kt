@@ -102,11 +102,17 @@ fun Navigation() {
         ) {
             val viewModel = hiltViewModel<DivisionListViewModel>()
             val state by viewModel.uiState.collectAsState()
-            DivisionListScreen(state = state, onEvent = viewModel::onEvent, onNavigate = {
-                navController.navigate(it.route)
-            }, onPopBackStack = {
-                navController.popBackStack()
-            }, drawerState = drawerState, uiEvent = viewModel.uiEvent
+            DivisionListScreen(state = state,
+                onEvent = viewModel::onEvent,
+                onNavigate = {
+                    navController.navigate(it.route)
+                },
+                onPopBackStack = {
+                    navController.popBackStack()
+                },
+                drawerState = drawerState,
+                uiEvent = viewModel.uiEvent,
+                snackBarHostState = snackBarHostState
             )
         }
         composable(
@@ -188,8 +194,7 @@ fun Navigation() {
         ) {
             val viewModel = hiltViewModel<CreateExamViewModel>()
             val state by viewModel.uiState.collectAsState()
-            CreateExamScreen(
-                state = state,
+            CreateExamScreen(state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
                 onPopBackStack = { navController.popBackStack() })

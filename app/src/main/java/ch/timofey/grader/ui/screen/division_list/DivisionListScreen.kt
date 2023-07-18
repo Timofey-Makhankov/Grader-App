@@ -16,20 +16,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
-import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,12 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.components.AppBar
-import ch.timofey.grader.ui.components.BottomAppBar
+import ch.timofey.grader.ui.components.*
 import ch.timofey.grader.ui.components.cards.DivisionCard
-import ch.timofey.grader.ui.components.FloatingActionButton
-import ch.timofey.grader.ui.components.NavigationDrawer
-import ch.timofey.grader.ui.components.SwipeToDeleteBackground
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -61,8 +49,16 @@ fun DivisionListScreen(
     uiEvent: Flow<UiEvent>,
     onPopBackStack: () -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
     val scope = rememberCoroutineScope()
+    val deletedDivisionId = remember { mutableStateOf<UUID?>(null) }
+    val dismissState = rememberDismissState(
+        //This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
+        //that's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
+        //In this example I want a 70% Threshold and is equal to 8
+        positionalThreshold = { value -> (value / 8).dp.toPx() }
+    )
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -74,7 +70,17 @@ fun DivisionListScreen(
                     onPopBackStack()
                 }
 
-                else -> Unit
+                is UiEvent.ShowSnackBar -> {
+                    val result = snackBarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.action,
+                        withDismissAction = event.withDismissAction
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        dismissState.reset()
+                        onEvent(DivisionListEvent.OnUndoDeleteClick(deletedDivisionId.value!!))
+                    }
+                }
             }
         }
     }
@@ -90,6 +96,7 @@ fun DivisionListScreen(
             }
         }) {
         Scaffold(
+            snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
@@ -191,14 +198,9 @@ fun DivisionListScreen(
                     items = state.divisionList,
                     key = { division -> division.id }
                 ) { division ->
-                    val dismissState = rememberDismissState(
-                        //This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
-                        //that's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
-                        //In this example I want a 70% Threshold and is equal to 8
-                        positionalThreshold = { value -> (value / 8).dp.toPx() }
-                    )
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        onEvent(DivisionListEvent.OnSwipeDelete(division))
+                        deletedDivisionId.value = division.id
+                        onEvent(DivisionListEvent.OnSwipeDelete(division.id))
                     }
                     SwipeToDismiss(
                         modifier = Modifier.padding(vertical = 1.dp),
@@ -298,7 +300,8 @@ private fun DivisionListScreenPreview() {
             onEvent = {},
             uiEvent = emptyFlow(),
             onPopBackStack = {},
-            onNavigate = {}
+            onNavigate = {},
+            snackBarHostState = SnackbarHostState()
         )
     }
 }

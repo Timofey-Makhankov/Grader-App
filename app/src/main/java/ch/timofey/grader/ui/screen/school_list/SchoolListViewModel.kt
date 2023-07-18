@@ -6,7 +6,7 @@ import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.utils.getAverageGrade
+import ch.timofey.grader.ui.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,7 +84,7 @@ class SchoolListViewModel @Inject constructor(
     private fun calculateAverageGrade(list: List<School>): Double {
         val validExams = list.map { it }.filter { it.isSelected }
         val gradeList = validExams.map { it.grade }
-        return getAverageGrade(grades = gradeList).toBigDecimal()
+        return getAverage(grades = gradeList).toBigDecimal()
             .setScale(2, RoundingMode.HALF_EVEN).toDouble()
     }
 
