@@ -30,15 +30,13 @@ object CounterWidget : GlanceAppWidget() {
         provideContent {
             val count = currentState(key = countKey) ?: 0
             Column(
-                modifier = GlanceModifier
-                    .fillMaxSize()
+                modifier = GlanceModifier.fillMaxSize()
                     .background(MaterialTheme.colorScheme.background),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = count.toString(),
-                    style = TextStyle(
+                    text = count.toString(), style = TextStyle(
                         fontWeight = FontWeight.Medium,
                         color = ColorProvider(MaterialTheme.colorScheme.onBackground),
                         fontSize = 26.sp
@@ -53,20 +51,18 @@ object CounterWidget : GlanceAppWidget() {
     }
 }
 
-class SimpleCounterWidgetReceiver : GlanceAppWidgetReceiver(){
+class SimpleCounterWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget
         get() = CounterWidget
 }
 
-object IncrementActionCallback: ActionCallback {
+object IncrementActionCallback : ActionCallback {
     override suspend fun onAction(
-        context: Context,
-        glanceId: GlanceId,
-        parameters: ActionParameters
+        context: Context, glanceId: GlanceId, parameters: ActionParameters
     ) {
         updateAppWidgetState(context, glanceId) { prefs ->
             val currentCount = prefs[CounterWidget.countKey]
-            if(currentCount != null){
+            if (currentCount != null) {
                 prefs[CounterWidget.countKey] = currentCount + 1
             } else {
                 prefs[CounterWidget.countKey] = 1

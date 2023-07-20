@@ -6,4 +6,4 @@ data class ExamListState(
     val exams: List<Exam> = emptyList(),
     val averageGrade: String = "",
     val averageGradeIsZero: Boolean? = null
-    )
+)

@@ -1,20 +1,13 @@
 package ch.timofey.grader.ui.screen.create_division
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -47,25 +40,21 @@ fun CreateDivisionScreen(
             }
         }
     }
-    Scaffold(
-        topBar = {
-            AppBar(
-                onNavigationIconClick = { onEvent(CreateDivisionEvent.OnBackButtonClick) },
-                icon = Icons.Default.ArrowBack,
-                contentDescription = "Go back to previous screen"
-            )
-        }
-    ) {
+    Scaffold(topBar = {
+        AppBar(
+            onNavigationIconClick = { onEvent(CreateDivisionEvent.OnBackButtonClick) },
+            icon = Icons.Default.ArrowBack,
+            contentDescription = "Go back to previous screen"
+        )
+    }) {
         Column(
             modifier = Modifier
                 .verticalScroll(state = rememberScrollState())
                 .padding(it)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Create Division",
-                style = MaterialTheme.typography.titleLarge
+                text = "Create Division", style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -100,7 +89,7 @@ fun CreateDivisionScreen(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
 
-            )
+                )
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
@@ -116,10 +105,9 @@ fun CreateDivisionScreen(
                 },
                 minLines = 6
             )
-            Button(
-                modifier = Modifier.padding(
-                    top = MaterialTheme.spacing.medium
-                ),
+            Button(modifier = Modifier.padding(
+                top = MaterialTheme.spacing.medium
+            ),
                 shape = MaterialTheme.shapes.large,
                 onClick = { onEvent(CreateDivisionEvent.OnCreateDivision) }
 
@@ -134,14 +122,9 @@ fun CreateDivisionScreen(
 @Composable
 private fun CreateDivisionScreenPreview() {
     GraderTheme {
-        CreateDivisionScreen(
-            state = CreateDivisionState(
-                year = "333"
-            ),
-            onEvent = {},
-            uiEvent = emptyFlow(),
-            onPopBackStack = {}
-        )
+        CreateDivisionScreen(state = CreateDivisionState(
+            year = "333"
+        ), onEvent = {}, uiEvent = emptyFlow(), onPopBackStack = {})
     }
 }
 
@@ -151,14 +134,8 @@ private fun CreateDivisionScreenPreview() {
 @Composable
 private fun CreateDivisionScreenDarkModePreview() {
     GraderTheme {
-        CreateDivisionScreen(
-            state = CreateDivisionState(
-                name = "Lehrjahr 2",
-                year = Year.of(2022).value.toString()
-            ),
-            onEvent = {},
-            uiEvent = emptyFlow(),
-            onPopBackStack = {}
-        )
+        CreateDivisionScreen(state = CreateDivisionState(
+            name = "Lehrjahr 2", year = Year.of(2022).value.toString()
+        ), onEvent = {}, uiEvent = emptyFlow(), onPopBackStack = {})
     }
 }

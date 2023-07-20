@@ -14,7 +14,7 @@ sealed class Screen(var route: String) {
     object CalculatorScreen : Screen("calculator_screen")
     object WalkthroughScreen : Screen("walkthrough_screen")
 
-    fun withArgs(vararg args: String): String{
+    fun withArgs(vararg args: String): String {
         return buildString {
             append(route)
             args.forEach { arg ->

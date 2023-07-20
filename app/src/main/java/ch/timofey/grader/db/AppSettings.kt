@@ -8,8 +8,7 @@ data class AppSettings(
 )
 
 enum class Language(
-    val id: String,
-    val value: String
+    val id: String, val value: String
 ) {
     ENGLISH("en", "English"),
     GERMAN("de", "German"),

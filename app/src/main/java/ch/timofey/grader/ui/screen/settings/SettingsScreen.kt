@@ -62,8 +62,7 @@ fun SettingsScreen(
             }
         }
     }
-    NavigationDrawer(
-        drawerState = drawerState,
+    NavigationDrawer(drawerState = drawerState,
         currentScreen = Screen.SettingsScreen,
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
@@ -74,39 +73,30 @@ fun SettingsScreen(
             scope.launch {
                 drawerState.close()
             }
-        }
-    ) {
-        Scaffold(
-            topBar = {
-                AppBar(
-                    onNavigationIconClick = { scope.launch { drawerState.open() } },
-                    icon = Icons.Default.Menu,
-                    contentDescription = "Toggle Drawer",
-                    appBarTitle = "Settings"
-                )
-            }
-        ) {
+        }) {
+        Scaffold(topBar = {
+            AppBar(
+                onNavigationIconClick = { scope.launch { drawerState.open() } },
+                icon = Icons.Default.Menu,
+                contentDescription = "Toggle Drawer",
+                appBarTitle = "Settings"
+            )
+        }) {
             Column(
                 modifier = Modifier
                     .padding(it)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextButton(
-                    colors = ButtonDefaults.textButtonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.error
-                    ),
-                    onClick = { onEvent(SettingsEvent.OnDeleteDatabaseButtonClick) }
-                ) {
+                TextButton(colors = ButtonDefaults.textButtonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.error
+                ), onClick = { onEvent(SettingsEvent.OnDeleteDatabaseButtonClick) }) {
                     Text(text = "Delete Database")
                 }
-                ExposedDropdownMenuBox(
-                    expanded = expanded.value,
-                    onExpandedChange = { expanded.value = !expanded.value }
-                ) {
-                    OutlinedTextField(
-                        value = state.language,
+                ExposedDropdownMenuBox(expanded = expanded.value,
+                    onExpandedChange = { expanded.value = !expanded.value }) {
+                    OutlinedTextField(value = state.language,
                         onValueChange = {},
                         label = {
                             Text(
@@ -120,25 +110,17 @@ fun SettingsScreen(
                         colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                         modifier = Modifier.menuAnchor()
                     )
-                    ExposedDropdownMenu(
-                        expanded = expanded.value,
-                        onDismissRequest = { expanded.value = false }
-                    ) {
+                    ExposedDropdownMenu(expanded = expanded.value,
+                        onDismissRequest = { expanded.value = false }) {
                         Language.values().forEach { language ->
-                            DropdownMenuItem(
-                                text = { Text(text = language.value) },
-                                onClick = {
-                                    value.value = language.value
-                                    expanded.value = false
-                                }
-                            )
+                            DropdownMenuItem(text = { Text(text = language.value) }, onClick = {
+                                value.value = language.value
+                                expanded.value = false
+                            })
                         }
                     }
                 }
-                Switch(
-                    checked = true,
-                    onCheckedChange = {}
-                )
+                Switch(checked = true, onCheckedChange = {})
             }
         }
     }
@@ -148,13 +130,11 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenPreview() {
     GraderTheme {
-        SettingsScreen(
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+        SettingsScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             state = SettingsState(),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onNavigate = {}
-        )
+            onNavigate = {})
     }
 }
 
@@ -162,12 +142,10 @@ private fun SettingsScreenPreview() {
 @Composable
 private fun SettingsScreenDarkModePreview() {
     GraderTheme {
-        SettingsScreen(
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+        SettingsScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             state = SettingsState(),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onNavigate = {}
-        )
+            onNavigate = {})
     }
 }

@@ -8,19 +8,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,34 +34,27 @@ fun ModuleCard(
 ) {
     val checkedState = remember { mutableStateOf(module.isSelected) }
     val expanded = remember { mutableStateOf(isOpen) }
-    Card(
-        modifier = Modifier
-            .animateContentSize(
-                animationSpec = tween(
-                    durationMillis = 300,
-                    easing = LinearOutSlowInEasing
-                )
+    Card(modifier = Modifier
+        .animateContentSize(
+            animationSpec = tween(
+                durationMillis = 300, easing = LinearOutSlowInEasing
             )
-            .combinedClickable(
-                interactionSource = MutableInteractionSource(),
-                indication = null,
-                onClick = { expanded.value = !expanded.value },
-                onLongClick = { onLongClick() }
-            )
-            .then(modifier),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        shape = MaterialTheme.shapes.large
-    ) {
+        )
+        .combinedClickable(interactionSource = MutableInteractionSource(),
+            indication = null,
+            onClick = { expanded.value = !expanded.value },
+            onLongClick = { onLongClick() })
+        .then(modifier), colors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
+    ), shape = MaterialTheme.shapes.large) {
         Column(
             modifier = Modifier.padding(MaterialTheme.spacing.small)
         ) {
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(
                     text = module.name,
                     style = MaterialTheme.typography.titleLarge,
@@ -80,12 +62,10 @@ fun ModuleCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Checkbox(
-                    checked = checkedState.value,
-                    onCheckedChange = {
+                    checked = checkedState.value, onCheckedChange = {
                         checkedState.value = it
                         onCheckBoxClick()
-                    },
-                    colors = CheckboxDefaults.colors()
+                    }, colors = CheckboxDefaults.colors()
                 )
             }
             Text(
@@ -97,7 +77,7 @@ fun ModuleCard(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             AnimatedVisibility(visible = expanded.value) {
-                Column( modifier = Modifier.animateContentSize() ) {
+                Column(modifier = Modifier.animateContentSize()) {
                     Text(
                         modifier = Modifier.padding(bottom = MaterialTheme.spacing.medium),
                         text = "Teacher: ${module.teacherFirstname} ${module.teacherLastname}"
@@ -118,7 +98,7 @@ fun ModuleCard(
 
 @Preview(showBackground = false)
 @Composable
-private fun ModuleCardPreview(){
+private fun ModuleCardPreview() {
     GraderTheme {
         ModuleCard(
             module = Module(
@@ -138,7 +118,7 @@ private fun ModuleCardPreview(){
 
 @Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun ModuleCardDarkModePreview(){
+private fun ModuleCardDarkModePreview() {
     GraderTheme {
         ModuleCard(
             module = Module(

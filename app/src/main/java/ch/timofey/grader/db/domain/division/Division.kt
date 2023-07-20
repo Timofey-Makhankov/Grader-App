@@ -1,22 +1,16 @@
 package ch.timofey.grader.db.domain.division
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import ch.timofey.grader.db.domain.school.School
 import java.util.UUID
 
 @Entity(
-    tableName = "division",
-    foreignKeys = [
-        ForeignKey(
-            entity = School::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("school_id"),
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
+    tableName = "division", foreignKeys = [ForeignKey(
+        entity = School::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("school_id"),
+        onDelete = ForeignKey.CASCADE
+    )]
 )
 data class Division(
     @PrimaryKey(autoGenerate = false) val id: UUID,

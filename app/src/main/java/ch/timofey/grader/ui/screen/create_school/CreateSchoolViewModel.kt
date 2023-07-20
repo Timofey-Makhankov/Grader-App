@@ -49,15 +49,18 @@ class CreateSchoolViewModel @Inject constructor(
             is CreateSchoolEvent.OnNameChange -> {
                 if (event.name.isNotBlank()) {
                     if (event.name.length > 60) {
-                        sendUiEvent(UiEvent.ShowSnackBar("The Name has to be not over 30 characters long", withDismissAction = true))
+                        sendUiEvent(
+                            UiEvent.ShowSnackBar(
+                                "The Name has to be not over 30 characters long",
+                                withDismissAction = true
+                            )
+                        )
                     } else {
                         _uiState.value = _uiState.value.copy(name = event.name, validName = true)
                     }
                 } else {
                     _uiState.value = _uiState.value.copy(
-                        name = "",
-                        validName = false,
-                        nameErrorMessage = "Please Enter a Name"
+                        name = "", validName = false, nameErrorMessage = "Please Enter a Name"
                     )
                 }
             }

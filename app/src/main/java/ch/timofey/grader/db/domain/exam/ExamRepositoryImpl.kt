@@ -35,4 +35,8 @@ class ExamRepositoryImpl(private val examDao: ExamDao) : ExamRepository {
     override fun getAllExams(): Flow<List<Exam>> {
         return examDao.getAll()
     }
+
+    override fun getAllExamsFromModuleId(id: UUID): Flow<List<Exam>> {
+        return examDao.getAllExamsFromModuleId(id)
+    }
 }

@@ -20,8 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExamListViewModel @Inject constructor(
-    private val repository: ExamRepository,
-    savedStateHandle: SavedStateHandle
+    private val repository: ExamRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val moduleId = savedStateHandle.get<String>("id").orEmpty()
 
@@ -33,8 +32,9 @@ class ExamListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getAllExams().collect { examList ->
-                _uiState.value = _uiState.value.copy(exams = examList)
+            repository.getAllExamsFromModuleId(UUID.fromString(moduleId)).collect { examList ->
+                _uiState.value =
+                    _uiState.value.copy(exams = examList.filter { exam -> !exam.onDelete })
                 if (examList.isNotEmpty()) {
                     val averageGrade = calculateAverageGrade(examList)
                     repository.updateModuleGradeById(UUID.fromString(moduleId), averageGrade)
@@ -69,7 +69,18 @@ class ExamListViewModel @Inject constructor(
 
             is ExamListEvent.OnSwipeDelete -> {
                 viewModelScope.launch {
-                    repository.deleteExam(event.exam)
+                    repository.updateOnDelete(event.id, true)
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "Exam was deleted", true, "Undo"
+                        )
+                    )
+                }
+            }
+
+            is ExamListEvent.OnUndoDeleteClick -> {
+                viewModelScope.launch {
+                    repository.updateOnDelete(event.id, false)
                 }
             }
         }
@@ -85,6 +96,7 @@ class ExamListViewModel @Inject constructor(
         val validExams = list.map { it }.filter { it.isSelected }
         val weightList = validExams.map { it.weight }
         val gradeList = validExams.map { it.grade }
-        return getAverage(grades = gradeList, weights = weightList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
+        return getAverage(grades = gradeList, weights = weightList).toBigDecimal()
+            .setScale(2, RoundingMode.HALF_EVEN).toDouble()
     }
 }

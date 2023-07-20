@@ -17,8 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val dataStore: DataStore<AppSettings>,
-    private val database: AppDatabase
+    private val dataStore: DataStore<AppSettings>, private val database: AppDatabase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState
@@ -32,13 +31,14 @@ class SettingsViewModel @Inject constructor(
                 //TODO
                 println()
             }
+
             is SettingsEvent.OnDeleteDatabaseButtonClick -> {
                 database.clearAllTables()
             }
         }
     }
 
-    private suspend fun updateLanguage(language: Language){
+    private suspend fun updateLanguage(language: Language) {
         dataStore.updateData {
             it.copy(
                 language = language

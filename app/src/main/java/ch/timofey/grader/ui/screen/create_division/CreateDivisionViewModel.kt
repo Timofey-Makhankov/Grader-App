@@ -21,8 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateDivisionViewModel @Inject constructor(
-    private val repository: DivisionRepository,
-    savedStateHandle: SavedStateHandle
+    private val repository: DivisionRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val id: String = savedStateHandle.get<String>("id").orEmpty()
@@ -56,9 +55,7 @@ class CreateDivisionViewModel @Inject constructor(
                     }
                 } else {
                     _uiState.value = _uiState.value.copy(
-                        year = "",
-                        validYear = false,
-                        errorMessageYear = "Please Enter a Year"
+                        year = "", validYear = false, errorMessageYear = "Please Enter a Year"
                     )
                 }
 
@@ -73,7 +70,7 @@ class CreateDivisionViewModel @Inject constructor(
                         schoolYear = _uiState.value.year.toInt(),
                         schoolId = UUID.fromString(id),
 
-                    )
+                        )
                     println(newDivision)
                     viewModelScope.launch {
                         repository.saveDivision(newDivision)

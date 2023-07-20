@@ -16,29 +16,25 @@ object NavigationDrawerItems {
             contentDescription = "Go to Home Screen",
             icon = Icons.Default.Home,
             onNavigate = Screen.MainScreen.route
-        ),
-        MenuItem(
+        ), MenuItem(
             id = "grade_calculator",
             title = "Grade Calculator",
             contentDescription = "Go to Custom Grade Calculator",
             icon = Icons.Calculate,
             onNavigate = Screen.CalculatorScreen.route
-        ),
-        MenuItem(
+        ), MenuItem(
             id = "help",
             title = "Help",
             contentDescription = "Go to Help Screen",
             icon = Icons.Help,
             onNavigate = Screen.WalkthroughScreen.route
-        ),
-        MenuItem(
+        ), MenuItem(
             id = "about",
             title = "About",
             contentDescription = "Go to Share Screen",
             icon = Icons.Default.Info,
             onNavigate = Screen.ShareScreen.route
-        ),
-        MenuItem(
+        ), MenuItem(
             id = "setting",
             title = "Settings",
             contentDescription = "Go to Settings Screen",

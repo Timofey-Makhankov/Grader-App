@@ -1,19 +1,12 @@
 package ch.timofey.grader.ui.screen.create_module
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -55,35 +48,31 @@ fun CreateModuleScreen(
             modifier = Modifier
                 .verticalScroll(state = rememberScrollState())
                 .padding(it)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Create Module", style = MaterialTheme.typography.titleLarge
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
                 value = state.name,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnNameChange(value)) },
                 singleLine = true,
                 label = { Text(text = "Module name") })
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
                 value = state.teacherFirstname,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnTeacherFirstnameChange(value)) },
                 singleLine = true,
                 label = { Text(text = "Teacher Firstname") })
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
                 value = state.teacherLastname,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnTeacherLastnameChange(value)) },
                 singleLine = true,

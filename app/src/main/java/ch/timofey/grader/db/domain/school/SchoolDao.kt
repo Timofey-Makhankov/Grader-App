@@ -1,25 +1,19 @@
 package ch.timofey.grader.db.domain.school
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.*
 import ch.timofey.grader.db.domain.relations.SchoolWithDivisions
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 @Dao
 interface SchoolDao {
-    @Insert
+    @Insert(entity = School::class)
     suspend fun save(school: School)
 
-    @Delete
+    @Delete(entity = School::class)
     suspend fun delete(school: School)
 
-    @Update
+    @Update(entity = School::class)
     suspend fun update(school: School)
 
     @Query("SELECT * FROM school")

@@ -21,8 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DivisionListViewModel @Inject constructor(
-    private val repository: DivisionRepository,
-    savedStateHandle: SavedStateHandle
+    private val repository: DivisionRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val schoolId: String = savedStateHandle.get<String>("id").orEmpty()
@@ -35,22 +34,24 @@ class DivisionListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getAllDivisionsFromSchoolId(UUID.fromString(schoolId)).collect { divisionList ->
-                println("division List $divisionList")
-                _uiState.value = _uiState.value.copy(divisionList = divisionList.filter { division -> !division.onDelete})
-                if (divisionList.isNotEmpty()) {
-                    val averageGrade = calculateAverageGrade(divisionList)
-                    repository.updateSchoolGradeById(UUID.fromString(schoolId), averageGrade)
-                    _uiState.value = _uiState.value.copy(averageGrade = averageGrade.toString())
-                    if (_uiState.value.averageGrade.toDouble() == 0.0) {
-                        _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
+            repository.getAllDivisionsFromSchoolId(UUID.fromString(schoolId))
+                .collect { divisionList ->
+                    println("division List $divisionList")
+                    _uiState.value =
+                        _uiState.value.copy(divisionList = divisionList.filter { division -> !division.onDelete })
+                    if (divisionList.isNotEmpty()) {
+                        val averageGrade = calculateAverageGrade(divisionList)
+                        repository.updateSchoolGradeById(UUID.fromString(schoolId), averageGrade)
+                        _uiState.value = _uiState.value.copy(averageGrade = averageGrade.toString())
+                        if (_uiState.value.averageGrade.toDouble() == 0.0) {
+                            _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
+                        } else {
+                            _uiState.value = _uiState.value.copy(averageGradeIsZero = false)
+                        }
                     } else {
-                        _uiState.value = _uiState.value.copy(averageGradeIsZero = false)
+                        _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
                     }
-                } else {
-                    _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
                 }
-            }
         }
     }
 
@@ -59,14 +60,17 @@ class DivisionListViewModel @Inject constructor(
             is DivisionListEvent.OnReturnBack -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
+
             is DivisionListEvent.OnCreateDivision -> {
                 sendUiEvent(UiEvent.Navigate(Screen.CreateDivisionScreen.withArgs(schoolId)))
             }
+
             is DivisionListEvent.OnCheckChange -> {
                 viewModelScope.launch {
                     repository.updateIsSelectedDivision(event.id, event.value)
                 }
             }
+
             is DivisionListEvent.OnSwipeDelete -> {
                 viewModelScope.launch {
                     repository.updateOnDeleteDivision(event.id, true)
@@ -77,6 +81,7 @@ class DivisionListViewModel @Inject constructor(
                     )
                 }
             }
+
             is DivisionListEvent.OnUndoDeleteClick -> {
                 viewModelScope.launch {
                     repository.updateOnDeleteDivision(event.id, false)
@@ -88,7 +93,8 @@ class DivisionListViewModel @Inject constructor(
     private fun calculateAverageGrade(list: List<Division>): Double {
         val validExams = list.map { it }.filter { it.isSelected }
         val gradeList = validExams.map { it.grade }
-        return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
+        return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
+            .toDouble()
     }
 
     private fun sendUiEvent(event: UiEvent) {

@@ -12,4 +12,5 @@ interface ExamRepository {
     suspend fun updateOnDelete(id: UUID, value: Boolean)
     suspend fun updateModuleGradeById(id: UUID, value: Double)
     fun getAllExams(): Flow<List<Exam>>
+    fun getAllExamsFromModuleId(id: UUID): Flow<List<Exam>>
 }

@@ -1,27 +1,25 @@
 package ch.timofey.grader.db.domain.exam
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 @Dao
 interface ExamDao {
-    @Insert
+    @Insert(entity = Exam::class)
     suspend fun save(exam: Exam)
 
-    @Delete
+    @Delete(entity = Exam::class)
     suspend fun delete(exam: Exam)
 
-    @Update
+    @Update(entity = Exam::class)
     suspend fun update(exam: Exam)
 
     @Query("SELECT * FROM exam")
     fun getAll(): Flow<List<Exam>>
+
+    @Query("SELECT * FROM exam WHERE module_id LIKE :id")
+    fun getAllExamsFromModuleId(id: UUID): Flow<List<Exam>>
 
     @Query("SELECT * FROM exam WHERE id LIKE :id")
     suspend fun getById(id: UUID): Exam?

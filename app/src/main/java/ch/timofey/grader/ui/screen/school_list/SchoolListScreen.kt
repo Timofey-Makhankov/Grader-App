@@ -17,20 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
-import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,12 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.components.AppBar
-import ch.timofey.grader.ui.components.BottomAppBar
-import ch.timofey.grader.ui.components.FloatingActionButton
-import ch.timofey.grader.ui.components.NavigationDrawer
+import ch.timofey.grader.ui.components.*
 import ch.timofey.grader.ui.components.cards.SchoolCard
-import ch.timofey.grader.ui.components.SwipeToDeleteBackground
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -167,8 +150,7 @@ fun SchoolListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        BottomAppBar(
-                            text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },

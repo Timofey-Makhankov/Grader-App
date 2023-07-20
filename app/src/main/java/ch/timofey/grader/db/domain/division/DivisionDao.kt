@@ -1,25 +1,19 @@
 package ch.timofey.grader.db.domain.division
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.*
 import ch.timofey.grader.db.domain.relations.DivisionWithModules
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 @Dao
 interface DivisionDao {
-    @Insert
+    @Insert(entity = Division::class)
     suspend fun save(division: Division)
 
-    @Delete
+    @Delete(entity = Division::class)
     suspend fun delete(division: Division)
 
-    @Update
+    @Update(entity = Division::class)
     suspend fun update(division: Division)
 
     @Query("SELECT * FROM division")

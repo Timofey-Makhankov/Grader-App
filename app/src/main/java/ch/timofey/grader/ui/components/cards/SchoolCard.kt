@@ -10,17 +10,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Checkbox
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,8 +41,7 @@ fun SchoolCard(
         modifier = Modifier
             .animateContentSize(
                 animationSpec = tween(
-                    durationMillis = 300,
-                    easing = LinearOutSlowInEasing
+                    durationMillis = 300, easing = LinearOutSlowInEasing
                 )
             )
             .combinedClickable(
@@ -60,18 +50,14 @@ fun SchoolCard(
                 onClick = { expanded.value = !expanded.value },
                 onLongClick = { onLongClick() },
             )
-            .then(modifier),
-        colors = CardDefaults.cardColors(
+            .then(modifier), colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
-        shape = MaterialTheme.shapes.large,
-        elevation = CardDefaults.cardElevation(
+        ), shape = MaterialTheme.shapes.large, elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         )
     ) {
         Column(
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.small)
+            modifier = Modifier.padding(MaterialTheme.spacing.small)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -85,12 +71,10 @@ fun SchoolCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Checkbox(
-                    checked = checkedState.value,
-                    onCheckedChange = {
+                    checked = checkedState.value, onCheckedChange = {
                         checkedState.value = it
                         onCheckBoxClick()
-                    },
-                    colors = CheckboxDefaults.colors()
+                    }, colors = CheckboxDefaults.colors()
                 )
             }
             Text(
@@ -102,13 +86,11 @@ fun SchoolCard(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             AnimatedVisibility(
-                visible = expanded.value,
-                label = "Extending Button"
+                visible = expanded.value, label = "Extending Button"
             ) {
                 Column(modifier = Modifier.animateContentSize()) {
                     Text(
-                        text = school.address,
-                        style = MaterialTheme.typography.labelLarge
+                        text = school.address, style = MaterialTheme.typography.labelLarge
                     )
                     Text(
                         text = "${school.zipCode}, ${school.city}",
@@ -116,7 +98,7 @@ fun SchoolCard(
                     )
                 }
             }
-            if (school.grade != 0.0){
+            if (school.grade != 0.0) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Average Grade: ${school.grade}",
@@ -132,42 +114,32 @@ fun SchoolCard(
 @Composable
 private fun PreviewSchoolCard() {
     GraderTheme {
-        SchoolCard(
-            school = School(
-                UUID.randomUUID(),
-                "Technische Berufsschule Zürich",
-                "Eine Berufliche Schule, in der mann über technische Fächern Lernt. Diese Schule wird von Lernenden besucht",
-                "",
-                "",
-                "",
-                isSelected = true,
-                grade = 5.6
-            ),
-            onCheckBoxClick = {},
-            onLongClick = {}
-        )
+        SchoolCard(school = School(
+            UUID.randomUUID(),
+            "Technische Berufsschule Zürich",
+            "Eine Berufliche Schule, in der mann über technische Fächern Lernt. Diese Schule wird von Lernenden besucht",
+            "",
+            "",
+            "",
+            isSelected = true,
+            grade = 5.6
+        ), onCheckBoxClick = {}, onLongClick = {})
     }
 }
 
 @Preview(
-    showBackground = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 private fun PreviewSchoolCardDarkMode() {
     GraderTheme {
-        SchoolCard(
-            isOpen = true,
-            school = School(
-                UUID.randomUUID(),
-                "Berufsmaturitätsschule Zürich",
-                "Eine Berufliche Schule, in der mann über technische Fächern Lernt. Diese Schule wird von Lernenden besucht",
-                "Bächlerstrasse 55",
-                "8046",
-                "Zürich"
-            ),
-            onCheckBoxClick = {},
-            onLongClick = {}
-        )
+        SchoolCard(isOpen = true, school = School(
+            UUID.randomUUID(),
+            "Berufsmaturitätsschule Zürich",
+            "Eine Berufliche Schule, in der mann über technische Fächern Lernt. Diese Schule wird von Lernenden besucht",
+            "Bächlerstrasse 55",
+            "8046",
+            "Zürich"
+        ), onCheckBoxClick = {}, onLongClick = {})
     }
 }

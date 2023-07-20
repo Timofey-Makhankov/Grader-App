@@ -13,21 +13,18 @@ object AppSettingsSerializer : Serializer<AppSettings> {
     override suspend fun readFrom(input: InputStream): AppSettings {
         return try {
             Json.decodeFromString(
-                deserializer = AppSettings.serializer(),
-                string = input.readBytes().decodeToString()
+                deserializer = AppSettings.serializer(), string = input.readBytes().decodeToString()
             )
-        } catch (e: SerializationException){
+        } catch (e: SerializationException) {
             e.printStackTrace()
             defaultValue
         }
     }
 
     override suspend fun writeTo(t: AppSettings, output: OutputStream) {
-        @Suppress("BlockingMethodInNonBlockingContext")
-        output.write(
+        @Suppress("BlockingMethodInNonBlockingContext") output.write(
             Json.encodeToString(
-                serializer = AppSettings.serializer(),
-                value = t
+                serializer = AppSettings.serializer(), value = t
             ).encodeToByteArray()
         )
     }

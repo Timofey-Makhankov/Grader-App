@@ -23,8 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateExamViewModel @Inject constructor(
-    private val repository: ExamRepository,
-    savedStateHandle: SavedStateHandle
+    private val repository: ExamRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val moduleId = savedStateHandle.get<String>("id").orEmpty()
 
@@ -76,7 +75,9 @@ class CreateExamViewModel @Inject constructor(
                             description = _uiState.value.description,
                             grade = _uiState.value.grade.toDouble(),
                             weight = _uiState.value.weight.toDouble(),
-                            date = LocalDate.parse(_uiState.value.date, DateTimeFormatter.ISO_LOCAL_DATE),
+                            date = LocalDate.parse(
+                                _uiState.value.date, DateTimeFormatter.ISO_LOCAL_DATE
+                            ),
                             module = UUID.fromString(moduleId)
                         )
                     )

@@ -17,32 +17,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
-import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.components.AppBar
-import ch.timofey.grader.ui.components.BottomAppBar
+import ch.timofey.grader.ui.components.*
 import ch.timofey.grader.ui.components.cards.ExamCard
-import ch.timofey.grader.ui.components.FloatingActionButton
-import ch.timofey.grader.ui.components.NavigationDrawer
-import ch.timofey.grader.ui.components.SwipeToDeleteBackground
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -50,6 +38,7 @@ import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,9 +48,13 @@ fun ExamListScreen(
     uiEvent: Flow<UiEvent>,
     drawerState: DrawerState,
     onPopBackStack: () -> Unit,
-    onNavigate: (UiEvent.Navigate) -> Unit
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
     val scope = rememberCoroutineScope()
+    val deletedExamId = remember { mutableStateOf<UUID?>(null) }
+    val dismissState =
+        rememberDismissState(positionalThreshold = { value -> (value / 8).dp.toPx() })
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -73,7 +66,17 @@ fun ExamListScreen(
                     onPopBackStack()
                 }
 
-                else -> Unit
+                is UiEvent.ShowSnackBar -> {
+                    val result = snackBarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.action,
+                        withDismissAction = event.withDismissAction
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        dismissState.reset()
+                        onEvent(ExamListEvent.OnUndoDeleteClick(deletedExamId.value!!))
+                    }
+                }
             }
         }
     }
@@ -85,7 +88,7 @@ fun ExamListScreen(
             }
         }, currentScreen = Screen.ExamScreen
     ) {
-        Scaffold(
+        Scaffold(snackbarHost = { SnackbarHost(snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             topBar = {
                 AppBar(
@@ -94,15 +97,30 @@ fun ExamListScreen(
                     contentDescription = "Go Back to previous Screen",
                     appBarTitle = "Exams"
                 )
-            }, bottomBar = {
+            },
+            bottomBar = {
                 state.averageGradeIsZero?.let {
-                    AnimatedVisibility(
-                        visible = !it,
-                        enter = slideInHorizontally(animationSpec = tween(durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing)){fullWidth -> -fullWidth / 3 }
-                                + fadeIn(animationSpec = tween(durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing)),
-                        exit = slideOutHorizontally(animationSpec = tween(durationMillis = 100, easing = FastOutSlowInEasing)){fullWidth -> fullWidth / 3 }
-                                + fadeOut(animationSpec = tween(durationMillis = 100, easing = FastOutSlowInEasing))
-                    ) {
+                    AnimatedVisibility(visible = !it, enter = slideInHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
+                        )
+                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
+                        )
+                    ), exit = slideOutHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    )) {
                         BottomAppBar(
                             text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
@@ -113,15 +131,30 @@ fun ExamListScreen(
                             })
                     }
                 }
-            }, floatingActionButton = {
+            },
+            floatingActionButton = {
                 state.averageGradeIsZero?.let {
-                    AnimatedVisibility(
-                        visible = it,
-                        enter = slideInHorizontally(animationSpec = tween(durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing)){fullWidth -> -fullWidth / 3 }
-                                + fadeIn(animationSpec = tween(durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing)),
-                        exit = slideOutHorizontally(animationSpec = tween(durationMillis = 100, easing = FastOutSlowInEasing)){fullWidth -> fullWidth / 3 }
-                                + fadeOut(animationSpec = tween(durationMillis = 100, easing = FastOutSlowInEasing))
-                    ) {
+                    AnimatedVisibility(visible = it, enter = slideInHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
+                        )
+                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
+                        )
+                    ), exit = slideOutHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    )) {
                         FloatingActionButton(
                             modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                             onFABClick = { onEvent(ExamListEvent.OnFABClick) },
@@ -137,10 +170,9 @@ fun ExamListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(items = state.exams, key = { exam -> exam.id }) { exam ->
-                    val dismissState =
-                        rememberDismissState(positionalThreshold = { value -> (value / 8).dp.toPx() })
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        onEvent(ExamListEvent.OnSwipeDelete(exam))
+                        deletedExamId.value = exam.id
+                        onEvent(ExamListEvent.OnSwipeDelete(exam.id))
                     }
                     SwipeToDismiss(modifier = Modifier.padding(vertical = 1.dp),
                         state = dismissState,
@@ -192,14 +224,14 @@ private fun ExamListScreenPreview() {
     GraderTheme {
         ExamListScreen(
             state = ExamListState(
-                averageGradeIsZero = true,
-                averageGrade = ""
+                averageGradeIsZero = true, averageGrade = ""
             ),
             onEvent = {},
             uiEvent = emptyFlow(),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onPopBackStack = {},
-            onNavigate = {}
+            onNavigate = {},
+            snackBarHostState = SnackbarHostState()
         )
     }
 }
@@ -210,14 +242,14 @@ private fun ExamListScreenDarkModePreview() {
     GraderTheme {
         ExamListScreen(
             state = ExamListState(
-                averageGradeIsZero = false,
-                averageGrade = "5.6"
+                averageGradeIsZero = false, averageGrade = "5.6"
             ),
             onEvent = {},
             uiEvent = emptyFlow(),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onPopBackStack = {},
-            onNavigate = {}
+            onNavigate = {},
+            snackBarHostState = SnackbarHostState()
         )
     }
 }

@@ -41,6 +41,10 @@ class ModuleRepositoryImpl(private val moduleDao: ModuleDao) : ModuleRepository 
         return moduleDao.getAllWithExams()
     }
 
+    override fun getAllModulesFromDivisionId(id: UUID): Flow<List<Module>> {
+        return moduleDao.getAllModulesFromDivisionId(id)
+    }
+
     override suspend fun getModuleWithExamsById(id: UUID): ModuleWithExams? {
         return moduleDao.getWithExamsById(id)
     }

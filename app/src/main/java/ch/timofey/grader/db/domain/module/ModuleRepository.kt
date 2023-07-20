@@ -14,5 +14,6 @@ interface ModuleRepository {
     suspend fun updateDivisionGradeById(id: UUID, value: Double)
     fun getAllModules(): Flow<List<Module>>
     fun getAllModulesWithExams(): Flow<List<ModuleWithExams>>
+    fun getAllModulesFromDivisionId(id: UUID): Flow<List<Module>>
     suspend fun getModuleWithExamsById(id: UUID): ModuleWithExams?
 }

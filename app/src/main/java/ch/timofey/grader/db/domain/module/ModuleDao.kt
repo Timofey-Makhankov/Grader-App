@@ -1,25 +1,19 @@
 package ch.timofey.grader.db.domain.module
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.*
 import ch.timofey.grader.db.domain.relations.ModuleWithExams
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 @Dao
 interface ModuleDao {
-    @Insert
+    @Insert(entity = Module::class)
     suspend fun save(module: Module)
 
-    @Delete
+    @Delete(entity = Module::class)
     suspend fun delete(module: Module)
 
-    @Update
+    @Update(entity = Module::class)
     suspend fun update(module: Module)
 
     @Query("SELECT * FROM module")
@@ -27,6 +21,9 @@ interface ModuleDao {
 
     @Query("SELECT * FROM module WHERE id LIKE :id")
     suspend fun getById(id: UUID): Module?
+
+    @Query("SELECT * FROM module WHERE division_id LIKE :id")
+    fun getAllModulesFromDivisionId(id: UUID): Flow<List<Module>>
 
     @Query("UPDATE module SET is_selected = :value WHERE id LIKE :id")
     suspend fun updateIsSelected(id: UUID, value: Boolean)

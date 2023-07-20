@@ -54,8 +54,5 @@ fun GradeInputField(
 @Preview(showBackground = true)
 @Composable
 private fun GradeInputFieldPreview() {
-    GradeInputField(
-        onGradeChange = {},
-        onWeightChange = {}
-    )
+    GradeInputField(onGradeChange = {}, onWeightChange = {})
 }

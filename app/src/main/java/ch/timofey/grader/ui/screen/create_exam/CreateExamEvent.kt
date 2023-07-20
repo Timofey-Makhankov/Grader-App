@@ -1,6 +1,6 @@
 package ch.timofey.grader.ui.screen.create_exam
 
-sealed class CreateExamEvent{
+sealed class CreateExamEvent {
     object OnBackButtonPress : CreateExamEvent()
     object OnCreateExamButtonPress : CreateExamEvent()
     data class OnNameChange(val name: String) : CreateExamEvent()

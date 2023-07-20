@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.share
+package ch.timofey.grader.ui.screen.about
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -41,9 +41,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AboutScreen(
-    drawerState: DrawerState,
-    uiEvent: Flow<UiEvent>,
-    onNavigate: (UiEvent.Navigate) -> Unit
+    drawerState: DrawerState, uiEvent: Flow<UiEvent>, onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
@@ -58,28 +56,23 @@ fun AboutScreen(
         }
     }
     NavigationDrawer(
-        drawerState = drawerState,
-        items = NavigationDrawerItems.list,
-        onItemClick = { menuItem ->
+        drawerState = drawerState, items = NavigationDrawerItems.list, onItemClick = { menuItem ->
             if (menuItem.onNavigate != Screen.ShareScreen.route) {
                 onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
             scope.launch {
                 drawerState.close()
             }
-        },
-        currentScreen = Screen.ShareScreen
+        }, currentScreen = Screen.ShareScreen
     ) {
-        Scaffold(
-            topBar = {
-                AppBar(
-                    onNavigationIconClick = { scope.launch { drawerState.open() } },
-                    icon = Icons.Default.Menu,
-                    contentDescription = "Toggle Drawer",
-                    appBarTitle = "About"
-                )
-            }
-        ) {
+        Scaffold(topBar = {
+            AppBar(
+                onNavigationIconClick = { scope.launch { drawerState.open() } },
+                icon = Icons.Default.Menu,
+                contentDescription = "Toggle Drawer",
+                appBarTitle = "About"
+            )
+        }) {
             Column(
                 modifier = Modifier
                     .padding(it)
@@ -96,10 +89,10 @@ fun AboutScreen(
                     textAlign = TextAlign.Center,
                     text = "If you like the App, you can share it with others"
                 )
-                Button(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { /*TODO*/ }
-                ) {
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
+                    onClick = { /*TODO*/ }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -111,18 +104,17 @@ fun AboutScreen(
                         )
                     }
                 }
-                Button(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { /*TODO*/ }
-                ) {
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
+                    onClick = { /*TODO*/ }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "Share")
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                         Icon(
-                            imageVector = Icons.Default.Share,
-                            contentDescription = "Share Icon"
+                            imageVector = Icons.Default.Share, contentDescription = "Share Icon"
                         )
                     }
                 }
@@ -135,11 +127,9 @@ fun AboutScreen(
 @Composable
 fun ShareScreenPreview() {
     GraderTheme {
-        AboutScreen(
-            drawerState = DrawerState(initialValue = DrawerValue.Closed),
+        AboutScreen(drawerState = DrawerState(initialValue = DrawerValue.Closed),
             uiEvent = emptyFlow(),
-            onNavigate = {}
-        )
+            onNavigate = {})
     }
 }
 
@@ -147,10 +137,8 @@ fun ShareScreenPreview() {
 @Composable
 fun ShareScreenDarkModePreview() {
     GraderTheme {
-        AboutScreen(
-            drawerState = DrawerState(initialValue = DrawerValue.Closed),
+        AboutScreen(drawerState = DrawerState(initialValue = DrawerValue.Closed),
             uiEvent = emptyFlow(),
-            onNavigate = {}
-        )
+            onNavigate = {})
     }
 }

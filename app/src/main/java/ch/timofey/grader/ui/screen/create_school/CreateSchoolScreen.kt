@@ -1,26 +1,12 @@
 package ch.timofey.grader.ui.screen.create_school
 
 import android.content.res.Configuration
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -50,7 +36,9 @@ fun CreateSchoolScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
-                    snackBarHostState.showSnackbar(message = event.message, withDismissAction = event.withDismissAction)
+                    snackBarHostState.showSnackbar(
+                        message = event.message, withDismissAction = event.withDismissAction
+                    )
                 }
 
                 else -> Unit
@@ -69,18 +57,16 @@ fun CreateSchoolScreen(
             modifier = Modifier
                 .verticalScroll(state = rememberScrollState())
                 .padding(it)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Create School", style = MaterialTheme.typography.titleLarge
             )
-            OutlinedTextField(
-                value = state.name,
+            OutlinedTextField(value = state.name,
                 label = { Text(text = "School Name") },
-                onValueChange = {
-                        name -> onEvent(CreateSchoolEvent.OnNameChange(name))
-                                },
+                onValueChange = { name ->
+                    onEvent(CreateSchoolEvent.OnNameChange(name))
+                },
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
@@ -96,8 +82,7 @@ fun CreateSchoolScreen(
                 },
                 minLines = 2
             )
-            OutlinedTextField(
-                value = state.address,
+            OutlinedTextField(value = state.address,
                 label = { Text(text = "Address") },
                 onValueChange = { address -> onEvent(CreateSchoolEvent.OnAddressChange(address)) },
                 modifier = Modifier
@@ -105,8 +90,7 @@ fun CreateSchoolScreen(
                     .fillMaxWidth(),
                 singleLine = true
             )
-            OutlinedTextField(
-                value = state.zip,
+            OutlinedTextField(value = state.zip,
                 label = { Text(text = "Zip") },
                 onValueChange = { zip -> onEvent(CreateSchoolEvent.OnZipChange(zip)) },
                 modifier = Modifier
@@ -115,8 +99,7 @@ fun CreateSchoolScreen(
                     .fillMaxWidth(),
                 singleLine = true
             )
-            OutlinedTextField(
-                value = state.city,
+            OutlinedTextField(value = state.city,
                 label = { Text(text = "City") },
                 onValueChange = { city -> onEvent(CreateSchoolEvent.OnCityChange(city)) },
                 modifier = Modifier

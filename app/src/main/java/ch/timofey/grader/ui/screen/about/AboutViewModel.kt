@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.share
+package ch.timofey.grader.ui.screen.about
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

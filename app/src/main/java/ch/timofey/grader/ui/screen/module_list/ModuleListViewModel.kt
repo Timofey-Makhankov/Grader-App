@@ -32,23 +32,27 @@ class ModuleListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getAllModules().collect { moduleList ->
-                _uiState.value = _uiState.value.copy(moduleList = moduleList.filter { module -> !module.onDelete })
-                if (moduleList.isNotEmpty()) {
-                    val averageGrade = calculateAverageGrade(moduleList)
-                    println("calculate Grade: $averageGrade")
-                    repository.updateDivisionGradeById(UUID.fromString(divisionId), averageGrade)
-                    _uiState.value = _uiState.value.copy(averageGrade = averageGrade.toString())
-                    if (_uiState.value.averageGrade.toDouble() == 0.0) {
-                        _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
+            repository.getAllModulesFromDivisionId(UUID.fromString(divisionId))
+                .collect { moduleList ->
+                    _uiState.value =
+                        _uiState.value.copy(moduleList = moduleList.filter { module -> !module.onDelete })
+                    if (moduleList.isNotEmpty()) {
+                        val averageGrade = calculateAverageGrade(moduleList)
+                        println("calculate Grade: $averageGrade")
+                        repository.updateDivisionGradeById(
+                            UUID.fromString(divisionId), averageGrade
+                        )
+                        _uiState.value = _uiState.value.copy(averageGrade = averageGrade.toString())
+                        if (_uiState.value.averageGrade.toDouble() == 0.0) {
+                            _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
+                        } else {
+                            _uiState.value = _uiState.value.copy(averageGradeIsZero = false)
+                        }
                     } else {
-                        _uiState.value = _uiState.value.copy(averageGradeIsZero = false)
+                        _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
                     }
-                } else {
-                    _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
+                    println("calculate Grade after toString: ${_uiState.value.averageGrade}")
                 }
-                println("calculate Grade after toString: ${_uiState.value.averageGrade}")
-            }
         }
     }
 

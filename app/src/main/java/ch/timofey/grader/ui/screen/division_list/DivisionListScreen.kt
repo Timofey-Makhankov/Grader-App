@@ -57,8 +57,7 @@ fun DivisionListScreen(
         //This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
         //that's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
         //In this example I want a 70% Threshold and is equal to 8
-        positionalThreshold = { value -> (value / 8).dp.toPx() }
-    )
+        positionalThreshold = { value -> (value / 8).dp.toPx() })
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -84,8 +83,7 @@ fun DivisionListScreen(
             }
         }
     }
-    NavigationDrawer(
-        drawerState = drawerState,
+    NavigationDrawer(drawerState = drawerState,
         currentScreen = Screen.DivisionScreen,
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
@@ -95,40 +93,31 @@ fun DivisionListScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(
-            snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        Scaffold(snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
-                    AnimatedVisibility(
-                        visible = it,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                delayMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) { fullWidth -> -fullWidth / 3 }
-                                + fadeIn(
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                delayMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ),
-                        exit = slideOutHorizontally(
-                            animationSpec = tween(
-                                durationMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) { fullWidth -> fullWidth / 3 }
-                                + fadeOut(
-                            animationSpec = tween(
-                                durationMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
+                    AnimatedVisibility(visible = it, enter = slideInHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
                         )
-                    ) {
+                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
+                        )
+                    ), exit = slideOutHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    )) {
                         FloatingActionButton(
                             modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                             onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
@@ -139,37 +128,28 @@ fun DivisionListScreen(
             },
             bottomBar = {
                 state.averageGradeIsZero?.let {
-                    AnimatedVisibility(
-                        visible = !it,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                delayMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) { fullWidth -> -fullWidth / 3 }
-                                + fadeIn(
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                delayMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ),
-                        exit = slideOutHorizontally(
-                            animationSpec = tween(
-                                durationMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) { fullWidth -> fullWidth / 3 }
-                                + fadeOut(
-                            animationSpec = tween(
-                                durationMillis = 100,
-                                easing = FastOutSlowInEasing
-                            )
+                    AnimatedVisibility(visible = !it, enter = slideInHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
                         )
-                    ) {
-                        BottomAppBar(
-                            text = "Average Grade: ${state.averageGrade}",
+                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            delayMillis = 100,
+                            easing = FastOutSlowInEasing
+                        )
+                    ), exit = slideOutHorizontally(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 100, easing = FastOutSlowInEasing
+                        )
+                    )) {
+                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
@@ -186,24 +166,19 @@ fun DivisionListScreen(
                     contentDescription = "Go Back to previous Screen",
                     appBarTitle = "Divisions"
                 )
-            }
-        ) {
+            }) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(
-                    items = state.divisionList,
-                    key = { division -> division.id }
-                ) { division ->
+                items(items = state.divisionList, key = { division -> division.id }) { division ->
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                         deletedDivisionId.value = division.id
                         onEvent(DivisionListEvent.OnSwipeDelete(division.id))
                     }
-                    SwipeToDismiss(
-                        modifier = Modifier.padding(vertical = 1.dp),
+                    SwipeToDismiss(modifier = Modifier.padding(vertical = 1.dp),
                         state = dismissState,
                         directions = setOf(DismissDirection.EndToStart),
                         background = {
@@ -211,19 +186,16 @@ fun DivisionListScreen(
                                 targetValue = when (dismissState.targetValue) {
                                     DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
                                     else -> MaterialTheme.colorScheme.background
-                                },
-                                label = "Color"
+                                }, label = "Color"
                             )
                             val isVisible =
                                 dismissState.targetValue == DismissValue.DismissedToStart
                             AnimatedVisibility(
-                                visible = isVisible,
-                                enter = fadeIn(
+                                visible = isVisible, enter = fadeIn(
                                     animationSpec = TweenSpec(
                                         durationMillis = 400
                                     )
-                                ),
-                                exit = fadeOut(
+                                ), exit = fadeOut(
                                     animationSpec = TweenSpec(
                                         durationMillis = 400
                                     )
@@ -233,14 +205,12 @@ fun DivisionListScreen(
                             }
                         },
                         dismissContent = {
-                            DivisionCard(
-                                modifier = Modifier.padding(MaterialTheme.spacing.small),
+                            DivisionCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
                                 division = division,
                                 onCheckBoxClick = {
                                     onEvent(
                                         DivisionListEvent.OnCheckChange(
-                                            id = division.id,
-                                            value = !division.isSelected
+                                            id = division.id, value = !division.isSelected
                                         )
                                     )
                                 },
@@ -252,10 +222,8 @@ fun DivisionListScreen(
                                             )
                                         )
                                     )
-                                }
-                            )
-                        }
-                    )
+                                })
+                        })
                 }
             }
         }
@@ -278,16 +246,14 @@ private fun DivisionListScreenPreview() {
                         schoolYear = 2023,
                         schoolId = UUID.randomUUID(),
                         grade = 0.0
-                    ),
-                    Division(
+                    ), Division(
                         id = UUID.randomUUID(),
                         name = "Semester 2",
                         description = "Lorem Impsum",
                         schoolYear = 2002,
                         schoolId = UUID.randomUUID(),
                         grade = 0.0
-                    ),
-                    Division(
+                    ), Division(
                         id = UUID.randomUUID(),
                         name = "Semester 3",
                         description = "Lorem Impsum",

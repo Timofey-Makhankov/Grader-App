@@ -1,19 +1,11 @@
 package ch.timofey.grader.ui.screen.calculator
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -36,8 +28,7 @@ fun CalculatorScreen(
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    NavigationDrawer(
-        drawerState = drawerState,
+    NavigationDrawer(drawerState = drawerState,
         currentScreen = Screen.CalculatorScreen,
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
@@ -49,15 +40,13 @@ fun CalculatorScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(
-            topBar = {
-                AppBar(
-                    onNavigationIconClick = { scope.launch { drawerState.open() } },
-                    icon = Icons.Default.Menu,
-                    contentDescription = "Toggle Drawer"
-                )
-            }
-        ) {
+        Scaffold(topBar = {
+            AppBar(
+                onNavigationIconClick = { scope.launch { drawerState.open() } },
+                icon = Icons.Default.Menu,
+                contentDescription = "Toggle Drawer"
+            )
+        }) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -65,14 +54,11 @@ fun CalculatorScreen(
                     .padding(all = MaterialTheme.spacing.small)
             ) {
                 items(state.rowCount) { index ->
-                    GradeInputField(
-                        onGradeChange = { value ->
-                            onEvent(CalculatorEvent.OnGradeChange(index, value))
-                        },
-                        onWeightChange = { value ->
-                            onEvent(CalculatorEvent.OnWeightChange(index, value))
-                        }
-                    )
+                    GradeInputField(onGradeChange = { value ->
+                        onEvent(CalculatorEvent.OnGradeChange(index, value))
+                    }, onWeightChange = { value ->
+                        onEvent(CalculatorEvent.OnWeightChange(index, value))
+                    })
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 }
                 item {
@@ -87,17 +73,14 @@ fun CalculatorScreen(
 }
 
 @Preview(
-    showBackground = true,
-    showSystemUi = false
+    showBackground = true, showSystemUi = false
 )
 @Composable
 private fun CalculatorScreenPreview() {
     GraderTheme {
-        CalculatorScreen(
-            state = CalculatorState(
-                calculatedGrade = 6.0,
-                rowCount = 3
-            ),
+        CalculatorScreen(state = CalculatorState(
+            calculatedGrade = 6.0, rowCount = 3
+        ),
             onEvent = {},
             onNavigate = {},
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -113,11 +96,9 @@ private fun CalculatorScreenPreview() {
 @Composable
 private fun CalculatorScreenDarkModePreview() {
     GraderTheme {
-        CalculatorScreen(
-            state = CalculatorState(
-                calculatedGrade = 4.75,
-                rowCount = 5
-            ),
+        CalculatorScreen(state = CalculatorState(
+            calculatedGrade = 4.75, rowCount = 5
+        ),
             onEvent = {},
             onNavigate = {},
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)

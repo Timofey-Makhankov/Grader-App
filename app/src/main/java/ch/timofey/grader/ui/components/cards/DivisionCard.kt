@@ -8,19 +8,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,15 +32,14 @@ fun DivisionCard(
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
-){
+) {
     val checkedState = remember { mutableStateOf(division.isSelected) }
     val expanded = remember { mutableStateOf(isOpen) }
     Card(
         modifier = Modifier
             .animateContentSize(
                 animationSpec = tween(
-                    durationMillis = 300,
-                    easing = LinearOutSlowInEasing
+                    durationMillis = 300, easing = LinearOutSlowInEasing
                 )
             )
             .combinedClickable(
@@ -60,15 +48,12 @@ fun DivisionCard(
                 onClick = { expanded.value = !expanded.value },
                 onLongClick = { onLongClick() },
             )
-            .then(modifier),
-        colors = CardDefaults.cardColors(
+            .then(modifier), colors = CardDefaults.cardColors(
             containerColor = containerColor,
-        ),
-        shape = MaterialTheme.shapes.large
+        ), shape = MaterialTheme.shapes.large
     ) {
         Column(
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.small)
+            modifier = Modifier.padding(MaterialTheme.spacing.small)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -82,12 +67,10 @@ fun DivisionCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Checkbox(
-                    checked = checkedState.value,
-                    onCheckedChange = {
+                    checked = checkedState.value, onCheckedChange = {
                         checkedState.value = it
                         onCheckBoxClick()
-                    },
-                    colors = CheckboxDefaults.colors()
+                    }, colors = CheckboxDefaults.colors()
                 )
             }
             Text(
@@ -98,16 +81,14 @@ fun DivisionCard(
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            AnimatedVisibility(visible = expanded.value){}
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            AnimatedVisibility(visible = expanded.value) {}
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
-                    text = "${division.schoolYear}",
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "${division.schoolYear}", style = MaterialTheme.typography.bodyMedium
                 )
-                if (division.grade != 0.0){
+                if (division.grade != 0.0) {
                     Text(
                         text = "Average Grade: ${division.grade}",
                         style = MaterialTheme.typography.bodyMedium
@@ -120,44 +101,35 @@ fun DivisionCard(
 
 @Preview(showBackground = false)
 @Composable
-private fun DivisionCardPreview(){
+private fun DivisionCardPreview() {
     GraderTheme {
-        DivisionCard(
-            division = Division(
-                id = UUID.randomUUID(),
-                name = "Semester 1",
-                description = "lorem Impsum",
-                schoolYear = 2024,
-                schoolId = UUID.randomUUID(),
-                isSelected = false,
-                grade = 0.0
-            ),
-            onLongClick = {},
-            onCheckBoxClick = {}
-        )
+        DivisionCard(division = Division(
+            id = UUID.randomUUID(),
+            name = "Semester 1",
+            description = "lorem Impsum",
+            schoolYear = 2024,
+            schoolId = UUID.randomUUID(),
+            isSelected = false,
+            grade = 0.0
+        ), onLongClick = {}, onCheckBoxClick = {})
     }
 }
 
 @Preview(
-    showBackground = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-private fun DivisionCardDarkModePreview(){
+private fun DivisionCardDarkModePreview() {
     GraderTheme {
-        DivisionCard(
-            division = Division(
-                id = UUID.randomUUID(),
-                name = "Semester 3",
-                description = "lorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsum",
-                schoolYear = 2022,
-                schoolId = UUID.randomUUID(),
-                isSelected = true,
-                grade = 4.0
-            ),
-            onLongClick = {},
-            onCheckBoxClick = {},
-            isOpen = true
+        DivisionCard(division = Division(
+            id = UUID.randomUUID(),
+            name = "Semester 3",
+            description = "lorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsum",
+            schoolYear = 2022,
+            schoolId = UUID.randomUUID(),
+            isSelected = true,
+            grade = 4.0
+        ), onLongClick = {}, onCheckBoxClick = {}, isOpen = true
         )
     }
 }

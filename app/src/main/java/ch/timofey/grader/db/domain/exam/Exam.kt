@@ -1,23 +1,17 @@
 package ch.timofey.grader.db.domain.exam
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import ch.timofey.grader.db.domain.module.Module
 import java.time.LocalDate
 import java.util.UUID
 
 @Entity(
-    tableName = "exam",
-    foreignKeys = [
-        ForeignKey(
-            entity = Module::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("module_id"),
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
+    tableName = "exam", foreignKeys = [ForeignKey(
+        entity = Module::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("module_id"),
+        onDelete = ForeignKey.CASCADE
+    )]
 )
 data class Exam(
     @PrimaryKey(autoGenerate = false) val id: UUID,

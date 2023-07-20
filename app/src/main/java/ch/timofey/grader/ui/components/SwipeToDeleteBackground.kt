@@ -23,14 +23,14 @@ fun SwipeToDeleteBackground(
         modifier = Modifier
             .fillMaxSize()
             .padding(vertical = MaterialTheme.spacing.small)
-            .padding(end = MaterialTheme.spacing.small)
-        ,
-        shape = MaterialTheme.shapes.large
+            .padding(end = MaterialTheme.spacing.small), shape = MaterialTheme.shapes.large
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().background(color),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color),
             contentAlignment = Alignment.CenterEnd
-        ){
+        ) {
             Icon(
                 modifier = Modifier.padding(end = MaterialTheme.spacing.large),
                 imageVector = Icons.Default.Delete,

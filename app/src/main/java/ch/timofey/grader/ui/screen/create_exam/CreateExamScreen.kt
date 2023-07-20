@@ -1,25 +1,11 @@
 package ch.timofey.grader.ui.screen.create_exam
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +20,6 @@ import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlin.math.min
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,110 +43,89 @@ fun CreateExamScreen(
             }
         }
     }
-    Scaffold(
-        topBar = {
-            AppBar(
-                onNavigationIconClick = { onEvent(CreateExamEvent.OnBackButtonPress) },
-                icon = Icons.Default.ArrowBack,
-                contentDescription = "Go back to previous Screen"
-            )
-        }
-    ) {
+    Scaffold(topBar = {
+        AppBar(
+            onNavigationIconClick = { onEvent(CreateExamEvent.OnBackButtonPress) },
+            icon = Icons.Default.ArrowBack,
+            contentDescription = "Go back to previous Screen"
+        )
+    }) {
         Column(
             modifier = Modifier
                 .verticalScroll(state = rememberScrollState())
                 .padding(it)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "Create Exam", style = MaterialTheme.typography.titleLarge)
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
                 value = state.name,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnNameChange(value)) },
                 minLines = 2,
-                label = { Text(text = "Exam Name") }
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
+                label = { Text(text = "Exam Name") })
+            OutlinedTextField(modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
                 value = state.date,
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(text = "Exam taken") },
                 placeholder = { Text(text = "YYYY-MM-DD") },
                 trailingIcon = {
-                    IconButton(
-                        onClick = { openDialog.value = true }
-                    ) {
+                    IconButton(onClick = { openDialog.value = true }) {
                         Icon(imageVector = Icons.CalendarToday, contentDescription = "")
                     }
-                }
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
+                })
+            OutlinedTextField(modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
                 value = state.grade,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnGradeChange(value)) },
                 singleLine = true,
-                label = { Text(text = "Grade") }
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
+                label = { Text(text = "Grade") })
+            OutlinedTextField(modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
                 value = state.weight,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnWeightChange(value)) },
                 singleLine = true,
-                label = { Text(text = "Weight") }
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
+                label = { Text(text = "Weight") })
+            OutlinedTextField(modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnDescriptionChange(value)) },
                 minLines = 4,
-                label = { Text(text = "Description") }
-            )
-            Button(
-                modifier = Modifier.padding(
-                    top = MaterialTheme.spacing.medium
-                ),
+                label = { Text(text = "Description") })
+            Button(modifier = Modifier.padding(
+                top = MaterialTheme.spacing.medium
+            ),
                 shape = MaterialTheme.shapes.large,
-                onClick = { onEvent(CreateExamEvent.OnCreateExamButtonPress) }
-            ) {
+                onClick = { onEvent(CreateExamEvent.OnCreateExamButtonPress) }) {
                 Text(text = "Create")
             }
             if (openDialog.value) {
-                DatePickerDialog(
-                    onDismissRequest = { openDialog.value = false },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            openDialog.value = false; onEvent(
-                            CreateExamEvent.OnSetDate(
-                                datePickerState.selectedDateMillis!!
-                            )
+                DatePickerDialog(onDismissRequest = { openDialog.value = false }, confirmButton = {
+                    TextButton(onClick = {
+                        openDialog.value = false; onEvent(
+                        CreateExamEvent.OnSetDate(
+                            datePickerState.selectedDateMillis!!
                         )
-                        }) {
-                            Text(text = "OK")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { openDialog.value = false }) {
-                            Text(text = "Cancel")
-                        }
+                    )
+                    }) {
+                        Text(text = "OK")
                     }
-                ) {
+                }, dismissButton = {
+                    TextButton(onClick = { openDialog.value = false }) {
+                        Text(text = "Cancel")
+                    }
+                }) {
                     DatePicker(state = datePickerState)
                 }
             }
@@ -173,11 +137,9 @@ fun CreateExamScreen(
 @Composable
 private fun CreateExamScreenPreview() {
     GraderTheme {
-        CreateExamScreen(
-            state = CreateExamState(),
+        CreateExamScreen(state = CreateExamState(),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onPopBackStack = {}
-        )
+            onPopBackStack = {})
     }
 }

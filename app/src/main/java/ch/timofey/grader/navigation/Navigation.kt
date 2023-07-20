@@ -33,8 +33,8 @@ import ch.timofey.grader.ui.screen.module_list.ModuleListViewModel
 import ch.timofey.grader.ui.screen.school_list.SchoolListScreen
 import ch.timofey.grader.ui.screen.school_list.SchoolListViewModel
 import ch.timofey.grader.ui.screen.settings.SettingsViewModel
-import ch.timofey.grader.ui.screen.share.AboutScreen
-import ch.timofey.grader.ui.screen.share.AboutViewModel
+import ch.timofey.grader.ui.screen.about.AboutScreen
+import ch.timofey.grader.ui.screen.about.AboutViewModel
 
 @Composable
 fun Navigation() {
@@ -141,17 +141,15 @@ fun Navigation() {
         ) {
             val viewModel = hiltViewModel<ModuleListViewModel>()
             val state by viewModel.uiState.collectAsState()
-            ModuleListScreen(state = state,
+            ModuleListScreen(
+                state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onNavigate = {
-                    navController.navigate(it.route)
-                },
+                onNavigate = { navController.navigate(it.route) },
                 drawerState = drawerState,
-                onPopBackStack = {
-                    navController.popBackStack()
-                },
-                snackBarHostState = snackBarHostState)
+                onPopBackStack = { navController.popBackStack() },
+                snackBarHostState = snackBarHostState
+            )
         }
         composable(
             route = Screen.CreateModuleScreen.route + "/{id}",
@@ -179,12 +177,15 @@ fun Navigation() {
         ) {
             val viewModel = hiltViewModel<ExamListViewModel>()
             val state by viewModel.uiState.collectAsState()
-            ExamListScreen(state = state,
+            ExamListScreen(
+                state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
                 drawerState = drawerState,
                 onPopBackStack = { navController.popBackStack() },
-                onNavigate = { navController.navigate(it.route) })
+                onNavigate = { navController.navigate(it.route) },
+                snackBarHostState = snackBarHostState
+            )
         }
         composable(
             route = Screen.CreateExamScreen.route + "/{id}", arguments = listOf(navArgument("id") {
