@@ -31,6 +31,7 @@ import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
 import ch.timofey.grader.ui.components.cards.DivisionCard
+import ch.timofey.grader.ui.components.items.DivisionItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -53,11 +54,6 @@ fun DivisionListScreen(
 ) {
     val scope = rememberCoroutineScope()
     val deletedDivisionId = remember { mutableStateOf<UUID?>(null) }
-    val dismissState = rememberDismissState(
-        //This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
-        //that's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
-        //In this example I want a 70% Threshold and is equal to 8
-        positionalThreshold = { value -> (value / 8).dp.toPx() })
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -76,7 +72,6 @@ fun DivisionListScreen(
                         withDismissAction = event.withDismissAction
                     )
                     if (result == SnackbarResult.ActionPerformed) {
-                        dismissState.reset()
                         onEvent(DivisionListEvent.OnUndoDeleteClick(deletedDivisionId.value!!))
                     }
                 }
@@ -87,8 +82,7 @@ fun DivisionListScreen(
         currentScreen = Screen.DivisionScreen,
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
-            println("Clicked on ${menuItem.title}")
-            onNavigate(UiEvent.Navigate(menuItem.onNavigate))
+            onEvent(DivisionListEvent.OnDeleteItems(menuItem.onNavigate))
             scope.launch {
                 drawerState.close()
             }
@@ -174,55 +168,28 @@ fun DivisionListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(items = state.divisionList, key = { division -> division.id }) { division ->
-                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        deletedDivisionId.value = division.id
-                        onEvent(DivisionListEvent.OnSwipeDelete(division.id))
-                    }
-                    SwipeToDismiss(modifier = Modifier.padding(vertical = 1.dp),
-                        state = dismissState,
-                        directions = setOf(DismissDirection.EndToStart),
-                        background = {
-                            val color by animateColorAsState(
-                                targetValue = when (dismissState.targetValue) {
-                                    DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
-                                    else -> MaterialTheme.colorScheme.background
-                                }, label = "Color"
+                    DivisionItem(
+                        division = division,
+                        onSwipe = { divisionItem ->
+                            deletedDivisionId.value = divisionItem.id
+                            onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
+                        },
+                        onCheckBoxClick = {
+                            onEvent(
+                                DivisionListEvent.OnCheckChange(
+                                    id = division.id,
+                                    value = !division.isSelected
+                                )
                             )
-                            val isVisible =
-                                dismissState.targetValue == DismissValue.DismissedToStart
-                            AnimatedVisibility(
-                                visible = isVisible, enter = fadeIn(
-                                    animationSpec = TweenSpec(
-                                        durationMillis = 400
-                                    )
-                                ), exit = fadeOut(
-                                    animationSpec = TweenSpec(
-                                        durationMillis = 400
+                        },
+                        onLongClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.ModuleScreen.withArgs(
+                                        division.id.toString()
                                     )
                                 )
-                            ) {
-                                SwipeToDeleteBackground(color = color)
-                            }
-                        },
-                        dismissContent = {
-                            DivisionCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
-                                division = division,
-                                onCheckBoxClick = {
-                                    onEvent(
-                                        DivisionListEvent.OnCheckChange(
-                                            id = division.id, value = !division.isSelected
-                                        )
-                                    )
-                                },
-                                onLongClick = {
-                                    onNavigate(
-                                        UiEvent.Navigate(
-                                            Screen.ModuleScreen.withArgs(
-                                                division.id.toString()
-                                            )
-                                        )
-                                    )
-                                })
+                            )
                         })
                 }
             }

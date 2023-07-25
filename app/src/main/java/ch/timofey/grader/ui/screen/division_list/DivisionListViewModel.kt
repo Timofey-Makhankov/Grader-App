@@ -62,7 +62,17 @@ class DivisionListViewModel @Inject constructor(
             }
 
             is DivisionListEvent.OnCreateDivision -> {
+                viewModelScope.launch {
+                    deleteDivisionItems()
+                }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateDivisionScreen.withArgs(schoolId)))
+            }
+
+            is DivisionListEvent.OnDeleteItems -> {
+                viewModelScope.launch {
+                    deleteDivisionItems()
+                }
+                sendUiEvent(UiEvent.Navigate(route = event.route))
             }
 
             is DivisionListEvent.OnCheckChange -> {
@@ -95,6 +105,15 @@ class DivisionListViewModel @Inject constructor(
         val gradeList = validExams.map { it.grade }
         return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
             .toDouble()
+    }
+
+    private suspend fun deleteDivisionItems(){
+        val divisionList = repository.getAllDivisions()
+        divisionList.collect{ list ->
+            list.filter { division -> division.onDelete }.forEach { division ->
+                repository.deleteDivision(division)
+            }
+        }
     }
 
     private fun sendUiEvent(event: UiEvent) {
