@@ -55,6 +55,22 @@ class SchoolListViewModel @Inject constructor(
                 sendUiEvent(UiEvent.Navigate(Screen.CreateSchoolScreen.route))
             }
 
+            is SchoolListEvent.OnDeleteItems -> {
+                println("Running OnDeleteItems Block")
+                viewModelScope.launch {
+                    val schoolList = repository.getAllSchools()
+                    schoolList.collect { list ->
+                        list.filter { school -> school.onDelete }.forEach { school ->
+                            repository.deleteSchool(school)
+                            println("deleted Item")
+                        }
+                    }
+                    println("After delete")
+
+                }
+                sendUiEvent(UiEvent.Navigate(event.route))
+            }
+
             is SchoolListEvent.OnCheckChange -> {
                 viewModelScope.launch {
                     repository.updateIsSelectedSchool(id = event.id, value = event.value)

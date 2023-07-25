@@ -1,23 +1,23 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 3,
-    "identityHash": "79a85915f686f69238d11e7062e225fb",
+    "version": 4,
+    "identityHash": "c44069cf1747bebc9c125d08649af11e",
     "entities": [
       {
         "tableName": "division",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `school_id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `school_year` INTEGER NOT NULL DEFAULT 0, `is_selected` INTEGER NOT NULL, `grade` REAL NOT NULL DEFAULT 0.0, `on_delete` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`), FOREIGN KEY(`school_id`) REFERENCES `school`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `school_id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `school_year` INTEGER NOT NULL DEFAULT 0, `is_selected` INTEGER NOT NULL, `grade` REAL NOT NULL DEFAULT 0.0, `on_delete` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`), FOREIGN KEY(`school_id`) REFERENCES `school`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "BLOB",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "schoolId",
             "columnName": "school_id",
-            "affinity": "BLOB",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -93,18 +93,18 @@
       },
       {
         "tableName": "exam",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `module_id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `grade` REAL NOT NULL, `weight` REAL NOT NULL, `date` INTEGER NOT NULL, `is_selected` INTEGER NOT NULL, `on_delete` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`), FOREIGN KEY(`module_id`) REFERENCES `module`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `module_id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `grade` REAL NOT NULL, `weight` REAL NOT NULL, `date` INTEGER NOT NULL, `is_selected` INTEGER NOT NULL, `on_delete` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`), FOREIGN KEY(`module_id`) REFERENCES `module`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "BLOB",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "module",
             "columnName": "module_id",
-            "affinity": "BLOB",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -184,18 +184,18 @@
       },
       {
         "tableName": "module",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `division_id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `teacher_lastname` TEXT NOT NULL DEFAULT '', `teacher_firstname` TEXT NOT NULL DEFAULT '', `is_selected` INTEGER NOT NULL, `grade` REAL NOT NULL DEFAULT 0.0, `on_delete` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`), FOREIGN KEY(`division_id`) REFERENCES `division`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `division_id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `teacher_lastname` TEXT NOT NULL DEFAULT '', `teacher_firstname` TEXT NOT NULL DEFAULT '', `is_selected` INTEGER NOT NULL, `grade` REAL NOT NULL DEFAULT 0.0, `on_delete` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`), FOREIGN KEY(`division_id`) REFERENCES `division`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "BLOB",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "divisionId",
             "columnName": "division_id",
-            "affinity": "BLOB",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -278,12 +278,12 @@
       },
       {
         "tableName": "school",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `address` TEXT NOT NULL, `zip` TEXT NOT NULL, `city` TEXT NOT NULL, `is_selected` INTEGER NOT NULL, `grade` REAL NOT NULL DEFAULT 0.0, `on_delete` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `address` TEXT NOT NULL, `zip` TEXT NOT NULL, `city` TEXT NOT NULL, `is_selected` INTEGER NOT NULL, `grade` REAL NOT NULL DEFAULT 0.0, `on_delete` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "BLOB",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -350,7 +350,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '79a85915f686f69238d11e7062e225fb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c44069cf1747bebc9c125d08649af11e')"
     ]
   }
 }

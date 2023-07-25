@@ -2,6 +2,7 @@ package ch.timofey.grader.db
 
 import androidx.room.TypeConverter
 import java.time.LocalDate
+import java.util.UUID
 
 class Converter {
     @TypeConverter

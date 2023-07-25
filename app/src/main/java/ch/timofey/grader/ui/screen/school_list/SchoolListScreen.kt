@@ -4,20 +4,24 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,7 +45,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SchoolListScreen(
     drawerState: DrawerState,
@@ -53,15 +57,11 @@ fun SchoolListScreen(
 ) {
     val scope = rememberCoroutineScope()
     val deletedSchoolId = remember { mutableStateOf<UUID?>(value = null) }
-    val dismissState = rememberDismissState(
-        //This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
-        //that's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
-        //In this example I want a 70% Threshold and is equal to 8
-        positionalThreshold = { value -> (value / 8).dp.toPx() })
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.Navigate -> {
+                    //onEvent(SchoolListEvent.OnDeleteItems(state.schoolList))
                     onNavigate(event)
                 }
 
@@ -73,7 +73,6 @@ fun SchoolListScreen(
                         withDismissAction = event.withDismissAction
                     )
                     if (result == SnackbarResult.ActionPerformed) {
-                        dismissState.reset()
                         onEvent(SchoolListEvent.OnUndoDeleteClick(deletedSchoolId.value!!))
                     }
                 }
@@ -88,7 +87,8 @@ fun SchoolListScreen(
         onItemClick = { menuItem ->
             println("Clicked on ${menuItem.title}")
             if (menuItem.onNavigate != Screen.MainScreen.route) {
-                onNavigate(UiEvent.Navigate(menuItem.onNavigate))
+                onEvent(SchoolListEvent.OnDeleteItems(menuItem.onNavigate))
+                //onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
             scope.launch {
                 drawerState.close()
@@ -150,7 +150,8 @@ fun SchoolListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(
+                            text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
@@ -178,57 +179,31 @@ fun SchoolListScreen(
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(items = state.schoolList, key = { school -> school.id }) { school ->
-                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        println("Tried to delete School: $school")
-                        deletedSchoolId.value = school.id
-                        onEvent(SchoolListEvent.OnSwipeDelete(school.id))
-                    }
-                    SwipeToDismiss(state = dismissState,
-                        modifier = Modifier.padding(vertical = 1.dp),
-                        directions = setOf(
-                            DismissDirection.EndToStart
-                        ),
-                        background = {
-                            val color by animateColorAsState(
-                                targetValue = when (dismissState.targetValue) {
-                                    DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
-                                    else -> MaterialTheme.colorScheme.background
-                                }, label = "Color"
-                            )
-                            val isVisible =
-                                dismissState.targetValue == DismissValue.DismissedToStart
-                            AnimatedVisibility(
-                                visible = isVisible, enter = fadeIn(
-                                    animationSpec = TweenSpec(
-                                        durationMillis = 400
-                                    )
-                                ), exit = fadeOut(
-                                    animationSpec = TweenSpec(
-                                        durationMillis = 400
+                items(
+                    items = state.schoolList,
+                    key = { school -> school.id },
+                ) { school ->
+                    SchoolItem(modifier = Modifier.animateItemPlacement(),
+                        school = school,
+                        onSwipe = { schoolItem ->
+                            deletedSchoolId.value = schoolItem.id
+                            onEvent(SchoolListEvent.OnSwipeDelete(schoolItem.id))
+                        },
+                        onLongClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.DivisionScreen.withArgs(
+                                        school.id.toString()
                                     )
                                 )
-                            ) { SwipeToDeleteBackground(color = color) }
+                            )
                         },
-                        dismissContent = {
-                            SchoolCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
-                                school = school,
-                                onCheckBoxClick = {
-                                    onEvent(
-                                        SchoolListEvent.OnCheckChange(
-                                            id = school.id, value = !school.isSelected
-                                        )
-                                    )
-                                },
-                                onLongClick = {
-                                    onNavigate(
-                                        UiEvent.Navigate(
-                                            Screen.DivisionScreen.withArgs(
-                                                school.id.toString()
-                                            )
-                                        )
-                                    )
-                                })
+                        onCheckBoxClick = {
+                            onEvent(
+                                SchoolListEvent.OnCheckChange(
+                                    id = school.id, value = !school.isSelected
+                                )
+                            )
                         })
                 }
             }
