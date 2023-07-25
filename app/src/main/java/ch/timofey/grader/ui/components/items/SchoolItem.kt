@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.components
+package ch.timofey.grader.ui.components.items
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec
@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
+import ch.timofey.grader.ui.components.DismissDeleteBackground
 import ch.timofey.grader.ui.components.cards.SchoolCard
 import ch.timofey.grader.ui.theme.spacing
 

@@ -6,6 +6,9 @@ fun getAverage(grades: List<Double>, weights: List<Double>): Double {
     if (grades.isEmpty() || weights.isEmpty()) {
         return 0.0
     }
+    if (grades.size != weights.size){
+        throw UnevenListDistributionException("The given lists are uneven")
+    }
     var gradeSum = 0.0
     var weightSum = 0.0
     for (index in grades.indices) {

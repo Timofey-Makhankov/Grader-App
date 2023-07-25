@@ -52,21 +52,15 @@ class SchoolListViewModel @Inject constructor(
     fun onEvent(event: SchoolListEvent) {
         when (event) {
             is SchoolListEvent.OnCreateSchool -> {
+                viewModelScope.launch {
+                    deleteSchoolItems()
+                }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateSchoolScreen.route))
             }
 
             is SchoolListEvent.OnDeleteItems -> {
-                println("Running OnDeleteItems Block")
                 viewModelScope.launch {
-                    val schoolList = repository.getAllSchools()
-                    schoolList.collect { list ->
-                        list.filter { school -> school.onDelete }.forEach { school ->
-                            repository.deleteSchool(school)
-                            println("deleted Item")
-                        }
-                    }
-                    println("After delete")
-
+                    deleteSchoolItems()
                 }
                 sendUiEvent(UiEvent.Navigate(event.route))
             }
@@ -80,7 +74,6 @@ class SchoolListViewModel @Inject constructor(
             is SchoolListEvent.OnSwipeDelete -> {
                 viewModelScope.launch {
                     repository.updateOnDeleteSchool(event.id, true)
-                    println("After update on delete")
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
                             "School Deleted was deleted", true, "Undo"
@@ -102,6 +95,15 @@ class SchoolListViewModel @Inject constructor(
         val gradeList = validExams.map { it.grade }
         return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
             .toDouble()
+    }
+
+    private suspend fun deleteSchoolItems(){
+        val schoolList = repository.getAllSchools()
+        schoolList.collect { list ->
+            list.filter { school -> school.onDelete }.forEach { school ->
+                repository.deleteSchool(school)
+            }
+        }
     }
 
     private fun sendUiEvent(event: UiEvent) {
