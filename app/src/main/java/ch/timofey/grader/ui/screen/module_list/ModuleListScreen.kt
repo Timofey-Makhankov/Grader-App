@@ -1,7 +1,6 @@
 package ch.timofey.grader.ui.screen.module_list
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
 import ch.timofey.grader.ui.components.cards.ModuleCard
+import ch.timofey.grader.ui.components.items.ModuleItem
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
@@ -36,7 +36,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModuleListScreen(
     drawerState: DrawerState,
@@ -49,11 +48,6 @@ fun ModuleListScreen(
 ) {
     val scope = rememberCoroutineScope()
     val deletedModuleId = remember { mutableStateOf<UUID?>(value = null) }
-    val dismissState = rememberDismissState(
-        // This is a Hack, you take the percentage of the the threshold (example: 50%), divide it by 10 and add 1.
-        // That's your threshold you have to divide by the value is given, which is the width of your phone in Pixels.
-        // In this example I want a 70% Threshold and is equal to 8
-        positionalThreshold = { value -> (value / 8).dp.toPx() })
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -69,10 +63,10 @@ fun ModuleListScreen(
                     val result = snackBarHostState.showSnackbar(
                         message = event.message,
                         withDismissAction = event.withDismissAction,
-                        actionLabel = event.action
+                        actionLabel = event.action,
+                        duration = SnackbarDuration.Short
                     )
                     if (result == SnackbarResult.ActionPerformed) {
-                        dismissState.reset()
                         onEvent(ModuleListEvent.OnUndoDeleteClick(deletedModuleId.value!!))
                     }
                 }
@@ -84,7 +78,7 @@ fun ModuleListScreen(
         items = NavigationDrawerItems.list,
         currentScreen = Screen.ModuleScreen,
         onItemClick = { menuItem ->
-            onNavigate(UiEvent.Navigate(menuItem.onNavigate))
+            onEvent(ModuleListEvent.OnDeleteItems(menuItem.onNavigate))
             scope.launch {
                 drawerState.close()
             }
@@ -146,8 +140,7 @@ fun ModuleListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        BottomAppBar(
-                            text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
@@ -172,59 +165,25 @@ fun ModuleListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(items = state.moduleList, key = { module -> module.id }) { module ->
-                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        deletedModuleId.value = module.id
-                        onEvent(ModuleListEvent.OnSwipeDelete(module.id))
-                    }
-                    SwipeToDismiss(modifier = Modifier.padding(vertical = 1.dp),
-                        state = dismissState,
-                        directions = setOf(DismissDirection.EndToStart),
-                        background = {
-                            val color by animateColorAsState(
-                                targetValue = when (dismissState.targetValue) {
-                                    DismissValue.Default -> MaterialTheme.colorScheme.background
-                                    DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
-                                    else -> MaterialTheme.colorScheme.background
-                                }, label = "Color"
+                    ModuleItem(module = module, onCheckBoxClick = {
+                        onEvent(
+                            ModuleListEvent.OnCheckChange(
+                                module.id, !module.isSelected
                             )
-                            val isVisible =
-                                dismissState.targetValue == DismissValue.DismissedToStart
-                            AnimatedVisibility(
-                                visible = isVisible, enter = fadeIn(
-                                    animationSpec = TweenSpec(
-                                        durationMillis = 400
-                                    )
-                                ), exit = fadeOut(
-                                    animationSpec = TweenSpec(
-                                        durationMillis = 400
-                                    )
-                                )
-                            ) {
-                                SwipeToDeleteBackground(color = color)
-                            }
-                        },
-                        dismissContent = {
-                            ModuleCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
-                                module = module,
-                                onCheckBoxClick = {
-                                    onEvent(
-                                        ModuleListEvent.OnCheckChange(
-                                            module.id, !module.isSelected
-                                        )
-                                    )
-                                },
-                                onLongClick = {
-                                    onNavigate(
-                                        UiEvent.Navigate(
-                                            Screen.ExamScreen.withArgs(module.id.toString())
-                                        )
-                                    )
-                                })
-                        })
+                        )
+                    }, onLongClick = {
+                        onNavigate(
+                            UiEvent.Navigate(
+                                Screen.ExamScreen.withArgs(module.id.toString())
+                            )
+                        )
+                    }, onSwipe = { moduleItem ->
+                        deletedModuleId.value = moduleItem.id
+                        onEvent(ModuleListEvent.OnSwipeDelete(moduleItem.id))
+                    })
                 }
             }
-
         }
-
     }
 }
+

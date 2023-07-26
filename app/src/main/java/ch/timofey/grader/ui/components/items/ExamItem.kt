@@ -16,21 +16,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ch.timofey.grader.db.domain.school.School
+import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.ui.components.DismissDeleteBackground
-import ch.timofey.grader.ui.components.cards.SchoolCard
+import ch.timofey.grader.ui.components.cards.ExamCard
 import ch.timofey.grader.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SchoolItem(
-    school: School,
-    onSwipe: (School) -> Unit,
+fun ExamItem(
+    modifier: Modifier = Modifier,
+    exam: Exam,
+    onSwipe: (Exam) -> Unit,
     onCheckBoxClick: () -> Unit,
-    onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
-    val currentItem by rememberUpdatedState(school)
+    val currentItem by rememberUpdatedState(exam)
     val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->
         when (dismissValue) {
             DismissValue.DismissedToStart -> {
@@ -41,28 +40,32 @@ fun SchoolItem(
         }
         true
     }, positionalThreshold = { value -> (value / 8).dp.toPx() })
-    SwipeToDismiss(state = dismissState,
-        modifier = Modifier,
+    SwipeToDismiss(modifier = Modifier,
         directions = setOf(DismissDirection.EndToStart),
+        state = dismissState,
         background = {
             val isVisible = dismissState.targetValue == DismissValue.DismissedToStart
-
             AnimatedVisibility(
-                visible = isVisible,
-                enter = fadeIn(animationSpec = TweenSpec(durationMillis = 400)),
-                exit = fadeOut(animationSpec = TweenSpec(durationMillis = 400))
+                visible = isVisible, enter = fadeIn(
+                    animationSpec = TweenSpec(
+                        durationMillis = 400
+                    )
+                ), exit = fadeOut(
+                    animationSpec = TweenSpec(
+                        durationMillis = 400
+                    )
+                )
             ) {
-                DismissDeleteBackground(dismissState)
+                DismissDeleteBackground(dismissState = dismissState)
             }
         },
         dismissContent = {
-            SchoolCard(
+            ExamCard(
                 modifier = Modifier
                     .padding(MaterialTheme.spacing.small)
                     .then(modifier),
-                school = currentItem,
-                onCheckBoxClick = onCheckBoxClick,
-                onLongClick = onLongClick
+                exam = exam,
+                onCheckBoxClick = onCheckBoxClick
             )
         })
 }

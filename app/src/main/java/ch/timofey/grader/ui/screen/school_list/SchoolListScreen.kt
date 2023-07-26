@@ -54,7 +54,6 @@ fun SchoolListScreen(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.Navigate -> {
-                    //onEvent(SchoolListEvent.OnDeleteItems(state.schoolList))
                     onNavigate(event)
                 }
 
@@ -63,7 +62,8 @@ fun SchoolListScreen(
                     val result = snackBarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = event.action,
-                        withDismissAction = event.withDismissAction
+                        withDismissAction = event.withDismissAction,
+                        duration = SnackbarDuration.Short
                     )
                     if (result == SnackbarResult.ActionPerformed) {
                         onEvent(SchoolListEvent.OnUndoDeleteClick(deletedSchoolId.value!!))
@@ -81,7 +81,6 @@ fun SchoolListScreen(
             println("Clicked on ${menuItem.title}")
             if (menuItem.onNavigate != Screen.MainScreen.route) {
                 onEvent(SchoolListEvent.OnDeleteItems(menuItem.onNavigate))
-                //onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
             scope.launch {
                 drawerState.close()
@@ -143,8 +142,7 @@ fun SchoolListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        BottomAppBar(
-                            text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
@@ -176,28 +174,24 @@ fun SchoolListScreen(
                     items = state.schoolList,
                     key = { school -> school.id },
                 ) { school ->
-                    SchoolItem(modifier = Modifier.animateItemPlacement(),
-                        school = school,
-                        onSwipe = { schoolItem ->
-                            deletedSchoolId.value = schoolItem.id
-                            onEvent(SchoolListEvent.OnSwipeDelete(schoolItem.id))
-                        },
-                        onLongClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.DivisionScreen.withArgs(
-                                        school.id.toString()
-                                    )
+                    SchoolItem(school = school, onSwipe = { schoolItem ->
+                        deletedSchoolId.value = schoolItem.id
+                        onEvent(SchoolListEvent.OnSwipeDelete(schoolItem.id))
+                    }, onLongClick = {
+                        onNavigate(
+                            UiEvent.Navigate(
+                                Screen.DivisionScreen.withArgs(
+                                    school.id.toString()
                                 )
                             )
-                        },
-                        onCheckBoxClick = {
-                            onEvent(
-                                SchoolListEvent.OnCheckChange(
-                                    id = school.id, value = !school.isSelected
-                                )
+                        )
+                    }, onCheckBoxClick = {
+                        onEvent(
+                            SchoolListEvent.OnCheckChange(
+                                id = school.id, value = !school.isSelected
                             )
-                        })
+                        )
+                    })
                 }
             }
 

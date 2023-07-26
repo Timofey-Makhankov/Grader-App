@@ -16,21 +16,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ch.timofey.grader.db.domain.school.School
+import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.ui.components.DismissDeleteBackground
-import ch.timofey.grader.ui.components.cards.SchoolCard
+import ch.timofey.grader.ui.components.cards.ModuleCard
 import ch.timofey.grader.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SchoolItem(
-    school: School,
-    onSwipe: (School) -> Unit,
+fun ModuleItem(
+    modifier: Modifier = Modifier,
+    module: Module,
+    onSwipe: (Module) -> Unit,
     onCheckBoxClick: () -> Unit,
-    onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onLongClick: () -> Unit
 ) {
-    val currentItem by rememberUpdatedState(school)
+    val currentItem by rememberUpdatedState(module)
     val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->
         when (dismissValue) {
             DismissValue.DismissedToStart -> {
@@ -41,26 +41,25 @@ fun SchoolItem(
         }
         true
     }, positionalThreshold = { value -> (value / 8).dp.toPx() })
-    SwipeToDismiss(state = dismissState,
-        modifier = Modifier,
+    SwipeToDismiss(modifier = Modifier,
         directions = setOf(DismissDirection.EndToStart),
+        state = dismissState,
         background = {
-            val isVisible = dismissState.targetValue == DismissValue.DismissedToStart
-
+            val visible = dismissState.targetValue == DismissValue.DismissedToStart
             AnimatedVisibility(
-                visible = isVisible,
+                visible = visible,
                 enter = fadeIn(animationSpec = TweenSpec(durationMillis = 400)),
                 exit = fadeOut(animationSpec = TweenSpec(durationMillis = 400))
             ) {
-                DismissDeleteBackground(dismissState)
+                DismissDeleteBackground(dismissState = dismissState)
             }
         },
         dismissContent = {
-            SchoolCard(
+            ModuleCard(
                 modifier = Modifier
                     .padding(MaterialTheme.spacing.small)
                     .then(modifier),
-                school = currentItem,
+                module = currentItem,
                 onCheckBoxClick = onCheckBoxClick,
                 onLongClick = onLongClick
             )

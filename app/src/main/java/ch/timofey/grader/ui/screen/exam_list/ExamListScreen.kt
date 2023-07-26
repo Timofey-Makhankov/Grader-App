@@ -2,9 +2,7 @@ package ch.timofey.grader.ui.screen.exam_list
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -20,7 +18,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
-import ch.timofey.grader.ui.components.cards.ExamCard
+import ch.timofey.grader.ui.components.items.ExamItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -40,7 +37,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamListScreen(
     state: ExamListState,
@@ -53,8 +49,6 @@ fun ExamListScreen(
 ) {
     val scope = rememberCoroutineScope()
     val deletedExamId = remember { mutableStateOf<UUID?>(null) }
-    val dismissState =
-        rememberDismissState(positionalThreshold = { value -> (value / 8).dp.toPx() })
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -73,7 +67,6 @@ fun ExamListScreen(
                         withDismissAction = event.withDismissAction
                     )
                     if (result == SnackbarResult.ActionPerformed) {
-                        dismissState.reset()
                         onEvent(ExamListEvent.OnUndoDeleteClick(deletedExamId.value!!))
                     }
                 }
@@ -82,7 +75,7 @@ fun ExamListScreen(
     }
     NavigationDrawer(
         drawerState = drawerState, items = NavigationDrawerItems.list, onItemClick = { menuItem ->
-            onNavigate(UiEvent.Navigate(menuItem.onNavigate))
+            onEvent(ExamListEvent.OnDeleteItems(menuItem.onNavigate))
             scope.launch {
                 drawerState.close()
             }
@@ -170,53 +163,23 @@ fun ExamListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(items = state.exams, key = { exam -> exam.id }) { exam ->
-                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                        deletedExamId.value = exam.id
-                        onEvent(ExamListEvent.OnSwipeDelete(exam.id))
-                    }
-                    SwipeToDismiss(modifier = Modifier.padding(vertical = 1.dp),
-                        state = dismissState,
-                        directions = setOf(DismissDirection.EndToStart),
-                        background = {
-                            val color by animateColorAsState(
-                                targetValue = when (dismissState.targetValue) {
-                                    DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
-                                    else -> MaterialTheme.colorScheme.background
-                                }, label = "Dismiss Color Change"
+                    ExamItem(exam = exam, onSwipe = { examItem ->
+                        deletedExamId.value = examItem.id
+                        onEvent(ExamListEvent.OnSwipeDelete(examItem.id))
+                    }, onCheckBoxClick = {
+                        onEvent(
+                            ExamListEvent.OnCheckChange(
+                                id = exam.id, value = !exam.isSelected
                             )
-                            val isVisible =
-                                dismissState.targetValue == DismissValue.DismissedToStart
-                            AnimatedVisibility(
-                                visible = isVisible, enter = fadeIn(
-                                    animationSpec = TweenSpec(
-                                        durationMillis = 400
-                                    )
-                                ), exit = fadeOut(
-                                    animationSpec = TweenSpec(
-                                        durationMillis = 400
-                                    )
-                                )
-                            ) {
-                                SwipeToDeleteBackground(color = color)
-                            }
-                        },
-                        dismissContent = {
-                            ExamCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
-                                exam = exam,
-                                onCheckBoxClick = {
-                                    onEvent(
-                                        ExamListEvent.OnCheckChange(
-                                            id = exam.id, value = !exam.isSelected
-                                        )
-                                    )
-                                })
-                        })
+                        )
+                    })
                 }
             }
-
         }
+
     }
 }
+
 
 @Preview
 @Composable

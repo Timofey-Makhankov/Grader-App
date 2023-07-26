@@ -6,6 +6,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -29,18 +30,19 @@ fun ExamCard(
 ) {
     val checkedState = remember { mutableStateOf(exam.isSelected) }
     val expanded = remember { mutableStateOf(isOpen) }
+    val interactionSource = remember { MutableInteractionSource() }
     Card(modifier = Modifier
         .animateContentSize(
             animationSpec = tween(
                 durationMillis = 300, easing = LinearOutSlowInEasing
             )
         )
-        .clickable { expanded.value = !expanded.value }
-        .then(modifier),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        shape = MaterialTheme.shapes.large) {
+        .clickable(interactionSource = interactionSource, indication = null) {
+            expanded.value = !expanded.value
+        }
+        .then(modifier), colors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
+    ), shape = MaterialTheme.shapes.large) {
         Column(
             modifier = Modifier.padding(MaterialTheme.spacing.small)
         ) {

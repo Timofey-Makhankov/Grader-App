@@ -58,6 +58,9 @@ class DivisionListViewModel @Inject constructor(
     fun onEvent(event: DivisionListEvent) {
         when (event) {
             is DivisionListEvent.OnReturnBack -> {
+                viewModelScope.launch {
+                    deleteDivisionItems()
+                }
                 sendUiEvent(UiEvent.PopBackStack)
             }
 

@@ -1,9 +1,7 @@
 package ch.timofey.grader.ui.screen.division_list
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,7 +17,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,10 +27,8 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
-import ch.timofey.grader.ui.components.cards.DivisionCard
 import ch.timofey.grader.ui.components.items.DivisionItem
 import ch.timofey.grader.ui.theme.GraderTheme
-import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +36,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DivisionListScreen(
     drawerState: DrawerState,
@@ -69,7 +63,8 @@ fun DivisionListScreen(
                     val result = snackBarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = event.action,
-                        withDismissAction = event.withDismissAction
+                        withDismissAction = event.withDismissAction,
+                        duration = SnackbarDuration.Short
                     )
                     if (result == SnackbarResult.ActionPerformed) {
                         onEvent(DivisionListEvent.OnUndoDeleteClick(deletedDivisionId.value!!))
@@ -143,7 +138,8 @@ fun DivisionListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(
+                            text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
@@ -168,29 +164,24 @@ fun DivisionListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(items = state.divisionList, key = { division -> division.id }) { division ->
-                    DivisionItem(
-                        division = division,
-                        onSwipe = { divisionItem ->
-                            deletedDivisionId.value = divisionItem.id
-                            onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
-                        },
-                        onCheckBoxClick = {
-                            onEvent(
-                                DivisionListEvent.OnCheckChange(
-                                    id = division.id,
-                                    value = !division.isSelected
+                    DivisionItem(division = division, onSwipe = { divisionItem ->
+                        deletedDivisionId.value = divisionItem.id
+                        onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
+                    }, onCheckBoxClick = {
+                        onEvent(
+                            DivisionListEvent.OnCheckChange(
+                                id = division.id, value = !division.isSelected
+                            )
+                        )
+                    }, onLongClick = {
+                        onNavigate(
+                            UiEvent.Navigate(
+                                Screen.ModuleScreen.withArgs(
+                                    division.id.toString()
                                 )
                             )
-                        },
-                        onLongClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.ModuleScreen.withArgs(
-                                        division.id.toString()
-                                    )
-                                )
-                            )
-                        })
+                        )
+                    })
                 }
             }
         }

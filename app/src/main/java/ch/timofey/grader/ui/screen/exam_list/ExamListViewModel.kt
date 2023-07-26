@@ -54,11 +54,24 @@ class ExamListViewModel @Inject constructor(
     fun onEvent(event: ExamListEvent) {
         when (event) {
             is ExamListEvent.OnBackButtonClick -> {
+                viewModelScope.launch {
+                    deleteExamItems()
+                }
                 sendUiEvent(UiEvent.PopBackStack)
             }
 
             is ExamListEvent.OnFABClick -> {
+                viewModelScope.launch {
+                    deleteExamItems()
+                }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateExamScreen.withArgs(moduleId)))
+            }
+
+            is ExamListEvent.OnDeleteItems -> {
+                viewModelScope.launch {
+                    deleteExamItems()
+                }
+                sendUiEvent(UiEvent.Navigate(event.route))
             }
 
             is ExamListEvent.OnCheckChange -> {
@@ -89,6 +102,15 @@ class ExamListViewModel @Inject constructor(
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
+        }
+    }
+
+    private suspend fun deleteExamItems(){
+        val examList = repository.getAllExams()
+        examList.collect { list ->
+            list.filter { exam -> exam.onDelete }.forEach { exam ->
+                repository.deleteExam(exam)
+            }
         }
     }
 

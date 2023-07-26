@@ -59,11 +59,24 @@ class ModuleListViewModel @Inject constructor(
     fun onEvent(event: ModuleListEvent) {
         when (event) {
             is ModuleListEvent.OnFABClick -> {
+                viewModelScope.launch {
+                    deleteModuleItems()
+                }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateModuleScreen.withArgs(divisionId)))
             }
 
             is ModuleListEvent.OnReturnBack -> {
+                viewModelScope.launch {
+                    deleteModuleItems()
+                }
                 sendUiEvent(UiEvent.PopBackStack)
+            }
+
+            is ModuleListEvent.OnDeleteItems -> {
+                viewModelScope.launch {
+                    deleteModuleItems()
+                }
+                sendUiEvent(UiEvent.Navigate(route = event.route))
             }
 
             is ModuleListEvent.OnCheckChange -> {
@@ -96,6 +109,15 @@ class ModuleListViewModel @Inject constructor(
         val gradeList = validExams.map { it.grade }
         return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
             .toDouble()
+    }
+
+    private suspend fun deleteModuleItems(){
+        val moduleList = repository.getAllModules()
+        moduleList.collect { list ->
+            list.filter { module -> module.onDelete }.forEach { module ->
+                repository.deleteModule(module)
+            }
+        }
     }
 
     private fun sendUiEvent(event: UiEvent) {
