@@ -20,36 +20,50 @@ title: Grader Database
 ---
 erDiagram
     Exam{
-        UUID id PK
-        VARCHAR(255) name
-        VARCHAR(255) description
-        FLOAT grade
-        FLOAT weight
-        DATE date
-        UUID modul_id FK
+        BLOB id PK
+        BLOB modul_id FK
+        TEXT name
+        TEXT description
+        REAL grade
+        REAL weight
+        INTEGER date
+        INTEGER is_selected
+        INTEGER on_delete
     }
 
     Module{
-        UUID id PK
-        VARCHAR(255) name
-        VARCHAR(255) description
-        INT division_id FK
+        BLOB id PK
+        BLOB division_id FK
+        TEXT name
+        TEXT description
+        TEXT teacher_lastname
+        TEXT teacher_firstname
+        INTEGER is_selected
+        INTEGER on_delete
+        REAL grade
     }
 
     School{
-        UUID id PK
-        VARCHAR(255) name
-        VARCHAR(255) address
-        VARCHAR(20) zip
-        VARCHAR(255) city
+        BLOB id PK
+        TEXT name
+        TEXT description
+        TEXT address
+        TEXT zip
+        TEXT city
+        INTEGER is_selected
+        INTEGER on_delete
+        REAL grade
     }
 
     Division{
-        UUID id PK
-        VARCHAR(255) name
-        VARCHAR(255) teacher_lastname
-        VARCHAR(255) teacher_firstname
-        INT school_id FK
+        BLOB id PK
+        BLOB school_id FK
+        TEXT name
+        TEXT description
+        INTEGER school_year
+        INTEGER is_selected
+        INTEGER on_delete
+        REAL grade
     }
 
     Module}o--||Division : "Zero to Many"
