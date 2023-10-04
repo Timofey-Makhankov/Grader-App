@@ -12,7 +12,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.components.AppBar
 import ch.timofey.grader.ui.utils.UiEvent
@@ -37,7 +42,9 @@ fun CreateSchoolScreen(
 
                 is UiEvent.ShowSnackBar -> {
                     snackBarHostState.showSnackbar(
-                        message = event.message, withDismissAction = event.withDismissAction
+                        message = event.message,
+                        withDismissAction = event.withDismissAction,
+                        duration = SnackbarDuration.Short
                     )
                 }
 
@@ -63,11 +70,23 @@ fun CreateSchoolScreen(
                 text = "Create School", style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(value = state.name,
-                label = { Text(text = "School Name") },
+                label = {
+                    Text(text = buildAnnotatedString {
+                        append("School name ")
+                        withStyle(
+                            style = SpanStyle(
+                                fontStyle = FontStyle.Italic, fontSize = 8.sp
+                            )
+                        ) {
+                            append("(Required)")
+                        }
+                    })
+                },
                 onValueChange = { name ->
                     onEvent(CreateSchoolEvent.OnNameChange(name))
                 },
                 modifier = Modifier
+                    .padding(top = MaterialTheme.spacing.small)
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 isError = !state.validName,
@@ -82,29 +101,90 @@ fun CreateSchoolScreen(
                 },
                 minLines = 2
             )
-            OutlinedTextField(value = state.address,
-                label = { Text(text = "Address") },
+            OutlinedTextField(modifier = Modifier
+                .padding(horizontal = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
+                value = state.address,
+                label = {
+                    Text(text = buildAnnotatedString {
+                        append("Address ")
+                        withStyle(
+                            style = SpanStyle(
+                                fontStyle = FontStyle.Italic, fontSize = 8.sp
+                            )
+                        ) {
+                            append("(Required)")
+                        }
+                    })
+                },
+                isError = !state.validAddress,
+                supportingText = {
+                    if (!state.validAddress) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = state.addressErrorMessage,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 onValueChange = { address -> onEvent(CreateSchoolEvent.OnAddressChange(address)) },
-                modifier = Modifier
-                    .padding(horizontal = MaterialTheme.spacing.large)
-                    .fillMaxWidth(),
-                singleLine = true
+                minLines = 3
             )
             OutlinedTextField(value = state.zip,
-                label = { Text(text = "Zip") },
+                label = {
+                    Text(text = buildAnnotatedString {
+                        append("Zip ")
+                        withStyle(
+                            SpanStyle(
+                                fontStyle = FontStyle.Italic, fontSize = 8.sp
+                            )
+                        ) {
+                            append("(Required)")
+                        }
+                    })
+                },
+                isError = !state.validZip,
+                supportingText = {
+                    if (!state.validZip) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = state.zipErrorMessage,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 onValueChange = { zip -> onEvent(CreateSchoolEvent.OnZipChange(zip)) },
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
-                    .padding(top = MaterialTheme.spacing.medium)
                     .fillMaxWidth(),
                 singleLine = true
             )
             OutlinedTextField(value = state.city,
-                label = { Text(text = "City") },
+                label = {
+                    Text(text = buildAnnotatedString {
+                        append("City ")
+                        withStyle(
+                            SpanStyle(
+                                fontStyle = FontStyle.Italic, fontSize = 8.sp
+                            )
+                        ) {
+                            append("(Required)")
+                        }
+                    })
+                },
+                isError = !state.validCity,
+                supportingText = {
+                    if (!state.validCity) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = state.cityErrorMessage,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 onValueChange = { city -> onEvent(CreateSchoolEvent.OnCityChange(city)) },
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
-                    .padding(top = MaterialTheme.spacing.medium)
                     .fillMaxWidth(),
                 singleLine = true
             )
@@ -112,7 +192,6 @@ fun CreateSchoolScreen(
                 value = state.description,
                 label = {
                     Text(
-
                         text = "School Description"
                     )
                 },
@@ -125,7 +204,6 @@ fun CreateSchoolScreen(
                 },
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
-                    .padding(top = MaterialTheme.spacing.medium)
                     .fillMaxWidth(),
                 minLines = 6,
             )
@@ -162,9 +240,7 @@ private fun PreviewCreateSchoolScreen() {
 private fun PreviewDarkModeCreateSchoolScreen() {
     GraderTheme {
         CreateSchoolScreen(state = CreateSchoolState(
-            showSnackBar = true,
-            validName = false,
-            nameErrorMessage = "This is an Error Message"
+            validName = false, nameErrorMessage = "This is an Error Message"
         ),
             onEvent = {},
             uiEvent = emptyFlow(),

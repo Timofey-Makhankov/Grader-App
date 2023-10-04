@@ -24,6 +24,7 @@ import ch.timofey.grader.ui.theme.spacing
 fun DismissDeleteBackground(
     dismissState: DismissState
 ){
+    dismissState.dismissDirection ?: return
     val color by animateColorAsState(
         targetValue = when (dismissState.targetValue) {
             DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer

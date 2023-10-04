@@ -12,8 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import ch.timofey.grader.ui.components.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -58,21 +63,44 @@ fun CreateDivisionScreen(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
+                    .padding(top = MaterialTheme.spacing.small)
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.name,
-                label = { Text(text = "Division Name") },
+                label = {
+                    Text(text = buildAnnotatedString {
+                        append("Division Name ")
+                        withStyle(SpanStyle(
+                            fontStyle = FontStyle.Italic, fontSize = 8.sp
+                        )){
+                            append("(Required)")
+                        }
+                    })
+                },
                 onValueChange = { name -> onEvent(CreateDivisionEvent.OnNameChange(name)) },
-                singleLine = true
+                isError = !state.validName,
+                supportingText = {
+                    if (!state.validName) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = state.errorMessageName,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
+                minLines = 2
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.year,
-                label = { Text(text = "Division Year") },
+                label = { Text(text = buildAnnotatedString {
+                    append("Division Year ")
+                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
+                        append("(Required)")
+                    }
+                }) },
                 onValueChange = { year ->
                     onEvent(CreateDivisionEvent.OnYearChange(year))
                 },
@@ -88,8 +116,7 @@ fun CreateDivisionScreen(
                     }
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-
-                )
+            )
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)

@@ -31,9 +31,11 @@ class ModuleListViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        println(divisionId)
         viewModelScope.launch {
             repository.getAllModulesFromDivisionId(UUID.fromString(divisionId))
                 .collect { moduleList ->
+                    println("ModuleList: $moduleList")
                     _uiState.value =
                         _uiState.value.copy(moduleList = moduleList.filter { module -> !module.onDelete })
                     if (moduleList.isNotEmpty()) {

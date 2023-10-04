@@ -36,9 +36,24 @@ class CreateModuleViewModel @Inject constructor(
             }
 
             is CreateModuleEvent.OnNameChange -> {
-                _uiState.value = _uiState.value.copy(
-                    name = event.name
-                )
+                if (event.name.isNotBlank()) {
+                    if (event.name.length > 60) {
+                        _uiState.value = _uiState.value.copy(
+                            validName = false,
+                            errorMessageName = "The name cannot exceed 60 characters long"
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            name = event.name, validName = true
+                        )
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        name = "",
+                        validName = false,
+                        errorMessageName = "Please enter a valid Module name"
+                    )
+                }
             }
 
             is CreateModuleEvent.OnDescriptionChange -> {
@@ -48,33 +63,80 @@ class CreateModuleViewModel @Inject constructor(
             }
 
             is CreateModuleEvent.OnTeacherFirstnameChange -> {
-                _uiState.value = _uiState.value.copy(
-                    teacherFirstname = event.teacherFirstname
-                )
+                if (event.teacherFirstname.isNotBlank()) {
+                    if (event.teacherFirstname.length > 60) {
+                        _uiState.value = _uiState.value.copy(
+                            validTeacherFirstname = false,
+                            errorMessageTeacherFirstname = "The teacher firstname cannot exceed 60 characters long"
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            teacherFirstname = event.teacherFirstname, validTeacherFirstname = true
+                        )
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        teacherFirstname = "",
+                        validTeacherFirstname = false,
+                        errorMessageTeacherFirstname = "Please enter a valid teacher firstname"
+                    )
+                }
             }
 
             is CreateModuleEvent.OnTeacherLastnameChange -> {
-                _uiState.value = _uiState.value.copy(
-                    teacherLastname = event.teacherLastname
-                )
+                if (event.teacherLastname.isNotBlank()) {
+                    if (event.teacherLastname.length > 60) {
+                        _uiState.value = _uiState.value.copy(
+                            validTeacherLastname = false,
+                            errorMessageTeacherLastname = "The teacher lastname cannot exceed 60 characters long"
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            teacherLastname = event.teacherLastname, validTeacherLastname = true
+                        )
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        teacherLastname = "",
+                        validTeacherLastname = false,
+                        errorMessageTeacherLastname = "Please enter a valid teacher lastname"
+                    )
+                }
             }
 
             is CreateModuleEvent.OnCreateModuleButtonClick -> {
-                viewModelScope.launch {
-                    repository.saveModule(
-                        Module(
-                            id = UUID.randomUUID(),
-                            name = _uiState.value.name,
-                            description = _uiState.value.description,
-                            teacherFirstname = _uiState.value.teacherFirstname,
-                            teacherLastname = _uiState.value.teacherLastname,
-                            divisionId = UUID.fromString(divisionId)
+                if (isValidInput(_uiState.value)) {
+                    viewModelScope.launch {
+                        repository.saveModule(
+                            Module(
+                                id = UUID.randomUUID(),
+                                name = _uiState.value.name,
+                                description = _uiState.value.description,
+                                teacherFirstname = _uiState.value.teacherFirstname,
+                                teacherLastname = _uiState.value.teacherLastname,
+                                divisionId = UUID.fromString(divisionId)
+                            )
                         )
-                    )
+                    }
+                    sendUiEvent(UiEvent.PopBackStack)
+                    Toast.makeText(GraderApp.getContext(), "Module Created", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        GraderApp.getContext(),
+                        "Module was unable to be created",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                sendUiEvent(UiEvent.PopBackStack)
-                Toast.makeText(GraderApp.getContext(), "Module Created", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun isValidInput(state: CreateModuleState): Boolean {
+        return if (state.name.isNotBlank() && state.teacherFirstname.isNotBlank() && state.teacherLastname.isNotBlank()) {
+            state.validName && state.validTeacherLastname && state.validTeacherFirstname
+        } else {
+            false
         }
     }
 

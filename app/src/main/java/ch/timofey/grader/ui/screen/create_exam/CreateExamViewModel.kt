@@ -18,6 +18,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.UUID
 import javax.inject.Inject
 
@@ -40,7 +41,22 @@ class CreateExamViewModel @Inject constructor(
             }
 
             is CreateExamEvent.OnNameChange -> {
-                _uiState.value = _uiState.value.copy(name = event.name)
+                if (event.name.isNotBlank()) {
+                    if (event.name.length > 60) {
+                        sendUiEvent(
+                            UiEvent.ShowSnackBar(
+                                "The Name cannot Exceed over 60 Characters",
+                                true
+                            )
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(name = event.name)
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        name = "", validName = false, errorMessageName = "Please Enter a valid Name"
+                    )
+                }
             }
 
             is CreateExamEvent.OnDescriptionChange -> {
@@ -48,15 +64,61 @@ class CreateExamViewModel @Inject constructor(
             }
 
             is CreateExamEvent.OnGradeChange -> {
-                _uiState.value = _uiState.value.copy(grade = event.grade)
+                if (event.grade.isNotBlank()) {
+                    if (numberIsValidFloatingPointNumber(event.grade)) {
+                        _uiState.value = _uiState.value.copy(grade = event.grade, validGrade = true)
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            grade = event.grade,
+                            validGrade = false,
+                            errorMessageGrade = "Please enter a Grade that is a Floating Point Number"
+                        )
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        grade = "",
+                        validGrade = false,
+                        errorMessageGrade = "Please Enter a valid Grade"
+                    )
+                }
             }
 
             is CreateExamEvent.OnWeightChange -> {
-                _uiState.value = _uiState.value.copy(weight = event.weight)
+                if (event.weight.isNotBlank()) {
+                    if (numberIsValidFloatingPointNumber(event.weight)) {
+                        _uiState.value = _uiState.value.copy(weight = event.weight, validWeight = true)
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            weight = event.weight,
+                            validWeight = false,
+                            errorMessageWeight = "Please enter a Weight that is a Floating Point Number"
+                        )
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        weight = "",
+                        validWeight = false,
+                        errorMessageWeight = "Please Enter a valid Weight"
+                    )
+                }
             }
 
             is CreateExamEvent.OnDateChange -> {
-                _uiState.value = _uiState.value.copy(date = event.date)
+                if (event.date.isNotBlank()) {
+                    if (dateIsValid(event.date)) {
+                        _uiState.value = _uiState.value.copy(date = event.date)
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            date = event.date,
+                            validDate = false,
+                            errorMessageDate = "Please Enter a Valid Date in YYYY-mm-dd format"
+                        )
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        date = "", validDate = false, errorMessageDate = "Please Enter a valid Date"
+                    )
+                }
             }
 
             is CreateExamEvent.OnSetDate -> {
@@ -67,24 +129,57 @@ class CreateExamViewModel @Inject constructor(
             }
 
             is CreateExamEvent.OnCreateExamButtonPress -> {
-                viewModelScope.launch {
-                    repository.saveExam(
-                        Exam(
-                            id = UUID.randomUUID(),
-                            name = _uiState.value.name,
-                            description = _uiState.value.description,
-                            grade = _uiState.value.grade.toDouble(),
-                            weight = _uiState.value.weight.toDouble(),
-                            date = LocalDate.parse(
-                                _uiState.value.date, DateTimeFormatter.ISO_LOCAL_DATE
-                            ),
-                            module = UUID.fromString(moduleId)
+                if (isValidInput(_uiState.value)) {
+                    viewModelScope.launch {
+                        repository.saveExam(
+                            Exam(
+                                id = UUID.randomUUID(),
+                                name = _uiState.value.name,
+                                description = _uiState.value.description,
+                                grade = _uiState.value.grade.toDouble(),
+                                weight = _uiState.value.weight.toDouble(),
+                                date = LocalDate.parse(
+                                    _uiState.value.date, DateTimeFormatter.ISO_LOCAL_DATE
+                                ),
+                                module = UUID.fromString(moduleId)
+                            )
                         )
-                    )
+                    }
+                    sendUiEvent(UiEvent.PopBackStack)
+                    Toast.makeText(GraderApp.getContext(), "Exam Created", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        GraderApp.getContext(), "Exam was unable to be created", Toast.LENGTH_SHORT
+                    ).show()
                 }
-                sendUiEvent(UiEvent.PopBackStack)
-                Toast.makeText(GraderApp.getContext(), "Exam Created", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun isValidInput(state: CreateExamState): Boolean {
+        return if (state.name.isNotBlank() && state.date.isNotBlank() && state.grade.isNotBlank() && state.weight.isNotBlank()) {
+            state.validName && state.validDate && state.validGrade && state.validWeight
+        } else {
+            false
+        }
+    }
+
+    private fun dateIsValid(date: String): Boolean {
+        return try {
+            LocalDate.parse(date)
+            true
+        } catch (_: DateTimeParseException) {
+            false
+        }
+    }
+
+    private fun numberIsValidFloatingPointNumber(number: String): Boolean {
+        return try {
+            number.toDouble()
+            true
+        } catch (_: NumberFormatException) {
+            false
         }
     }
 

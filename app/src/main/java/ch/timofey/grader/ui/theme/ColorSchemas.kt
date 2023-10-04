@@ -6,7 +6,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 object ColorSchemas {
-    val darkColorPalette: ColorScheme = darkColorScheme(
+    val darkColorSchema: ColorScheme = darkColorScheme(
         primary = Green80,
         onPrimary = Green20,
         primaryContainer = Green30,
@@ -34,7 +34,7 @@ object ColorSchemas {
         onSurfaceVariant = GreenGrey80,
         outline = GreenGrey80
     )
-    val lightColorPalette: ColorScheme = lightColorScheme(
+    val lightColorSchema: ColorScheme = lightColorScheme(
         primary = Green40,
         onPrimary = Color.White,
         primaryContainer = Green90,

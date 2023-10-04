@@ -11,7 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import ch.timofey.grader.ui.components.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -54,38 +59,80 @@ fun CreateModuleScreen(
                 text = "Create Module", style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(modifier = Modifier
-                .padding(top = MaterialTheme.spacing.medium)
+                .padding(top = MaterialTheme.spacing.small)
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
                 value = state.name,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnNameChange(value)) },
-                singleLine = true,
-                label = { Text(text = "Module name") })
+                minLines = 2,
+                isError = !state.validName,
+                label = { Text(text = buildAnnotatedString {
+                    append("Module Name ")
+                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
+                        append("(Required)")
+                    }
+                }) },
+                supportingText = {
+                    if (!state.validName) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = state.errorMessageName,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                })
             OutlinedTextField(modifier = Modifier
-                .padding(top = MaterialTheme.spacing.medium)
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
                 value = state.teacherFirstname,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnTeacherFirstnameChange(value)) },
-                singleLine = true,
-                label = { Text(text = "Teacher Firstname") })
+                minLines = 2,
+                isError = !state.validTeacherFirstname,
+                label = { Text(text = buildAnnotatedString {
+                    append("Teacher Firstname")
+                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
+                        append("(Required)")
+                    }
+                }) },
+                supportingText = {
+                    if (!state.validTeacherFirstname) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = state.errorMessageTeacherFirstname,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                })
             OutlinedTextField(modifier = Modifier
-                .padding(top = MaterialTheme.spacing.medium)
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
                 value = state.teacherLastname,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnTeacherLastnameChange(value)) },
-                singleLine = true,
-                label = { Text(text = "Teacher Lastname") })
+                minLines = 2,
+                isError = !state.validTeacherLastname,
+                label = { Text(text = buildAnnotatedString {
+                    append("Teacher Lastname")
+                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
+                        append("(Required)")
+                    }
+                }) },
+                supportingText = {
+                    if (!state.validTeacherLastname) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = state.errorMessageTeacherLastname,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                })
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(top = MaterialTheme.spacing.medium)
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnDescriptionChange(value)) },
                 label = { Text(text = "Module description") },
-                minLines = 4
+                minLines = 6
             )
             Button(modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
                 shape = MaterialTheme.shapes.large,

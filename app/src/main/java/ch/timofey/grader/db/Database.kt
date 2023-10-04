@@ -15,10 +15,13 @@ import ch.timofey.grader.db.domain.school.School
 
 @Database(
     entities = [Division::class, Exam::class, Module::class, School::class],
-    version = 3,
+    version = 4,
     exportSchema = true,
+    autoMigrations = [
+       AutoMigration(from = 3, to = 4)
+    ]
 )
-@TypeConverters(Converter::class)
+@TypeConverters(DateConverter::class, UUIDConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract val divisionDao: DivisionDao
     abstract val examDao: ExamDao

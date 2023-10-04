@@ -27,7 +27,7 @@ object NavigationDrawerItems {
             title = "Help",
             contentDescription = "Go to Help Screen",
             icon = Icons.Help,
-            onNavigate = Screen.MainScreen.route//Screen.WalkthroughScreen.route
+            onNavigate = Screen.WalkthroughScreen.route
         ), MenuItem(
             id = "about",
             title = "About",

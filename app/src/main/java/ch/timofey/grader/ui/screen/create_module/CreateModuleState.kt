@@ -6,5 +6,9 @@ data class CreateModuleState(
     val teacherFirstname: String = "",
     val teacherLastname: String = "",
     val validName: Boolean = true,
-    val errorMessageName: String = ""
+    val validTeacherFirstname: Boolean = true,
+    val validTeacherLastname: Boolean = true,
+    val errorMessageName: String = "",
+    val errorMessageTeacherFirstname: String = "",
+    val errorMessageTeacherLastname: String = ""
 )

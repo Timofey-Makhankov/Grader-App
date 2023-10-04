@@ -1,5 +1,6 @@
 package ch.timofey.grader.db.domain.division
 
+import android.util.Log
 import ch.timofey.grader.db.domain.relations.DivisionWithModules
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
@@ -46,6 +47,7 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
     }
 
     override fun getAllDivisionsFromSchoolId(id: UUID): Flow<List<Division>> {
+        Log.d("divison repository", "get All given Id: $id")
         return divisionDao.getAllDivisionsFromSchoolId(id)
     }
 }

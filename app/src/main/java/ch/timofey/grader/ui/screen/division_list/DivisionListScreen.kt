@@ -138,8 +138,7 @@ fun DivisionListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        BottomAppBar(
-                            text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },

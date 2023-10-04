@@ -52,40 +52,53 @@ class SchoolListViewModel @Inject constructor(
     fun onEvent(event: SchoolListEvent) {
         when (event) {
             is SchoolListEvent.OnCreateSchool -> {
+                println("OnCreateSchools")
                 viewModelScope.launch {
-                    deleteSchoolItems()
+                    println("tried to delete in onCreateSchool")
+                   deleteSchoolItems()
                 }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateSchoolScreen.route))
             }
 
             is SchoolListEvent.OnDeleteItems -> {
+                println("OnDeleteItems")
                 viewModelScope.launch {
-                    deleteSchoolItems()
+                    println("tried to delete in OnDeleteItems")
+                    //deleteSchoolItems()
                 }
                 sendUiEvent(UiEvent.Navigate(event.route))
             }
 
             is SchoolListEvent.OnCheckChange -> {
-                viewModelScope.launch {
+                println("OnCheckChange")
+                //viewModelScope.launch {
                     repository.updateIsSelectedSchool(id = event.id, value = event.value)
-                }
+                //}
             }
 
             is SchoolListEvent.OnSwipeDelete -> {
-                viewModelScope.launch {
+                println("OnSwipeDelete")
+                //viewModelScope.launch {
                     repository.updateOnDeleteSchool(event.id, true)
-                    sendUiEvent(
-                        UiEvent.ShowSnackBar(
-                            "School Deleted was deleted", true, "Undo"
-                        )
-                    )
+                //}
+                viewModelScope.launch {
+                    repository.getAllSchools().collect{ schoolList ->
+                        _uiState.value =
+                            _uiState.value.copy(schoolList = schoolList.filter { school -> !school.onDelete })
+                    }
                 }
+                sendUiEvent(
+                    UiEvent.ShowSnackBar(
+                        "School Deleted was deleted", true, "Undo"
+                    )
+                )
             }
 
             is SchoolListEvent.OnUndoDeleteClick -> {
-                viewModelScope.launch {
+                println("OnUdoDeleteClick")
+                //viewModelScope.launch {
                     repository.updateOnDeleteSchool(event.id, false)
-                }
+                //}
             }
         }
     }
@@ -98,6 +111,7 @@ class SchoolListViewModel @Inject constructor(
     }
 
     private suspend fun deleteSchoolItems(){
+        println("Inside deleteSchoolItems")
         val schoolList = repository.getAllSchools()
         schoolList.collect { list ->
             list.filter { school -> school.onDelete }.forEach { school ->

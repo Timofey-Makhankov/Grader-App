@@ -11,8 +11,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val darkColorPalette = ColorSchemas.darkColorPalette
-private val lightColorPalette = ColorSchemas.lightColorPalette
+private val darkColorPalette = ColorSchemas.darkColorSchema
+private val lightColorPalette = ColorSchemas.lightColorSchema
 
 @Composable
 fun GraderTheme(
@@ -34,9 +34,7 @@ fun GraderTheme(
         )
     }
 
-    CompositionLocalProvider(
-        LocalSpacing provides Spacing()
-    ) {
+    CompositionLocalProvider(LocalSpacing provides Spacing()) {
         MaterialTheme(
             colorScheme = colors,
             typography = Typography,

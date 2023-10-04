@@ -35,7 +35,21 @@ class CreateDivisionViewModel @Inject constructor(
     fun onEvent(event: CreateDivisionEvent) {
         when (event) {
             is CreateDivisionEvent.OnNameChange -> {
-                _uiState.value = _uiState.value.copy(name = event.name)
+                if (event.name.isNotBlank()) {
+                    if (event.name.length > 60) {
+                        sendUiEvent(
+                            UiEvent.ShowSnackBar(
+                                "The Name has to be not over 60 characters long", true
+                            )
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(name = event.name, validName = true)
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        name = "", validName = false, errorMessageName = "Please Enter a Valid Name"
+                    )
+                }
             }
 
             is CreateDivisionEvent.OnDescriptionChange -> {
@@ -44,8 +58,17 @@ class CreateDivisionViewModel @Inject constructor(
 
             is CreateDivisionEvent.OnYearChange -> {
                 if (event.year.isNotBlank()) {
-                    if (validateYear(event.year.toInt())) {
-                        _uiState.value = _uiState.value.copy(year = event.year, validYear = true)
+                    if (validateYear(event.year)) {
+                        if (event.year.length > 9) {
+                            sendUiEvent(
+                                UiEvent.ShowSnackBar(
+                                    "The Year cannot exceed the length of 9 characters", true
+                                )
+                            )
+                        } else {
+                            _uiState.value =
+                                _uiState.value.copy(year = event.year, validYear = true)
+                        }
                     } else {
                         _uiState.value = _uiState.value.copy(
                             year = event.year,
@@ -62,7 +85,7 @@ class CreateDivisionViewModel @Inject constructor(
             }
 
             is CreateDivisionEvent.OnCreateDivision -> {
-                if (_uiState.value.validYear) {
+                if (isValidInput(_uiState.value)) {
                     val newDivision = Division(
                         id = UUID.randomUUID(),
                         name = _uiState.value.name,
@@ -99,9 +122,17 @@ class CreateDivisionViewModel @Inject constructor(
         }
     }
 
-    private fun validateYear(year: Int): Boolean {
+    private fun isValidInput(state: CreateDivisionState): Boolean {
+        return if (state.name.isNotBlank() && validateYear(state.year)) {
+            state.validName && state.validYear
+        } else {
+            false
+        }
+    }
+
+    private fun validateYear(year: String): Boolean {
         return try {
-            Year.parse(year.toString())
+            Year.parse(year)
             true
         } catch (_: DateTimeParseException) {
             false

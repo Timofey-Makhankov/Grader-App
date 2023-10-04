@@ -27,12 +27,12 @@ class SchoolRepositoryImpl(private val schoolDao: SchoolDao) : SchoolRepository 
         return schoolDao.getById(id)
     }
 
-    override suspend fun updateIsSelectedSchool(id: UUID, value: Boolean) {
+    override fun updateIsSelectedSchool(id: UUID, value: Boolean) {
         schoolDao.updateIsSelected(id, value)
         Log.d(tag, "updated is selected")
     }
 
-    override suspend fun updateOnDeleteSchool(id: UUID, value: Boolean) {
+    override fun updateOnDeleteSchool(id: UUID, value: Boolean) {
         schoolDao.updateOnDelete(id, value)
         Log.d(tag, "updated on delete")
     }

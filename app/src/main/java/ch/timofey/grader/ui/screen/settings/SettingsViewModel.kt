@@ -3,6 +3,7 @@ package ch.timofey.grader.ui.screen.settings
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.timofey.grader.db.AppDatabase
 import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.Language
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val dataStore: DataStore<AppSettings>, private val database: AppDatabase
+    private val dataStore: DataStore<AppSettings>,
+    private val database: AppDatabase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState
@@ -33,7 +35,9 @@ class SettingsViewModel @Inject constructor(
             }
 
             is SettingsEvent.OnDeleteDatabaseButtonClick -> {
-                database.clearAllTables()
+                viewModelScope.launch {
+                    database.clearAllTables()
+                }
             }
         }
     }

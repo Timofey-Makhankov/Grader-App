@@ -13,7 +13,7 @@ interface SchoolDao {
     @Delete(entity = School::class)
     suspend fun delete(school: School)
 
-    @Update(entity = School::class)
+    @Update(entity = School::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun update(school: School)
 
     @Query("SELECT * FROM school")
@@ -22,11 +22,13 @@ interface SchoolDao {
     @Query("SELECT * FROM school WHERE id LIKE :id")
     suspend fun getById(id: UUID): School?
 
+    @Transaction
     @Query("UPDATE school SET is_selected = :value WHERE id LIKE :id")
-    suspend fun updateIsSelected(id: UUID, value: Boolean)
+    fun updateIsSelected(id: UUID, value: Boolean)
 
+    @Transaction
     @Query("UPDATE school SET on_delete = :value WHERE id LIKE :id")
-    suspend fun updateOnDelete(id: UUID, value: Boolean)
+    fun updateOnDelete(id: UUID, value: Boolean)
 
     @Transaction
     @Query("SELECT * FROM school")

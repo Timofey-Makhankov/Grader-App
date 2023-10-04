@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
@@ -29,16 +28,17 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
+import ch.timofey.grader.ui.components.cards.SchoolCard
 import ch.timofey.grader.ui.components.items.SchoolItem
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SchoolListScreen(
     drawerState: DrawerState,
@@ -59,15 +59,20 @@ fun SchoolListScreen(
 
                 is UiEvent.ShowSnackBar -> {
                     println("Inside show snack bar")
+                    println(snackBarHostState.currentSnackbarData)
                     val result = snackBarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = event.action,
                         withDismissAction = event.withDismissAction,
                         duration = SnackbarDuration.Short
                     )
+                    println(snackBarHostState.currentSnackbarData)
+                    println("after show snackbar")
                     if (result == SnackbarResult.ActionPerformed) {
                         onEvent(SchoolListEvent.OnUndoDeleteClick(deletedSchoolId.value!!))
                     }
+
+                    println("end of show snack bar")
                 }
 
                 else -> Unit
@@ -142,7 +147,8 @@ fun SchoolListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(
+                            text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
@@ -174,8 +180,9 @@ fun SchoolListScreen(
                     items = state.schoolList,
                     key = { school -> school.id },
                 ) { school ->
-                    SchoolItem(school = school, onSwipe = { schoolItem ->
+                    /*SchoolItem(school = school, onSwipe = { schoolItem ->
                         deletedSchoolId.value = schoolItem.id
+                        println("inside the onSwipe function")
                         onEvent(SchoolListEvent.OnSwipeDelete(schoolItem.id))
                     }, onLongClick = {
                         onNavigate(
@@ -191,7 +198,27 @@ fun SchoolListScreen(
                                 id = school.id, value = !school.isSelected
                             )
                         )
-                    })
+                    })*/
+                    SchoolCard(
+                        modifier = Modifier.padding(MaterialTheme.spacing.small),
+                        onCheckBoxClick = {
+                            onEvent(
+                                SchoolListEvent.OnCheckChange(
+                                    id = school.id, value = !school.isSelected
+                                )
+                            )
+                        },
+                        onLongClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.DivisionScreen.withArgs(
+                                        school.id.toString()
+                                    )
+                                )
+                            )
+                        },
+                        school = school
+                    )
                 }
             }
 

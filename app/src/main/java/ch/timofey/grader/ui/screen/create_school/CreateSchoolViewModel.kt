@@ -30,20 +30,28 @@ class CreateSchoolViewModel @Inject constructor(
     fun onEvent(event: CreateSchoolEvent) {
         when (event) {
             is CreateSchoolEvent.OnCreateSchool -> {
-                val newSchool = School(
-                    id = UUID.randomUUID(),
-                    name = _uiState.value.name,
-                    description = _uiState.value.description,
-                    address = _uiState.value.address,
-                    zipCode = _uiState.value.zip,
-                    city = _uiState.value.city
-                )
-                println(newSchool)
-                viewModelScope.launch {
-                    repository.saveSchool(newSchool)
+                if (isValidateInput(_uiState.value)) {
+                    val newSchool = School(
+                        id = UUID.randomUUID(),
+                        name = _uiState.value.name,
+                        description = _uiState.value.description,
+                        address = _uiState.value.address,
+                        zipCode = _uiState.value.zip,
+                        city = _uiState.value.city
+                    )
+                    viewModelScope.launch {
+                        repository.saveSchool(newSchool)
+                    }
+                    sendUiEvent(UiEvent.PopBackStack)
+                    Toast.makeText(GraderApp.getContext(), "School Created", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        GraderApp.getContext(),
+                        "School was unable to be created",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                sendUiEvent(UiEvent.PopBackStack)
-                Toast.makeText(GraderApp.getContext(), "School Created", Toast.LENGTH_SHORT).show()
             }
 
             is CreateSchoolEvent.OnNameChange -> {
@@ -51,7 +59,7 @@ class CreateSchoolViewModel @Inject constructor(
                     if (event.name.length > 60) {
                         sendUiEvent(
                             UiEvent.ShowSnackBar(
-                                "The Name has to be not over 30 characters long",
+                                "The Name has to be not over 60 characters long",
                                 withDismissAction = true
                             )
                         )
@@ -60,7 +68,9 @@ class CreateSchoolViewModel @Inject constructor(
                     }
                 } else {
                     _uiState.value = _uiState.value.copy(
-                        name = "", validName = false, nameErrorMessage = "Please Enter a Name"
+                        name = "",
+                        validName = false,
+                        nameErrorMessage = "Please Enter a valid School Name"
                     )
                 }
             }
@@ -70,20 +80,53 @@ class CreateSchoolViewModel @Inject constructor(
             }
 
             is CreateSchoolEvent.OnAddressChange -> {
-                _uiState.value = _uiState.value.copy(address = event.address)
+                if (event.address.isNotBlank()) {
+                    _uiState.value =
+                        _uiState.value.copy(address = event.address, validAddress = true)
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        address = "",
+                        validAddress = false,
+                        addressErrorMessage = "Please Enter a valid Address"
+                    )
+                }
             }
 
             is CreateSchoolEvent.OnZipChange -> {
-                _uiState.value = _uiState.value.copy(zip = event.zip)
+                if (event.zip.isNotBlank()) {
+                    _uiState.value = _uiState.value.copy(zip = event.zip, validZip = true)
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        zip = "",
+                        validZip = false,
+                        zipErrorMessage = "Please Enter a Valid Zip Code"
+                    )
+                }
             }
 
             is CreateSchoolEvent.OnCityChange -> {
-                _uiState.value = _uiState.value.copy(city = event.city)
+                if (event.city.isNotBlank()) {
+                    _uiState.value = _uiState.value.copy(city = event.city, validCity = true)
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        city = "",
+                        validCity = false,
+                        cityErrorMessage = "Please Enter a Valid City Name"
+                    )
+                }
             }
 
             is CreateSchoolEvent.OnReturnBack -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
+        }
+    }
+
+    private fun isValidateInput(state: CreateSchoolState): Boolean {
+        return if (state.name.isNotBlank() && state.address.isNotBlank() && state.zip.isNotBlank() && state.city.isNotBlank()) {
+            state.validName && state.validAddress && state.validCity && state.validZip
+        } else {
+            false
         }
     }
 

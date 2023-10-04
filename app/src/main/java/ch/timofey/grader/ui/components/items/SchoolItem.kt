@@ -35,11 +35,11 @@ fun SchoolItem(
         when (dismissValue) {
             DismissValue.DismissedToStart -> {
                 onSwipe(currentItem)
+                true
             }
 
-            else -> Unit
+            else -> false
         }
-        true
     }, positionalThreshold = { value -> (value / 8).dp.toPx() })
     SwipeToDismiss(state = dismissState,
         modifier = Modifier,

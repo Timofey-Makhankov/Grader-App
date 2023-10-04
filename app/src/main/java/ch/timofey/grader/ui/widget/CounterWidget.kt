@@ -1,5 +1,5 @@
 package ch.timofey.grader.ui.widget
-
+/*
 import android.content.Context
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.sp
@@ -70,4 +70,4 @@ object IncrementActionCallback : ActionCallback {
         }
         CounterWidget.update(context, glanceId)
     }
-}
+}*/

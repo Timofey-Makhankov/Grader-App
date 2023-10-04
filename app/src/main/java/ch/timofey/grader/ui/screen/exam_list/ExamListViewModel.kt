@@ -31,8 +31,11 @@ class ExamListViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        println("init")
         viewModelScope.launch {
             repository.getAllExamsFromModuleId(UUID.fromString(moduleId)).collect { examList ->
+                println(examList)
+                println(moduleId)
                 _uiState.value =
                     _uiState.value.copy(exams = examList.filter { exam -> !exam.onDelete })
                 if (examList.isNotEmpty()) {
