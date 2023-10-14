@@ -5,6 +5,19 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
 
+/**
+ * This is the School Entity saved to the database
+ *
+ * @property id unique [UUID]
+ * @property name String of School name
+ * @property description String description of the School
+ * @property address String address with number
+ * @property zipCode String Zipcode
+ * @property city String City
+ * @property isSelected To able to see it's grade
+ * @property grade average grade of previous items
+ * @property onDelete to delete entity in future
+ */
 @Entity(tableName = "school")
 data class School(
     @PrimaryKey(autoGenerate = false) val id: UUID,
