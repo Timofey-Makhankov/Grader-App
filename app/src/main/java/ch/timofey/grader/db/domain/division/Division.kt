@@ -4,6 +4,18 @@ import androidx.room.*
 import ch.timofey.grader.db.domain.school.School
 import java.util.UUID
 
+/**
+ * This is the division entity saved to the database
+ *
+ * @property id unique [UUID]
+ * @property schoolId [UUID] of school entity
+ * @property name of division
+ * @property description of division
+ * @property schoolYear year for division
+ * @property isSelected to be able to see it's grade
+ * @property grade average grade of previous item
+ * @property onDelete to delete in the future
+ */
 @Entity(
     tableName = "division", foreignKeys = [ForeignKey(
         entity = School::class,

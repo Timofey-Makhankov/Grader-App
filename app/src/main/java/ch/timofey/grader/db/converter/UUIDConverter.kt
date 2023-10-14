@@ -1,4 +1,4 @@
-package ch.timofey.grader.db
+package ch.timofey.grader.db.converter
 
 import androidx.room.TypeConverter
 import java.util.UUID

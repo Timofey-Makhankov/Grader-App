@@ -6,11 +6,11 @@ This Application is designed to Easily Track Your Grades in School and Calculate
 
 This Features are _Still in Progress_. **Not FINAL**
 
-- Save Grades for each subject
-- Get the average of the given subject Grade
-- Export the Data in either a JSON or CSV Format
-- rounding to full or .5 grade
-- easily manage grades
+- [ ] Save Grades for each subject
+- [X] Get the average of the given subject Grade
+- [ ] Export the Data in either a JSON or CSV Format
+- [ ] rounding to full or .5 grade
+- [ ] easily manage grades
 
 ## Database Schema
 
@@ -69,6 +69,7 @@ erDiagram
     Module}o--||Division : "Zero to Many"
     Division}|--||School : "One to Many"
     Exam}|--||Module : "One to Many"
+   
 ```
 
 in SQLlite hat es kein uuid type, muss als string oder blob speichern

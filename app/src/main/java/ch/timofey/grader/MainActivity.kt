@@ -1,15 +1,17 @@
 package ch.timofey.grader
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Window
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.core.app.LocaleManagerCompat
 import androidx.core.view.WindowCompat
 import ch.timofey.grader.navigation.Navigation
 import ch.timofey.grader.ui.theme.GraderTheme
@@ -19,18 +21,22 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                Color.TRANSPARENT, Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                Color.TRANSPARENT, Color.TRANSPARENT
+            )
+        )
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        println("App: ${AppCompatDelegate.getApplicationLocales()}")
-        println("System: ${
-            GraderApp.getContext()?.let { LocaleManagerCompat.getSystemLocales(it) }
-        }")
         //installSplashScreen()
         setContent {
             GraderTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation()
                 }
