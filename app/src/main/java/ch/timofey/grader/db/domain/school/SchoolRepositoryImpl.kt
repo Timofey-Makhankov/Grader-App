@@ -15,7 +15,7 @@ class SchoolRepositoryImpl(private val schoolDao: SchoolDao) : SchoolRepository 
 
     override suspend fun deleteSchool(id: UUID) {
         Log.v(tag, "trying to delete school")
-        schoolDao.delete(id)
+        schoolDao.deleteById(id)
         Log.d(tag, "school deleted")
     }
 

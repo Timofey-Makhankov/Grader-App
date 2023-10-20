@@ -24,11 +24,11 @@ interface SchoolDao {
     /**
      * delete a given Entity in the Room Database
      *
-     * @param school [School] Entity
+     * @param id [UUID]
      * @see School
      */
     @Query("DELETE FROM school WHERE id = :id")
-    suspend fun delete(id: UUID)
+    suspend fun deleteById(id: UUID)
 
     /**
      * Update an Entity with the updated values from given School Entity,

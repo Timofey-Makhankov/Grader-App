@@ -15,7 +15,7 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
 
     override suspend fun deleteDivision(id: UUID) {
         Log.v(tag, "trying to delete division")
-        divisionDao.delete(id)
+        divisionDao.deleteById(id)
         Log.d(tag, "division deleted")
     }
 

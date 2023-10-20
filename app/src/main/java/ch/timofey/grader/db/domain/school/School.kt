@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.util.UUID
 
 /**
- * This is the School Entity saved to the database
+ * This is the School Entity schema for the database
  *
  * @property id unique [UUID]
  * @property name String of School name

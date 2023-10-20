@@ -4,6 +4,8 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import ch.timofey.grader.db.converter.DateConverter
+import ch.timofey.grader.db.converter.UUIDConverter
 import ch.timofey.grader.db.domain.division.DivisionDao
 import ch.timofey.grader.db.domain.exam.ExamDao
 import ch.timofey.grader.db.domain.module.ModuleDao

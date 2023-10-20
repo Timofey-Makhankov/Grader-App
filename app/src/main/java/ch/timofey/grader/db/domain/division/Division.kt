@@ -5,7 +5,7 @@ import ch.timofey.grader.db.domain.school.School
 import java.util.UUID
 
 /**
- * This is the division entity saved to the database
+ * This is the division entity schema for the database
  *
  * @property id unique [UUID]
  * @property schoolId [UUID] of school entity

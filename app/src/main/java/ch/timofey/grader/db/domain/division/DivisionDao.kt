@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 /**
- * The Dao for the division entity in the database
+ * The Dao Interface for the Division Entity
+ * @see Division
  */
 @Dao
 interface DivisionDao {
@@ -26,7 +27,7 @@ interface DivisionDao {
      * @see Division
      */
     @Query("DELETE FROM division WHERE id LIKE :id")
-    suspend fun delete(id: UUID)
+    suspend fun deleteById(id: UUID)
 
     /**
      * update a division entity

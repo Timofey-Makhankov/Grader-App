@@ -11,6 +11,7 @@ sealed class Screen(var route: String) {
     object CreateExamScreen : Screen("create_exam_screen")
     object SettingsScreen : Screen("settings_screen")
     object ShareScreen : Screen("share_screen")
+    object SchoolEditScreen : Screen("edit_school_screen")
     object CalculatorScreen : Screen("calculator_screen")
     object WalkthroughScreen : Screen("walkthrough_screen")
 

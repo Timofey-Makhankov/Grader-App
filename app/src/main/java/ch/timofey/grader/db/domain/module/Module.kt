@@ -4,6 +4,19 @@ import androidx.room.*
 import ch.timofey.grader.db.domain.division.Division
 import java.util.UUID
 
+/**
+ * This is the module entity schema for the database
+ *
+ * @property id unique [UUID]
+ * @property divisionId [UUID] for division entity
+ * @property name of the division
+ * @property description of the division
+ * @property teacherLastname String
+ * @property teacherFirstname String
+ * @property isSelected to be able to see it's grade
+ * @property grade average grade of previous item
+ * @property onDelete to delete in the future
+ */
 @Entity(
     tableName = "module", foreignKeys = [ForeignKey(
         entity = Division::class,
