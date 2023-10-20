@@ -13,7 +13,7 @@ import java.util.UUID
  * @property description of the division
  * @property teacherLastname String
  * @property teacherFirstname String
- * @property isSelected to be able to see it's grade
+ * @property isSelected to be able to see its grade
  * @property grade average grade of previous item
  * @property onDelete to delete in the future
  */

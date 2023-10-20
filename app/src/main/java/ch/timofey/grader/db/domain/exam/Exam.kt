@@ -5,6 +5,19 @@ import ch.timofey.grader.db.domain.module.Module
 import java.time.LocalDate
 import java.util.UUID
 
+/**
+ * This is the Exam entity schema for the database
+ *
+ * @property id unique [UUID]
+ * @property moduleId [UUID] for module entity
+ * @property name of the exam
+ * @property description of the exam
+ * @property grade of the exam
+ * @property weight of the exam
+ * @property date when exam taken
+ * @property isSelected to be able to see its grade
+ * @property onDelete to delete in the future
+ */
 @Entity(
     tableName = "exam", foreignKeys = [ForeignKey(
         entity = Module::class,
@@ -15,7 +28,7 @@ import java.util.UUID
 )
 data class Exam(
     @PrimaryKey(autoGenerate = false) val id: UUID,
-    @ColumnInfo(name = "module_id", index = true) val module: UUID,
+    @ColumnInfo(name = "module_id", index = true) val moduleId: UUID,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "description") val description: String?,
     @ColumnInfo(name = "grade") val grade: Double,
