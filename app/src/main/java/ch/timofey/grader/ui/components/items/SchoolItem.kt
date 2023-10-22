@@ -62,7 +62,9 @@ fun SchoolItem(
                     .then(modifier),
                 school = currentItem,
                 onCheckBoxClick = onCheckBoxClick,
-                onLongClick = onLongClick
+                onLongClick = onLongClick,
+                onDeleteClick = {},
+                onEditClick = {}
             )
         })
 }

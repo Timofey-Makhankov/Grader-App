@@ -29,7 +29,6 @@ import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
 import ch.timofey.grader.ui.components.items.ExamItem
 import ch.timofey.grader.ui.theme.GraderTheme
-import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
@@ -53,6 +52,7 @@ fun ExamListScreen(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.Navigate -> {
+                    snackBarHostState.currentSnackbarData?.dismiss()
                     onNavigate(event)
                 }
 
@@ -61,13 +61,15 @@ fun ExamListScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
-                    val result = snackBarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.action,
-                        withDismissAction = event.withDismissAction
-                    )
-                    if (result == SnackbarResult.ActionPerformed) {
-                        onEvent(ExamListEvent.OnUndoDeleteClick(deletedExamId.value!!))
+                    scope.launch {
+                        val result = snackBarHostState.showSnackbar(
+                            message = event.message,
+                            actionLabel = event.action,
+                            withDismissAction = event.withDismissAction
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            onEvent(ExamListEvent.OnUndoDeleteClick(deletedExamId.value!!))
+                        }
                     }
                 }
             }
@@ -86,9 +88,11 @@ fun ExamListScreen(
             topBar = {
                 AppBar(
                     onNavigationIconClick = { onEvent(ExamListEvent.OnBackButtonClick) },
-                    icon = Icons.Default.ArrowBack,
-                    contentDescription = "Go Back to previous Screen",
-                    appBarTitle = "Exams"
+                    actionIcon = Icons.Default.ArrowBack,
+                    actionContentDescription = "Go Back to previous Screen",
+                    appBarTitle = "Exams",
+                    locationIndicator = true,
+                    pageIndex = 3
                 )
             },
             bottomBar = {

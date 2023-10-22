@@ -46,6 +46,7 @@ val Red10 = Color(0xFF410001)
 val Red20 = Color(0xFF680003)
 val Red30 = Color(0xFF930006)
 val Red40 = Color(0xFFBA1B1B)
+val Red60 = Color(0xFFEB5051)
 val Red80 = Color(0xFFFFB4A9)
 val Red90 = Color(0xFFFFDAD4)
 
@@ -54,3 +55,8 @@ val Grey20 = Color(0xFF2D3132)
 val Grey90 = Color(0xFFE0E3E3)
 val Grey95 = Color(0xFFEFF1F1)
 val Grey99 = Color(0xFFFBFDFD)
+
+// Yellow Color Grades
+val Yellow80 = Color(0xFFE3DA78)
+val Yellow60 = Color(0xFFEBCA51)
+val Yellow30 = Color(0xFFa88114)

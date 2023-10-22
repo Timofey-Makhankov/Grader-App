@@ -1,8 +1,8 @@
 package ch.timofey.grader.ui.screen.module_list
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -18,21 +18,23 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
+import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
-import ch.timofey.grader.ui.components.cards.ModuleCard
 import ch.timofey.grader.ui.components.items.ModuleItem
-import ch.timofey.grader.ui.theme.spacing
+import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -154,9 +156,11 @@ fun ModuleListScreen(
             topBar = {
                 AppBar(
                     onNavigationIconClick = { onEvent(ModuleListEvent.OnReturnBack) },
-                    icon = Icons.Default.ArrowBack,
-                    contentDescription = "Go Back to previous Screen",
-                    appBarTitle = "Modules"
+                    actionIcon = Icons.Default.ArrowBack,
+                    actionContentDescription = "Go Back to previous Screen",
+                    appBarTitle = "Modules",
+                    locationIndicator = true,
+                    pageIndex = 2
                 )
             }) {
             LazyColumn(
@@ -188,3 +192,92 @@ fun ModuleListScreen(
     }
 }
 
+@Preview
+@Composable
+private fun ModuleListScreenPreview() {
+    GraderTheme {
+        ModuleListScreen(
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+            state = ModuleListState(
+                moduleList = listOf(
+                    Module(
+                        id = UUID.randomUUID(),
+                        divisionId = UUID.randomUUID(),
+                        name = LoremIpsum(3).values.joinToString(""),
+                        description = LoremIpsum(20).values.joinToString(""),
+                        teacherFirstname = "",
+                        teacherLastname = ""
+                    ),
+                    Module(
+                        id = UUID.randomUUID(),
+                        divisionId = UUID.randomUUID(),
+                        name = LoremIpsum(3).values.joinToString(""),
+                        description = LoremIpsum(20).values.joinToString(""),
+                        teacherFirstname = "",
+                        teacherLastname = "",
+                        isSelected = true,
+
+                    ),
+                    Module(
+                        id = UUID.randomUUID(),
+                        divisionId = UUID.randomUUID(),
+                        name = LoremIpsum(3).values.joinToString(""),
+                        description = LoremIpsum(20).values.joinToString(""),
+                        teacherFirstname = "",
+                        teacherLastname = ""
+                    )
+                )
+            ),
+            onEvent = {},
+            uiEvent = emptyFlow(),
+            onPopBackStack = {},
+            onNavigate = {},
+            snackBarHostState = SnackbarHostState()
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ModuleListScreenDarkModePreview() {
+    GraderTheme {
+        ModuleListScreen(
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+            state = ModuleListState(
+                moduleList = listOf(
+                    Module(
+                        id = UUID.randomUUID(),
+                        divisionId = UUID.randomUUID(),
+                        name = LoremIpsum(3).values.joinToString(""),
+                        description = LoremIpsum(20).values.joinToString(""),
+                        teacherFirstname = "",
+                        teacherLastname = ""
+                    ),
+                    Module(
+                        id = UUID.randomUUID(),
+                        divisionId = UUID.randomUUID(),
+                        name = LoremIpsum(3).values.joinToString(""),
+                        description = LoremIpsum(20).values.joinToString(""),
+                        teacherFirstname = "",
+                        teacherLastname = "",
+                        isSelected = true,
+
+                        ),
+                    Module(
+                        id = UUID.randomUUID(),
+                        divisionId = UUID.randomUUID(),
+                        name = LoremIpsum(3).values.joinToString(""),
+                        description = LoremIpsum(20).values.joinToString(""),
+                        teacherFirstname = "",
+                        teacherLastname = ""
+                    )
+                )
+            ),
+            onEvent = {},
+            uiEvent = emptyFlow(),
+            onPopBackStack = {},
+            onNavigate = {},
+            snackBarHostState = SnackbarHostState()
+        )
+    }
+}

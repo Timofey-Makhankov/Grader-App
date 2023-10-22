@@ -18,9 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
+import io.github.serpro69.kfaker.Faker
+import io.github.serpro69.kfaker.fakerConfig
 import java.util.UUID
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -99,16 +102,17 @@ fun ModuleCard(
 @Preview(showBackground = false)
 @Composable
 private fun ModuleCardPreview() {
+    val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ModuleCard(
             module = Module(
                 id = UUID.randomUUID(),
-                name = "Chemistry",
-                description = "In this module, we are looking into how the molecular bonds are connected together",
+                name = f.science.branch.formalBasic(),
+                description = LoremIpsum().values.joinToString(""),
                 isSelected = false,
                 divisionId = UUID.randomUUID(),
-                teacherFirstname = "Daniela",
-                teacherLastname = "Boomer",
+                teacherFirstname = "",
+                teacherLastname = "",
             ),
             onCheckBoxClick = {},
             onLongClick = {},
@@ -119,16 +123,17 @@ private fun ModuleCardPreview() {
 @Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ModuleCardDarkModePreview() {
+    val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ModuleCard(
             module = Module(
                 id = UUID.randomUUID(),
-                name = "Chemistry",
-                description = "In this module, we are looking into how the molecular bonds are connected together",
+                name = f.science.branch.formalApplied(),
+                description = LoremIpsum().values.joinToString(""),
                 isSelected = true,
                 divisionId = UUID.randomUUID(),
-                teacherFirstname = "Daniela",
-                teacherLastname = "Boomer",
+                teacherFirstname = f.name.firstName(),
+                teacherLastname = f.name.lastName(),
                 grade = 3.9
             ),
             isOpen = true,

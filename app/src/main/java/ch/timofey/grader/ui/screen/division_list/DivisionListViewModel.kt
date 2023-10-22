@@ -21,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DivisionListViewModel @Inject constructor(
-    private val repository: DivisionRepository, savedStateHandle: SavedStateHandle
+    private val repository: DivisionRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val schoolId: String = savedStateHandle.get<String>("id").orEmpty()
@@ -110,12 +111,10 @@ class DivisionListViewModel @Inject constructor(
             .toDouble()
     }
 
-    private suspend fun deleteDivisionItems(){
+    private suspend fun deleteDivisionItems() {
         val divisionList = repository.getAllDivisions()
-        divisionList.collect{ list ->
-            list.filter { division -> division.onDelete }.forEach { division ->
-                repository.deleteDivision(division)
-            }
+        divisionList.filter { division -> division.onDelete }.forEach { division ->
+            repository.deleteDivision(division.id)
         }
     }
 

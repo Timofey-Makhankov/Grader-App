@@ -66,6 +66,9 @@ dependencies {
     // Unit Testing
     testImplementation 'junit:junit:4.13.2'
 
+    // Kotlin Faker
+    implementation 'io.github.serpro69:kotlin-faker:1.15.0'
+
     //Mockito framework
     testImplementation "org.mockito:mockito-core:5.6.0"
     //mockito-kotlin

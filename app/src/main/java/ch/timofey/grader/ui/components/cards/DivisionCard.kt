@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -106,7 +107,7 @@ private fun DivisionCardPreview() {
         DivisionCard(division = Division(
             id = UUID.randomUUID(),
             name = "Semester 1",
-            description = "lorem Impsum",
+            description = LoremIpsum(20).values.joinToString(""),
             schoolYear = 2024,
             schoolId = UUID.randomUUID(),
             isSelected = false,
@@ -124,7 +125,7 @@ private fun DivisionCardDarkModePreview() {
         DivisionCard(division = Division(
             id = UUID.randomUUID(),
             name = "Semester 3",
-            description = "lorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsumlorem Impsum",
+            description = LoremIpsum(20).values.joinToString(""),
             schoolYear = 2022,
             schoolId = UUID.randomUUID(),
             isSelected = true,

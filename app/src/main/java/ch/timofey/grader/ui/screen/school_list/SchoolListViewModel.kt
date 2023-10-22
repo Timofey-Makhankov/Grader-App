@@ -1,5 +1,6 @@
 package ch.timofey.grader.ui.screen.school_list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.school.School
@@ -29,9 +30,8 @@ class SchoolListViewModel @Inject constructor(
     val uiState: StateFlow<SchoolListState> = _uiState.asStateFlow()
 
     init {
-        println("starting init")
         viewModelScope.launch {
-            repository.getAllSchools().collect { schoolList ->
+            repository.getAllSchoolFlows().collect { schoolList ->
                 _uiState.value =
                     _uiState.value.copy(schoolList = schoolList.filter { school -> !school.onDelete })
                 if (schoolList.isNotEmpty()) {
@@ -52,53 +52,53 @@ class SchoolListViewModel @Inject constructor(
     fun onEvent(event: SchoolListEvent) {
         when (event) {
             is SchoolListEvent.OnCreateSchool -> {
-                println("OnCreateSchools")
+                Log.d("SchoolListvm-ocs", "trying to delete schools")
                 viewModelScope.launch {
-                    println("tried to delete in onCreateSchool")
-                   deleteSchoolItems()
+                    repository.getAllSchools().filter { school -> school.onDelete }
+                        .forEach { school ->
+                            Log.d("inside loop ocs", "$school")
+                            repository.deleteSchool(school.id)
+                        }
                 }
+                Log.d("ocs", "tried to delete Schools")
                 sendUiEvent(UiEvent.Navigate(Screen.CreateSchoolScreen.route))
             }
 
             is SchoolListEvent.OnDeleteItems -> {
                 println("OnDeleteItems")
+                Log.d("SchoolListvm-odi", "trying to delete schools")
                 viewModelScope.launch {
-                    println("tried to delete in OnDeleteItems")
                     //deleteSchoolItems()
+                    Log.d("odi", "tried to delete SChools")
                 }
                 sendUiEvent(UiEvent.Navigate(event.route))
             }
 
             is SchoolListEvent.OnCheckChange -> {
-                println("OnCheckChange")
-                //viewModelScope.launch {
-                    repository.updateIsSelectedSchool(id = event.id, value = event.value)
-                //}
+                viewModelScope.launch {
+                    repository.updateIsSelectedSchool(id = event.schoolId, value = event.value)
+                }
             }
 
-            is SchoolListEvent.OnSwipeDelete -> {
-                println("OnSwipeDelete")
-                //viewModelScope.launch {
-                    repository.updateOnDeleteSchool(event.id, true)
-                //}
+            is SchoolListEvent.OnItemClickDelete -> {
                 viewModelScope.launch {
-                    repository.getAllSchools().collect{ schoolList ->
+                    repository.updateOnDeleteSchool(event.schoolId, true)
+                    repository.getAllSchoolFlows().collect { schoolList ->
                         _uiState.value =
                             _uiState.value.copy(schoolList = schoolList.filter { school -> !school.onDelete })
                     }
-                }
-                sendUiEvent(
-                    UiEvent.ShowSnackBar(
-                        "School Deleted was deleted", true, "Undo"
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "School Deleted was deleted", true, "Undo"
+                        )
                     )
-                )
+                }
             }
 
             is SchoolListEvent.OnUndoDeleteClick -> {
-                println("OnUdoDeleteClick")
-                //viewModelScope.launch {
-                    repository.updateOnDeleteSchool(event.id, false)
-                //}
+                viewModelScope.launch {
+                    repository.updateOnDeleteSchool(event.schoolId, false)
+                }
             }
         }
     }
@@ -108,16 +108,6 @@ class SchoolListViewModel @Inject constructor(
         val gradeList = validExams.map { it.grade }
         return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
             .toDouble()
-    }
-
-    private suspend fun deleteSchoolItems(){
-        println("Inside deleteSchoolItems")
-        val schoolList = repository.getAllSchools()
-        schoolList.collect { list ->
-            list.filter { school -> school.onDelete }.forEach { school ->
-                repository.deleteSchool(school)
-            }
-        }
     }
 
     private fun sendUiEvent(event: UiEvent) {

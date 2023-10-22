@@ -29,7 +29,6 @@ import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
 import ch.timofey.grader.ui.components.cards.SchoolCard
-import ch.timofey.grader.ui.components.items.SchoolItem
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -165,9 +164,11 @@ fun SchoolListScreen(
                             drawerState.open()
                         }
                     },
-                    icon = Icons.Default.Menu,
-                    contentDescription = "Toggle Drawer",
-                    appBarTitle = "Schools"
+                    actionIcon = Icons.Default.Menu,
+                    actionContentDescription = "Toggle Drawer",
+                    appBarTitle = "Schools",
+                    locationIndicator = true,
+                    pageIndex = 0
                 )
             }) {
             LazyColumn(
@@ -180,31 +181,12 @@ fun SchoolListScreen(
                     items = state.schoolList,
                     key = { school -> school.id },
                 ) { school ->
-                    /*SchoolItem(school = school, onSwipe = { schoolItem ->
-                        deletedSchoolId.value = schoolItem.id
-                        println("inside the onSwipe function")
-                        onEvent(SchoolListEvent.OnSwipeDelete(schoolItem.id))
-                    }, onLongClick = {
-                        onNavigate(
-                            UiEvent.Navigate(
-                                Screen.DivisionScreen.withArgs(
-                                    school.id.toString()
-                                )
-                            )
-                        )
-                    }, onCheckBoxClick = {
-                        onEvent(
-                            SchoolListEvent.OnCheckChange(
-                                id = school.id, value = !school.isSelected
-                            )
-                        )
-                    })*/
                     SchoolCard(
                         modifier = Modifier.padding(MaterialTheme.spacing.small),
                         onCheckBoxClick = {
                             onEvent(
                                 SchoolListEvent.OnCheckChange(
-                                    id = school.id, value = !school.isSelected
+                                    schoolId = school.id, value = !school.isSelected
                                 )
                             )
                         },
@@ -214,6 +196,22 @@ fun SchoolListScreen(
                                     Screen.DivisionScreen.withArgs(
                                         school.id.toString()
                                     )
+                                )
+                            )
+                        },
+                        onEditClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.SchoolEditScreen.withArgs(
+                                        school.id.toString()
+                                    )
+                                )
+                            )
+                        },
+                        onDeleteClick = {
+                            onEvent(
+                                SchoolListEvent.OnItemClickDelete(
+                                    schoolId = school.id
                                 )
                             )
                         },
@@ -227,7 +225,7 @@ fun SchoolListScreen(
 }
 
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewMainScreen() {
     GraderTheme {

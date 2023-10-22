@@ -113,12 +113,10 @@ class ModuleListViewModel @Inject constructor(
             .toDouble()
     }
 
-    private suspend fun deleteModuleItems(){
+    private suspend fun deleteModuleItems() {
         val moduleList = repository.getAllModules()
-        moduleList.collect { list ->
-            list.filter { module -> module.onDelete }.forEach { module ->
-                repository.deleteModule(module)
-            }
+        moduleList.filter { module -> module.onDelete }.forEach { module ->
+            repository.deleteModuleById(module.id)
         }
     }
 

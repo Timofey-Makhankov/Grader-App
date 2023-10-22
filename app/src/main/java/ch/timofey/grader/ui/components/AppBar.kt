@@ -1,29 +1,51 @@
 package ch.timofey.grader.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     onNavigationIconClick: () -> Unit,
-    icon: ImageVector,
-    contentDescription: String,
-    appBarTitle: String = ""
+    actionIcon: ImageVector,
+    actionContentDescription: String,
+    appBarTitle: String = "",
+    locationIndicator: Boolean = false,
+    pageIndex: Int? = 0,
+    pageNumber: Int = 4
 ) {
     TopAppBar(title = {
-        Text(text = appBarTitle)
-    }, colors = TopAppBarDefaults.mediumTopAppBarColors(), navigationIcon = {
-        IconButton(onClick = onNavigationIconClick) {
-            Icon(imageVector = icon, contentDescription = contentDescription)
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = appBarTitle)
+            if (locationIndicator && pageIndex != null) {
+                Spacer(modifier = Modifier.weight(1f))
+                ScreenIndicator(
+                    modifier = Modifier.padding(end = MaterialTheme.spacing.small),
+                    pages = pageNumber,
+                    index = pageIndex
+                )
+            }
         }
-    })
+    }, colors = TopAppBarDefaults.mediumTopAppBarColors(),
+        navigationIcon = {
+            IconButton(onClick = onNavigationIconClick) {
+                Icon(imageVector = actionIcon, contentDescription = actionContentDescription)
+            }
+        })
 }
 
 @Preview
@@ -32,9 +54,11 @@ private fun AppBarPreview() {
     GraderTheme {
         AppBar(
             onNavigationIconClick = {},
-            icon = Icons.Default.Menu,
-            contentDescription = "Open Navigation Drawer",
-            appBarTitle = "Schools"
+            actionIcon = Icons.Default.Menu,
+            actionContentDescription = "Open Navigation Drawer",
+            appBarTitle = "Schools",
+            locationIndicator = true,
+            pageIndex = 2
         )
     }
 }
@@ -47,8 +71,8 @@ private fun AppBarDarkModePreview() {
     GraderTheme {
         AppBar(
             onNavigationIconClick = {},
-            icon = Icons.Default.Menu,
-            contentDescription = "Open Navigation Drawer",
+            actionIcon = Icons.Default.Menu,
+            actionContentDescription = "Open Navigation Drawer",
             appBarTitle = "Divisions"
         )
     }

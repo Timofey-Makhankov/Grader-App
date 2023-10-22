@@ -1,5 +1,6 @@
 package ch.timofey.grader.ui.screen.division_list
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -60,14 +61,17 @@ fun DivisionListScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
-                    val result = snackBarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.action,
-                        withDismissAction = event.withDismissAction,
-                        duration = SnackbarDuration.Short
-                    )
-                    if (result == SnackbarResult.ActionPerformed) {
-                        onEvent(DivisionListEvent.OnUndoDeleteClick(deletedDivisionId.value!!))
+                    scope.launch {
+                        val result = snackBarHostState.showSnackbar(
+                            message = event.message,
+                            actionLabel = event.action,
+                            withDismissAction = event.withDismissAction,
+                            duration = SnackbarDuration.Short
+                        )
+
+                        if (result == SnackbarResult.ActionPerformed) {
+                            onEvent(DivisionListEvent.OnUndoDeleteClick(deletedDivisionId.value!!))
+                        }
                     }
                 }
             }
@@ -151,9 +155,11 @@ fun DivisionListScreen(
             topBar = {
                 AppBar(
                     onNavigationIconClick = { onEvent(DivisionListEvent.OnReturnBack) },
-                    icon = Icons.Default.ArrowBack,
-                    contentDescription = "Go Back to previous Screen",
-                    appBarTitle = "Divisions"
+                    actionIcon = Icons.Default.ArrowBack,
+                    actionContentDescription = "Go Back to previous Screen",
+                    appBarTitle = "Divisions",
+                    locationIndicator = true,
+                    pageIndex = 1
                 )
             }) {
             LazyColumn(
@@ -191,6 +197,47 @@ fun DivisionListScreen(
 @Preview
 @Composable
 private fun DivisionListScreenPreview() {
+    GraderTheme {
+        DivisionListScreen(
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+            state = DivisionListState(
+                divisionList = listOf(
+                    Division(
+                        id = UUID.randomUUID(),
+                        name = "Semester 1",
+                        description = "Lorem Impsum",
+                        schoolYear = 2023,
+                        schoolId = UUID.randomUUID(),
+                        grade = 0.0
+                    ), Division(
+                        id = UUID.randomUUID(),
+                        name = "Semester 2",
+                        description = "Lorem Impsum",
+                        schoolYear = 2002,
+                        schoolId = UUID.randomUUID(),
+                        grade = 0.0
+                    ), Division(
+                        id = UUID.randomUUID(),
+                        name = "Semester 3",
+                        description = "Lorem Impsum",
+                        schoolYear = 2222,
+                        schoolId = UUID.randomUUID(),
+                        grade = 0.0
+                    )
+                )
+            ),
+            onEvent = {},
+            uiEvent = emptyFlow(),
+            onPopBackStack = {},
+            onNavigate = {},
+            snackBarHostState = SnackbarHostState()
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun DivisionListScreenDarkModePreview() {
     GraderTheme {
         DivisionListScreen(
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),

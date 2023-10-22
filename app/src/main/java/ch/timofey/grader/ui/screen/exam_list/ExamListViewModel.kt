@@ -108,12 +108,10 @@ class ExamListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun deleteExamItems(){
+    private suspend fun deleteExamItems() {
         val examList = repository.getAllExams()
-        examList.collect { list ->
-            list.filter { exam -> exam.onDelete }.forEach { exam ->
-                repository.deleteExam(exam)
-            }
+        examList.filter { exam -> exam.onDelete }.forEach { exam ->
+            repository.deleteExamById(exam.id)
         }
     }
 

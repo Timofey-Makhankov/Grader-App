@@ -1,5 +1,8 @@
 package ch.timofey.grader.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
@@ -35,13 +38,20 @@ import ch.timofey.grader.ui.screen.school_list.SchoolListViewModel
 import ch.timofey.grader.ui.screen.settings.SettingsViewModel
 import ch.timofey.grader.ui.screen.about.AboutScreen
 import ch.timofey.grader.ui.screen.about.AboutViewModel
+import ch.timofey.grader.ui.screen.update_school.UpdateSchoolScreen
+import ch.timofey.grader.ui.screen.update_school.UpdateSchoolViewModel
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val snackBarHostState = remember { SnackbarHostState() }
-    NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.MainScreen.route,
+        enterTransition = { fadeIn(animationSpec = tween(500)) },
+        exitTransition = { fadeOut(animationSpec = tween(500)) }
+    ) {
         composable(route = Screen.MainScreen.route) {
             val viewModel = hiltViewModel<SchoolListViewModel>()
             val state by viewModel.uiState.collectAsState()
@@ -200,6 +210,23 @@ fun Navigation() {
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
                 onPopBackStack = { navController.popBackStack() })
+        }
+        composable(
+            route = Screen.SchoolEditScreen.route + "/{id}", arguments = listOf(navArgument("id"){
+                type = NavType.StringType
+                defaultValue = "None"
+                nullable = false
+            })
+        ) {
+            val viewModel = hiltViewModel<UpdateSchoolViewModel>()
+            val state by viewModel.uiState.collectAsState()
+            UpdateSchoolScreen(
+                state = state,
+                onEvent = viewModel::onEvent,
+                uiEvent = viewModel.uiEvent,
+                onPopBackStack = { navController.popBackStack() },
+                snackBarHostState = snackBarHostState
+            )
         }
     }
 }

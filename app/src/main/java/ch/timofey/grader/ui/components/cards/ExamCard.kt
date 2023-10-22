@@ -17,9 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
+import io.github.serpro69.kfaker.Faker
+import io.github.serpro69.kfaker.fakerConfig
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -101,15 +104,16 @@ fun ExamCard(
 @Preview(showBackground = false)
 @Composable
 private fun ExamCardPreview() {
+    val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ExamCard(exam = Exam(
             id = UUID.randomUUID(),
-            name = "",
-            description = "",
+            name = f.educator.schoolName(),
+            description = LoremIpsum(20).values.joinToString(""),
             grade = 1.0,
             weight = 1.0,
             date = LocalDate.now(),
-            module = UUID.randomUUID()
+            moduleId = UUID.randomUUID()
         ), onCheckBoxClick = {})
     }
 }
@@ -117,16 +121,17 @@ private fun ExamCardPreview() {
 @Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ExamCardDarkModePreview() {
+    val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ExamCard(
             exam = Exam(
                 id = UUID.randomUUID(),
-                name = "Lineare Gleichungssysteme, Quadratische Gleichungen",
-                description = "In dieser Prüfung geht es um, das Gleichungssystem und die Quadratische Gleichung",
+                name = f.educator.schoolName(),
+                description = LoremIpsum(20).values.joinToString(""),
                 grade = 5.9,
                 weight = 1.0,
                 date = LocalDate.of(2023, 6, 20),
-                module = UUID.randomUUID()
+                moduleId = UUID.randomUUID()
             ), onCheckBoxClick = {}, isOpen = true
         )
     }

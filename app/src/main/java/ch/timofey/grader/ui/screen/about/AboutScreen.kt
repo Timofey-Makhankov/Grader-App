@@ -68,8 +68,8 @@ fun AboutScreen(
         Scaffold(topBar = {
             AppBar(
                 onNavigationIconClick = { scope.launch { drawerState.open() } },
-                icon = Icons.Default.Menu,
-                contentDescription = "Toggle Drawer",
+                actionIcon = Icons.Default.Menu,
+                actionContentDescription = "Toggle Drawer",
                 appBarTitle = "About"
             )
         }) {

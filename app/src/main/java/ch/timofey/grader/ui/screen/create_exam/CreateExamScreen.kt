@@ -51,8 +51,8 @@ fun CreateExamScreen(
     Scaffold(topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(CreateExamEvent.OnBackButtonPress) },
-            icon = Icons.Default.ArrowBack,
-            contentDescription = "Go back to previous Screen"
+            actionIcon = Icons.Default.ArrowBack,
+            actionContentDescription = "Go back to previous Screen"
         )
     }) {
         Column(

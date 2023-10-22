@@ -45,8 +45,8 @@ fun CreateModuleScreen(
     Scaffold(topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(CreateModuleEvent.OnBackButtonClick) },
-            icon = Icons.Default.ArrowBack,
-            contentDescription = "Go back to previous screen"
+            actionIcon = Icons.Default.ArrowBack,
+            actionContentDescription = "Go back to previous screen"
         )
     }) {
         Column(

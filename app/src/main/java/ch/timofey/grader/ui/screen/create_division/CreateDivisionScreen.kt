@@ -48,8 +48,8 @@ fun CreateDivisionScreen(
     Scaffold(topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(CreateDivisionEvent.OnBackButtonClick) },
-            icon = Icons.Default.ArrowBack,
-            contentDescription = "Go back to previous screen"
+            actionIcon = Icons.Default.ArrowBack,
+            actionContentDescription = "Go back to previous screen"
         )
     }) {
         Column(

@@ -11,19 +11,33 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Checkbox
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.ui.theme.gradeColors
 import ch.timofey.grader.ui.theme.spacing
+import io.github.serpro69.kfaker.Faker
+import io.github.serpro69.kfaker.FakerConfig
+import io.github.serpro69.kfaker.fakerConfig
 import java.util.UUID
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -32,6 +46,8 @@ fun SchoolCard(
     modifier: Modifier = Modifier,
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     isOpen: Boolean = false,
     school: School
 ) {
@@ -44,12 +60,10 @@ fun SchoolCard(
                     durationMillis = 300, easing = LinearOutSlowInEasing
                 )
             )
-            .combinedClickable(
-                interactionSource = MutableInteractionSource(),
+            .combinedClickable(interactionSource = MutableInteractionSource(),
                 indication = null,
                 onClick = { expanded.value = !expanded.value },
-                onLongClick = { onLongClick() },
-            )
+                onLongClick = { onLongClick() })
             .then(modifier), colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ), shape = MaterialTheme.shapes.large, elevation = CardDefaults.cardElevation(
@@ -85,26 +99,73 @@ fun SchoolCard(
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            AnimatedVisibility(
-                visible = expanded.value, label = "Extending Button"
-            ) {
-                Column(modifier = Modifier.animateContentSize()) {
-                    Text(
-                        text = school.address, style = MaterialTheme.typography.labelLarge
-                    )
-                    Text(
-                        text = "${school.zipCode}, ${school.city}",
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
-            }
             if (school.grade != 0.0) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Average Grade: ${school.grade}",
-                    style = MaterialTheme.typography.labelMedium,
-                    textAlign = TextAlign.End
+                    text = buildAnnotatedString {
+                        withStyle(
+                            SpanStyle(
+                                fontStyle = FontStyle.Italic
+                            )
+                        ) {
+                            append("Average Grade: ")
+                        }
+                        withStyle(
+                            SpanStyle(
+                                color = when {
+                                    school.grade == 4.0 -> MaterialTheme.colorScheme.gradeColors.minimumGrade
+                                    school.grade > 4.0 -> MaterialTheme.colorScheme.gradeColors.overGrade
+                                    school.grade < 4.0 -> MaterialTheme.colorScheme.gradeColors.lowerGrade
+                                    else -> Color.Unspecified
+                                },
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("${school.grade}")
+                        }
+                    },
+                    style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.Start
                 )
+            }
+            AnimatedVisibility(
+                visible = expanded.value, label = "Extending Button"
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.animateContentSize()) {
+                        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                        Text(
+                            text = school.address, style = MaterialTheme.typography.labelLarge
+                        )
+                        Text(
+                            text = "${school.zipCode}, ${school.city}",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                    Box {
+                        Row {
+                            IconButton(
+                                onClick = onEditClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Create,
+                                    contentDescription = "Edit the School Card"
+                                )
+                            }
+                            IconButton(
+                                onClick = onDeleteClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Edit the School Card"
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -113,33 +174,36 @@ fun SchoolCard(
 @Preview(showBackground = false)
 @Composable
 private fun PreviewSchoolCard() {
+    val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         SchoolCard(school = School(
             UUID.randomUUID(),
-            "Technische Berufsschule Zürich",
-            "Eine Berufliche Schule, in der mann über technische Fächern Lernt. Diese Schule wird von Lernenden besucht",
+            f.airport.europeanUnion.large(),
+            LoremIpsum(20).values.joinToString(""),
             "",
             "",
             "",
             isSelected = true,
             grade = 5.6
-        ), onCheckBoxClick = {}, onLongClick = {})
+        ), onCheckBoxClick = {}, onLongClick = {}, onEditClick = {}, onDeleteClick = {})
     }
 }
 
 @Preview(
-    showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES
+    showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 private fun PreviewSchoolCardDarkMode() {
+    val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         SchoolCard(isOpen = true, school = School(
             UUID.randomUUID(),
-            "Berufsmaturitätsschule Zürich",
-            "Eine Berufliche Schule, in der mann über technische Fächern Lernt. Diese Schule wird von Lernenden besucht",
-            "Bächlerstrasse 55",
-            "8046",
-            "Zürich"
-        ), onCheckBoxClick = {}, onLongClick = {})
+            f.airport.europeanUnion.large(),
+            LoremIpsum(20).values.joinToString(""),
+            f.address.streetAddress(),
+            f.address.postcode(),
+            f.address.city(),
+            grade = 3.0
+        ), onCheckBoxClick = {}, onLongClick = {}, onEditClick = {}, onDeleteClick = {})
     }
 }

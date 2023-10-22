@@ -141,7 +141,7 @@ class CreateExamViewModel @Inject constructor(
                                 date = LocalDate.parse(
                                     _uiState.value.date, DateTimeFormatter.ISO_LOCAL_DATE
                                 ),
-                                module = UUID.fromString(moduleId)
+                                moduleId = UUID.fromString(moduleId)
                             )
                         )
                     }

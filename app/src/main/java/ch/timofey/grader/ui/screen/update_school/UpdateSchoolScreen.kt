@@ -1,12 +1,22 @@
-package ch.timofey.grader.ui.screen.create_school
+package ch.timofey.grader.ui.screen.update_school
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -18,21 +28,21 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.components.AppBar
-import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
+import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
-fun CreateSchoolScreen(
-    state: CreateSchoolState,
-    onEvent: (CreateSchoolEvent) -> Unit,
+fun UpdateSchoolScreen(
+    state: UpdateSchoolState,
+    onEvent: (UpdateSchoolEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onPopBackStack: () -> Unit,
     snackBarHostState: SnackbarHostState
-) {
+){
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -55,7 +65,7 @@ fun CreateSchoolScreen(
 
     Scaffold(topBar = {
         AppBar(
-            onNavigationIconClick = { onEvent(CreateSchoolEvent.OnReturnBack) },
+            onNavigationIconClick = { onEvent(UpdateSchoolEvent.OnReturnBack) },
             actionIcon = Icons.Default.ArrowBack,
             actionContentDescription = "Go back to School Screen"
         )
@@ -67,7 +77,7 @@ fun CreateSchoolScreen(
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Create School", style = MaterialTheme.typography.titleLarge
+                text = "Update School", style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(value = state.name,
                 label = {
@@ -83,7 +93,7 @@ fun CreateSchoolScreen(
                     })
                 },
                 onValueChange = { name ->
-                    onEvent(CreateSchoolEvent.OnNameChange(name))
+                    onEvent(UpdateSchoolEvent.OnNameChange(name))
                 },
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.small)
@@ -127,7 +137,7 @@ fun CreateSchoolScreen(
                         )
                     }
                 },
-                onValueChange = { address -> onEvent(CreateSchoolEvent.OnAddressChange(address)) },
+                onValueChange = { address -> onEvent(UpdateSchoolEvent.OnAddressChange(address)) },
                 minLines = 3
             )
             OutlinedTextField(value = state.zip,
@@ -154,7 +164,7 @@ fun CreateSchoolScreen(
                         )
                     }
                 },
-                onValueChange = { zip -> onEvent(CreateSchoolEvent.OnZipChange(zip)) },
+                onValueChange = { zip -> onEvent(UpdateSchoolEvent.OnZipChange(zip)) },
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
@@ -185,7 +195,7 @@ fun CreateSchoolScreen(
                         )
                     }
                 },
-                onValueChange = { city -> onEvent(CreateSchoolEvent.OnCityChange(city)) },
+                onValueChange = { city -> onEvent(UpdateSchoolEvent.OnCityChange(city)) },
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
@@ -200,7 +210,7 @@ fun CreateSchoolScreen(
                 },
                 onValueChange = { description ->
                     onEvent(
-                        CreateSchoolEvent.OnDescriptionChange(
+                        UpdateSchoolEvent.OnDescriptionChange(
                             description
                         )
                     )
@@ -211,13 +221,13 @@ fun CreateSchoolScreen(
                 minLines = 6,
             )
             Button(
-                onClick = { onEvent(CreateSchoolEvent.OnCreateSchool) },
+                onClick = { onEvent(UpdateSchoolEvent.OnUpdateSchool) },
                 modifier = Modifier.padding(
                     top = MaterialTheme.spacing.medium
                 ),
                 shape = MaterialTheme.shapes.large
             ) {
-                Text(text = "Create")
+                Text(text = "Update")
             }
         }
     }
@@ -227,7 +237,7 @@ fun CreateSchoolScreen(
 @Composable
 private fun PreviewCreateSchoolScreen() {
     GraderTheme {
-        CreateSchoolScreen(state = CreateSchoolState(
+        UpdateSchoolScreen(state = UpdateSchoolState(
             name = "Technische Berufsschule Zürich",
             description = "Das ist eine Berufsschule\n asfaf",
             city = "kasjdxnb"
@@ -243,7 +253,7 @@ private fun PreviewCreateSchoolScreen() {
 @Composable
 private fun PreviewDarkModeCreateSchoolScreen() {
     GraderTheme {
-        CreateSchoolScreen(state = CreateSchoolState(
+        UpdateSchoolScreen(state = UpdateSchoolState(
             validName = false, nameErrorMessage = "This is an Error Message"
         ),
             onEvent = {},
