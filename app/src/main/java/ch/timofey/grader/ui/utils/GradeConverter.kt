@@ -6,7 +6,7 @@ fun getAverage(grades: List<Double>, weights: List<Double>): Double {
     if (grades.isEmpty() || weights.isEmpty()) {
         return 0.0
     }
-    if (grades.size != weights.size){
+    if (grades.size != weights.size) {
         throw UnevenListDistributionException("The given lists are uneven")
     }
     var gradeSum = 0.0
@@ -31,4 +31,17 @@ fun getAverage(grades: List<Double>): Double {
 
 fun roundToPointFive(num: Double): Double {
     return round(num / .5) * .5
+}
+
+fun calculatePointsFromGrade(grade: Double, minimumGrade: Double): Double {
+    return minimumGrade - grade;
+}
+
+fun calculateDoublePointsFromGrade(grade: Double, minimumGrade: Double): Double {
+    val result = minimumGrade - grade;
+    return if (result < 0) {
+        result * 2
+    } else {
+        result
+    }
 }

@@ -106,7 +106,7 @@ fun SettingsScreen(
                     expanded = expanded.value,
                     onExpandedChange = { expanded.value = !expanded.value }) {
                     OutlinedTextField(
-                        value = state.appTheme.name,
+                        value = state.appTheme.title,
                         onValueChange = { },
                         label = {
                             Text(
@@ -128,7 +128,7 @@ fun SettingsScreen(
 
                         ) {
                         AppTheme.entries.filter { value -> value != state.appTheme }.forEach { theme ->
-                            DropdownMenuItem(text = { Text(text = theme.name) }, onClick = {
+                            DropdownMenuItem(text = { Text(text = theme.title) }, onClick = {
                                 onEvent(SettingsEvent.OnThemeChange(theme))
                                 expanded.value = false
                             })

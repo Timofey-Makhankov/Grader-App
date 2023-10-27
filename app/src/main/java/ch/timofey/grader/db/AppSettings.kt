@@ -8,9 +8,9 @@ data class AppSettings(
     val calculatePoints: Boolean = false,
     val doublePoints: Boolean = false
 )
-enum class AppTheme {
-    DARK_MODE,
-    LIGHT_MODE,
-    MATERIAL_THEME,
-    DEVICE_THEME
+enum class AppTheme(val title: String) {
+    DARK_MODE("Dark Mode"),
+    LIGHT_MODE("Light Mode"),
+    MATERIAL_THEME("Material You"),
+    DEVICE_THEME("Follow System")
 }
