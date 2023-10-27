@@ -3,15 +3,14 @@ package ch.timofey.grader.ui.screen.settings
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.timofey.grader.db.AppDatabase
 import ch.timofey.grader.db.AppSettings
-import ch.timofey.grader.db.Language
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,11 +26,25 @@ class SettingsViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    init {
+        viewModelScope.launch {
+            dataStore.data.collectLatest {
+                _uiState.value = _uiState.value.copy(
+                    appTheme = it.theme,
+                    calculatePointsState = it.calculatePoints,
+                    doublePointsState = it.doublePoints
+                )
+            }
+        }
+    }
+
     fun onEvent(event: SettingsEvent) {
         when (event) {
-            is SettingsEvent.OnSettingChange -> {
-                //TODO
-                println()
+            is SettingsEvent.OnThemeChange -> {
+                _uiState.value = _uiState.value.copy(appTheme = event.theme)
+                viewModelScope.launch{
+                    updateDataStore()
+                }
             }
 
             is SettingsEvent.OnDeleteDatabaseButtonClick -> {
@@ -39,20 +52,39 @@ class SettingsViewModel @Inject constructor(
                     database.clearAllTables()
                 }
             }
-        }
-    }
 
-    private suspend fun updateLanguage(language: Language) {
-        dataStore.updateData {
-            it.copy(
-                language = language
-            )
+            is SettingsEvent.OnCalculatePointsChange -> {
+                _uiState.value = _uiState.value.copy(calculatePointsState = event.value)
+                if (!event.value) {
+                    _uiState.value = _uiState.value.copy(doublePointsState = false)
+                }
+                viewModelScope.launch {
+                    updateDataStore()
+                }
+            }
+
+            is SettingsEvent.OnDoublePointsChange -> {
+                _uiState.value = _uiState.value.copy(doublePointsState = event.value)
+                viewModelScope.launch {
+                    updateDataStore()
+                }
+            }
         }
     }
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
+        }
+    }
+
+    private suspend fun updateDataStore() {
+        dataStore.updateData {
+            it.copy(
+                theme = _uiState.value.appTheme,
+                calculatePoints = _uiState.value.calculatePointsState,
+                doublePoints = _uiState.value.doublePointsState
+            )
         }
     }
 }

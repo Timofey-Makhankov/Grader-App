@@ -1,5 +1,9 @@
 package ch.timofey.grader.ui.screen.settings
 
+import ch.timofey.grader.db.AppTheme
+
 data class SettingsState(
-    val isOn: Boolean = false, val language: String = ""
+    val calculatePointsState: Boolean = false,
+    val doublePointsState: Boolean = false,
+    val appTheme: AppTheme = AppTheme.DEVICE_THEME
 )

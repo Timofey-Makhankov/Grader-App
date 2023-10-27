@@ -1,8 +1,13 @@
 package ch.timofey.grader.ui.screen.settings
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -28,11 +33,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ch.timofey.grader.db.Language
+import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.AppBar
 import ch.timofey.grader.ui.components.NavigationDrawer
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +56,6 @@ fun SettingsScreen(
 ) {
     val scope = rememberCoroutineScope()
     val expanded = remember { mutableStateOf(false) }
-    val value = remember { mutableStateOf("English") }
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -90,17 +95,22 @@ fun SettingsScreen(
             ) {
                 TextButton(colors = ButtonDefaults.textButtonColors(
                     containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.error
-                ), onClick = { onEvent(SettingsEvent.OnDeleteDatabaseButtonClick) }) {
+                    contentColor = MaterialTheme.colorScheme.error,
+                ), onClick = { /*onEvent(SettingsEvent.OnDeleteDatabaseButtonClick)*/ }) {
                     Text(text = "Delete Database")
                 }
-                ExposedDropdownMenuBox(expanded = expanded.value,
+                ExposedDropdownMenuBox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.spacing.medium),
+                    expanded = expanded.value,
                     onExpandedChange = { expanded.value = !expanded.value }) {
-                    OutlinedTextField(value = state.language,
-                        onValueChange = {},
+                    OutlinedTextField(
+                        value = state.appTheme.name,
+                        onValueChange = { },
                         label = {
                             Text(
-                                text = "Language"
+                                text = "App Theme"
                             )
                         },
                         readOnly = true,
@@ -108,19 +118,49 @@ fun SettingsScreen(
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
                         },
                         colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth()
                     )
-                    ExposedDropdownMenu(expanded = expanded.value,
-                        onDismissRequest = { expanded.value = false }) {
-                        Language.values().forEach { language ->
-                            DropdownMenuItem(text = { Text(text = language.value) }, onClick = {
-                                value.value = language.value
+                    ExposedDropdownMenu(
+                        expanded = expanded.value,
+                        onDismissRequest = { expanded.value = false },
+
+                        ) {
+                        AppTheme.entries.filter { value -> value != state.appTheme }.forEach { theme ->
+                            DropdownMenuItem(text = { Text(text = theme.name) }, onClick = {
+                                onEvent(SettingsEvent.OnThemeChange(theme))
                                 expanded.value = false
                             })
                         }
                     }
                 }
-                Switch(checked = true, onCheckedChange = {})
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                Row(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "calculate points")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Switch(
+                        checked = state.calculatePointsState,
+                        onCheckedChange = { onEvent(SettingsEvent.OnCalculatePointsChange(it)) })
+                }
+                Row(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "double points")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Switch(
+                        checked = state.doublePointsState,
+                        onCheckedChange = { onEvent(SettingsEvent.OnDoublePointsChange(it)) },
+                        enabled = state.calculatePointsState
+                    )
+                }
+
             }
         }
     }
@@ -131,7 +171,7 @@ fun SettingsScreen(
 private fun SettingsScreenPreview() {
     GraderTheme {
         SettingsScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-            state = SettingsState(),
+            state = SettingsState(appTheme = AppTheme.DEVICE_THEME, calculatePointsState = true),
             onEvent = {},
             uiEvent = emptyFlow(),
             onNavigate = {})
@@ -143,7 +183,7 @@ private fun SettingsScreenPreview() {
 private fun SettingsScreenDarkModePreview() {
     GraderTheme {
         SettingsScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-            state = SettingsState(),
+            state = SettingsState(appTheme = AppTheme.LIGHT_MODE),
             onEvent = {},
             uiEvent = emptyFlow(),
             onNavigate = {})
