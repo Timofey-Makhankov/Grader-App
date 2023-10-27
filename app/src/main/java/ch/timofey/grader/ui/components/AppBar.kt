@@ -27,7 +27,7 @@ fun AppBar(
     pageNumber: Int = 4
 ) {
     TopAppBar(title = {
-        Row (
+        Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = appBarTitle)
@@ -40,7 +40,8 @@ fun AppBar(
                 )
             }
         }
-    }, colors = TopAppBarDefaults.mediumTopAppBarColors(),
+    },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = MaterialTheme.colorScheme.background),
         navigationIcon = {
             IconButton(onClick = onNavigationIconClick) {
                 Icon(imageVector = actionIcon, contentDescription = actionContentDescription)

@@ -26,6 +26,8 @@ import ch.timofey.grader.ui.theme.spacing
 fun SchoolItem(
     school: School,
     onSwipe: (School) -> Unit,
+    onDeleteClick: () -> Unit,
+    onUpdateClick: () -> Unit,
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -63,8 +65,8 @@ fun SchoolItem(
                 school = currentItem,
                 onCheckBoxClick = onCheckBoxClick,
                 onLongClick = onLongClick,
-                onDeleteClick = {},
-                onEditClick = {}
+                onDeleteClick = onDeleteClick,
+                onEditClick = onUpdateClick
             )
         })
 }

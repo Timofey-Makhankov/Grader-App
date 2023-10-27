@@ -51,7 +51,7 @@ fun ScreenIndicator(
     ) {
         items(componentIndexes.toList()) {shape ->
             when (shape) {
-                Shape.TRIANGLE_ID -> Triangle(triangleSize = 16.dp, color = MaterialTheme.colorScheme.tertiary)
+                Shape.TRIANGLE_ID -> Triangle(triangleSize = 16.dp, color = MaterialTheme.colorScheme.primary)
                 Shape.CIRCLE_FILL_ID -> Circle(
                     size = 16.dp,
                     color = MaterialTheme.colorScheme.secondary,
