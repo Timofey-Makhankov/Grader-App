@@ -20,7 +20,8 @@ import ch.timofey.grader.db.domain.school.School
     version = 4,
     exportSchema = true,
     autoMigrations = [
-       AutoMigration(from = 3, to = 4)
+        AutoMigration(from = 2, to = 3),
+        AutoMigration(from = 3, to = 4)
     ]
 )
 @TypeConverters(DateConverter::class, UUIDConverter::class)

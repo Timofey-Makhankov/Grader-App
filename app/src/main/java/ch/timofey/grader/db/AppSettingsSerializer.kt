@@ -22,7 +22,8 @@ object AppSettingsSerializer : Serializer<AppSettings> {
     }
 
     override suspend fun writeTo(t: AppSettings, output: OutputStream) {
-        @Suppress("BlockingMethodInNonBlockingContext") output.write(
+        @Suppress("BlockingMethodInNonBlockingContext")
+        output.write(
             Json.encodeToString(
                 serializer = AppSettings.serializer(), value = t
             ).encodeToByteArray()

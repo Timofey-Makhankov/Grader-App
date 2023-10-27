@@ -4,13 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppSettings(
-    val language: Language = Language.ENGLISH
+    val theme: AppTheme = AppTheme.DEVICE_THEME,
+    val calculatePoints: Boolean = false,
+    val doublePoints: Boolean = false
 )
-
-enum class Language(
-    val id: String, val value: String
-) {
-    ENGLISH("en", "English"),
-    GERMAN("de", "German"),
-    RUSSIAN("ru", "Russian")
+enum class AppTheme {
+    DARK_MODE,
+    LIGHT_MODE,
+    MATERIAL_THEME,
+    DEVICE_THEME
 }
