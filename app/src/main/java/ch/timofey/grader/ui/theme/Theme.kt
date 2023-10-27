@@ -2,7 +2,9 @@ package ch.timofey.grader.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -14,21 +16,50 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import ch.timofey.grader.db.AppTheme
+import javax.inject.Inject
 
 private val darkColorPalette = ColorSchemas.darkColorSchema
 private val lightColorPalette = ColorSchemas.lightColorSchema
 
 @Composable
+fun getColorschemeFromAppSetting(theme: AppTheme): ColorScheme {
+    val useDynamicColors = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    return when {
+        theme == AppTheme.MATERIAL_THEME && isSystemInDarkTheme() && useDynamicColors -> dynamicDarkColorScheme(
+            LocalContext.current
+        )
+
+        theme == AppTheme.MATERIAL_THEME && !isSystemInDarkTheme() && useDynamicColors -> dynamicLightColorScheme(
+            LocalContext.current
+        )
+
+        theme == AppTheme.DARK_MODE -> darkColorPalette
+        else -> lightColorPalette
+    }
+}
+
+@Composable
+fun getColorScheme(): ColorScheme {
+    val useDynamicColors = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    return when {
+        useDynamicColors && isSystemInDarkTheme() -> dynamicDarkColorScheme(LocalContext.current)
+        useDynamicColors && !isSystemInDarkTheme() -> dynamicLightColorScheme(LocalContext.current)
+        isSystemInDarkTheme() -> darkColorPalette
+        else -> lightColorPalette
+    }
+}
+
+@Composable
 fun GraderTheme(
+    themeSetting: AppTheme? = null,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val useDynamicColors = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val colors = when {
-        useDynamicColors && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
-        useDynamicColors && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
-        darkTheme -> darkColorPalette
-        else -> lightColorPalette
+        themeSetting == null || themeSetting == AppTheme.DEVICE_THEME && useDynamicColors -> getColorScheme()
+        else -> getColorschemeFromAppSetting(theme = themeSetting)
     }
 
     val gradeColors = when {
@@ -55,6 +86,5 @@ fun GraderTheme(
             shapes = Shapes,
             content = content
         )
-
     }
 }
