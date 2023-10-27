@@ -25,13 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.*
-import ch.timofey.grader.ui.components.cards.SchoolCard
+import ch.timofey.grader.ui.components.items.SchoolItem
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.theme.GraderTheme
-import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -57,21 +57,17 @@ fun SchoolListScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
-                    println("Inside show snack bar")
-                    println(snackBarHostState.currentSnackbarData)
-                    val result = snackBarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.action,
-                        withDismissAction = event.withDismissAction,
-                        duration = SnackbarDuration.Short
-                    )
-                    println(snackBarHostState.currentSnackbarData)
-                    println("after show snackbar")
-                    if (result == SnackbarResult.ActionPerformed) {
-                        onEvent(SchoolListEvent.OnUndoDeleteClick(deletedSchoolId.value!!))
+                    scope.launch {
+                        val result = snackBarHostState.showSnackbar(
+                            message = event.message,
+                            actionLabel = event.action,
+                            withDismissAction = event.withDismissAction,
+                            duration = SnackbarDuration.Short
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            onEvent(SchoolListEvent.OnUndoDeleteClick(deletedSchoolId.value!!))
+                        }
                     }
-
-                    println("end of show snack bar")
                 }
 
                 else -> Unit
@@ -181,8 +177,16 @@ fun SchoolListScreen(
                     items = state.schoolList,
                     key = { school -> school.id },
                 ) { school ->
-                    SchoolCard(
-                        modifier = Modifier.padding(MaterialTheme.spacing.small),
+                    SchoolItem(
+                        school = school,
+                        onSwipe = {
+                            deletedSchoolId.value = school.id
+                            onEvent(
+                                SchoolListEvent.OnSwipeDelete(
+                                    id = school.id
+                                )
+                            )
+                        },
                         onCheckBoxClick = {
                             onEvent(
                                 SchoolListEvent.OnCheckChange(
@@ -199,15 +203,6 @@ fun SchoolListScreen(
                                 )
                             )
                         },
-                        onEditClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.SchoolEditScreen.withArgs(
-                                        school.id.toString()
-                                    )
-                                )
-                            )
-                        },
                         onDeleteClick = {
                             onEvent(
                                 SchoolListEvent.OnItemClickDelete(
@@ -215,7 +210,15 @@ fun SchoolListScreen(
                                 )
                             )
                         },
-                        school = school
+                        onUpdateClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.SchoolEditScreen.withArgs(
+                                        school.id.toString()
+                                    )
+                                )
+                            )
+                        }
                     )
                 }
             }
@@ -228,7 +231,9 @@ fun SchoolListScreen(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewMainScreen() {
-    GraderTheme {
+    GraderTheme(
+        themeSetting = AppTheme.LIGHT_MODE
+    ) {
         SchoolListScreen(
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onEvent = {},

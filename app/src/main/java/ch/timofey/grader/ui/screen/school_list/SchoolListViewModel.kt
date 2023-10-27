@@ -68,10 +68,21 @@ class SchoolListViewModel @Inject constructor(
                 println("OnDeleteItems")
                 Log.d("SchoolListvm-odi", "trying to delete schools")
                 viewModelScope.launch {
-                    //deleteSchoolItems()
+                    deleteSchoolItems()
                     Log.d("odi", "tried to delete SChools")
                 }
                 sendUiEvent(UiEvent.Navigate(event.route))
+            }
+
+            is SchoolListEvent.OnSwipeDelete -> {
+                viewModelScope.launch {
+                    repository.updateOnDeleteSchool(event.id, true)
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "School was deleted", true, "Undo"
+                        )
+                    )
+                }
             }
 
             is SchoolListEvent.OnCheckChange -> {
@@ -108,6 +119,13 @@ class SchoolListViewModel @Inject constructor(
         val gradeList = validExams.map { it.grade }
         return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
             .toDouble()
+    }
+
+    private suspend fun deleteSchoolItems() {
+        val divisionList = repository.getAllSchools()
+        divisionList.filter { school -> school.onDelete }.forEach { school ->
+            repository.deleteSchool(school.id)
+        }
     }
 
     private fun sendUiEvent(event: UiEvent) {
