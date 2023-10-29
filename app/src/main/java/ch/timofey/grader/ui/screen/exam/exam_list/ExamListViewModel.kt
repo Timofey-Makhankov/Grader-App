@@ -3,8 +3,11 @@ package ch.timofey.grader.ui.screen.exam.exam_list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.exam.ExamRepository
+import ch.timofey.grader.db.domain.module.ModuleRepository
+import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.utils.getAverage
@@ -20,7 +23,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExamListViewModel @Inject constructor(
-    private val repository: ExamRepository, savedStateHandle: SavedStateHandle
+    private val repository: ExamRepository,
+    private val moduleRepository: ModuleRepository,
+    private val divisionRepository: DivisionRepository,
+    private val schoolRepository: SchoolRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val moduleId = savedStateHandle.get<String>("id").orEmpty()
 
@@ -31,7 +38,6 @@ class ExamListViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        println("init")
         viewModelScope.launch {
             repository.getAllExamsFromModuleId(UUID.fromString(moduleId)).collect { examList ->
                 println(examList)
@@ -49,6 +55,19 @@ class ExamListViewModel @Inject constructor(
                     }
                 } else {
                     _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
+                }
+            }
+        }
+        viewModelScope.launch {
+            moduleRepository.getModuleById(UUID.fromString(moduleId))?.let { module ->
+                divisionRepository.getDivision(module.divisionId)?.let { division ->
+                    schoolRepository.getSchoolById(division.schoolId)?.let { school ->
+                        _uiState.value = _uiState.value.copy(
+                            locationsTitles = listOf(
+                                school.name, division.name, module.name, "Exams"
+                            )
+                        )
+                    }
                 }
             }
         }

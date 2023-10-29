@@ -26,10 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
+import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.organisms.items.ExamItem
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
@@ -119,7 +121,8 @@ fun ExamListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        ch.timofey.grader.ui.components.organisms.BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        ch.timofey.grader.ui.components.organisms.BottomAppBar(
+                            text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 ch.timofey.grader.ui.components.atom.FloatingActionButton(
                                     onFABClick = { onEvent(ExamListEvent.OnFABClick) },
@@ -166,6 +169,20 @@ fun ExamListScreen(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                item {
+                    if (state.locationsTitles.isNotEmpty()) {
+                        BreadCrumb(
+                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                            locationTitles = state.locationsTitles
+                        )
+                        Divider(
+                            modifier = Modifier.padding(
+                                horizontal = MaterialTheme.spacing.medium,
+                                vertical = MaterialTheme.spacing.extraSmall
+                            )
+                        )
+                    }
+                }
                 items(items = state.exams, key = { exam -> exam.id }) { exam ->
                     ExamItem(exam = exam, onSwipe = { examItem ->
                         deletedExamId.value = examItem.id
@@ -191,7 +208,9 @@ private fun ExamListScreenPreview() {
     GraderTheme {
         ExamListScreen(
             state = ExamListState(
-                averageGradeIsZero = true, averageGrade = ""
+                averageGradeIsZero = true,
+                averageGrade = "",
+                locationsTitles = listOf("School item", "division item", "module item", "Exams")
             ),
             onEvent = {},
             uiEvent = emptyFlow(),
