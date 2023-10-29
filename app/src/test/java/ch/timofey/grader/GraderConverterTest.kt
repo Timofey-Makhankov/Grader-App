@@ -1,6 +1,6 @@
 package ch.timofey.grader
 
-import ch.timofey.grader.ui.utils.UnevenListDistributionException
+import ch.timofey.grader.ui.utils.exception.UnevenListDistributionException
 import ch.timofey.grader.ui.utils.getAverage
 import ch.timofey.grader.ui.utils.roundToPointFive
 import org.junit.Test
@@ -74,4 +74,6 @@ class GraderConverterTest {
     fun returnFormattedDouble() {
         assertEquals(5.5, roundToPointFive(5.6679), 0.001)
     }
+
+    // Points calculation
 }
