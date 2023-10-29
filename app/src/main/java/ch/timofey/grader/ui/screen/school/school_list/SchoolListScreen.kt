@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.school.update_school.school_list
+package ch.timofey.grader.ui.screen.school.school_list
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
@@ -145,8 +145,7 @@ fun SchoolListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        ch.timofey.grader.ui.components.organisms.BottomAppBar(
-                            text = "Average Grade: ${state.averageGrade}",
+                        ch.timofey.grader.ui.components.organisms.BottomAppBar(text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 ch.timofey.grader.ui.components.atom.FloatingActionButton(
                                     onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
@@ -177,55 +176,51 @@ fun SchoolListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    BreadCrumb(modifier = Modifier.padding(start = MaterialTheme.spacing.medium), locationTitles = listOf("Home"))
+                    BreadCrumb(
+                        modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                        locationTitles = listOf("Home")
+                    )
                 }
                 items(
                     items = state.schoolList,
                     key = { school -> school.id },
                 ) { school ->
-                    SchoolItem(
-                        school = school,
-                        onSwipe = {
-                            deletedSchoolId.value = school.id
-                            onEvent(
-                                SchoolListEvent.OnSwipeDelete(
-                                    id = school.id
+                    SchoolItem(school = school, onSwipe = {
+                        deletedSchoolId.value = school.id
+                        onEvent(
+                            SchoolListEvent.OnSwipeDelete(
+                                id = school.id
+                            )
+                        )
+                    }, onCheckBoxClick = {
+                        onEvent(
+                            SchoolListEvent.OnCheckChange(
+                                schoolId = school.id, value = !school.isSelected
+                            )
+                        )
+                    }, onLongClick = {
+                        onNavigate(
+                            UiEvent.Navigate(
+                                Screen.DivisionScreen.withArgs(
+                                    school.id.toString()
                                 )
                             )
-                        },
-                        onCheckBoxClick = {
-                            onEvent(
-                                SchoolListEvent.OnCheckChange(
-                                    schoolId = school.id, value = !school.isSelected
+                        )
+                    }, onDeleteClick = {
+                        onEvent(
+                            SchoolListEvent.OnItemClickDelete(
+                                schoolId = school.id
+                            )
+                        )
+                    }, onUpdateClick = {
+                        onNavigate(
+                            UiEvent.Navigate(
+                                Screen.SchoolEditScreen.withArgs(
+                                    school.id.toString()
                                 )
                             )
-                        },
-                        onLongClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.DivisionScreen.withArgs(
-                                        school.id.toString()
-                                    )
-                                )
-                            )
-                        },
-                        onDeleteClick = {
-                            onEvent(
-                                SchoolListEvent.OnItemClickDelete(
-                                    schoolId = school.id
-                                )
-                            )
-                        },
-                        onUpdateClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.SchoolEditScreen.withArgs(
-                                        school.id.toString()
-                                    )
-                                )
-                            )
-                        }
-                    )
+                        )
+                    })
                 }
             }
 
