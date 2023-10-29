@@ -174,7 +174,7 @@ fun DivisionListScreen(
                 item(key = 0) {
                     if (state.locationTitles.isNotEmpty()){
                         BreadCrumb(
-                            modifier = Modifier.padding(start = MaterialTheme.spacing.medium),
+                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                             locationTitles = state.locationTitles
                         )
                     }

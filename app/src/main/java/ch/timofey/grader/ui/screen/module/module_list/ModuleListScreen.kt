@@ -175,7 +175,7 @@ fun ModuleListScreen(
                 item {
                     if (state.locationsTitles.isNotEmpty()) {
                         BreadCrumb(
-                            modifier = Modifier.padding(start = MaterialTheme.spacing.medium),
+                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                             locationTitles = state.locationsTitles
                         )
                         Divider(
