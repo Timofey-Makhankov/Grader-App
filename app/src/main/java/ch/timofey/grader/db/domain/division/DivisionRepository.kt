@@ -39,6 +39,24 @@ interface DivisionRepository {
     suspend fun getDivision(id: UUID): Division?
 
     /**
+     * Check, whether a given division exists by given id
+     *
+     * @param id of division
+     * @return true, if division exists, otherwise false
+     * @see Division
+     */
+    suspend fun existsById(id: UUID): Boolean
+
+    /**
+     * get the school name from
+     *
+     * @param schoolId
+     * @return name of school
+     * @see ch.timofey.grader.db.domain.school.School
+     */
+    suspend fun getSchoolName(schoolId: UUID): String
+
+    /**
      * update isSelected field in division entity by id
      *
      * @param id [UUID]

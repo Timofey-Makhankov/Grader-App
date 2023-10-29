@@ -67,6 +67,26 @@ interface DivisionDao {
     suspend fun getById(id: UUID): Division?
 
     /**
+     * check, whether a given division exists by division id
+     *
+     * @param id of division
+     * @return true, if division exists, otherwise false
+     * @see Division
+     */
+    @Query("SELECT EXISTS(SELECT * FROM division WHERE id = :id)")
+    suspend fun existsById(id: UUID): Boolean
+
+    /**
+     * get a school title from given school id
+     *
+     * @param schoolId
+     * @return name of School
+     * @see ch.timofey.grader.db.domain.school.School
+     */
+    @Query("SELECT name FROM school WHERE id = :schoolId")
+    suspend fun getSchoolTitle(schoolId: UUID): String
+
+    /**
      * update isSelected on division Entity by id and given value
      *
      * @param id [UUID]

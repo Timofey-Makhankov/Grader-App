@@ -32,6 +32,20 @@ class DivisionRepositoryImpl(private val divisionDao: DivisionDao) : DivisionRep
         return result
     }
 
+    override suspend fun existsById(id: UUID): Boolean {
+        Log.v(tag, "trying to check a division with id: $id it exists")
+        val result = divisionDao.existsById(id)
+        Log.d(tag, "finished checking division")
+        return result
+    }
+
+    override suspend fun getSchoolName(schoolId: UUID): String {
+        Log.v(tag, "trying to get school name from school id: $schoolId")
+        val result = divisionDao.getSchoolTitle(schoolId)
+        Log.d(tag, "found a school name")
+        return result
+    }
+
     override fun getAllDivisionsFlow(): Flow<List<Division>> {
         Log.v(tag, "trying to get list flow of divisions")
         val result = divisionDao.getAllFlow()
