@@ -1,19 +1,19 @@
 package ch.timofey.grader.navigation
 
 sealed class Screen(var route: String) {
-    object MainScreen : Screen("main_screen")
-    object CreateSchoolScreen : Screen("create_school_screen")
-    object DivisionScreen : Screen("division_screen")
-    object ModuleScreen : Screen("module_screen")
-    object CreateDivisionScreen : Screen("create_division_screen")
-    object CreateModuleScreen : Screen("create_module_screen")
-    object ExamScreen : Screen("exam_screen")
-    object CreateExamScreen : Screen("create_exam_screen")
-    object SettingsScreen : Screen("settings_screen")
-    object ShareScreen : Screen("share_screen")
-    object SchoolEditScreen : Screen("edit_school_screen")
-    object CalculatorScreen : Screen("calculator_screen")
-    object WalkthroughScreen : Screen("walkthrough_screen")
+    data object MainScreen : Screen("main_screen")
+    data object CreateSchoolScreen : Screen("create_school_screen")
+    data object DivisionScreen : Screen("division_screen")
+    data object ModuleScreen : Screen("module_screen")
+    data object CreateDivisionScreen : Screen("create_division_screen")
+    data object CreateModuleScreen : Screen("create_module_screen")
+    data object ExamScreen : Screen("exam_screen")
+    data object CreateExamScreen : Screen("create_exam_screen")
+    data object SettingsScreen : Screen("settings_screen")
+    data object ShareScreen : Screen("share_screen")
+    data object SchoolEditScreen : Screen("edit_school_screen")
+    data object CalculatorScreen : Screen("calculator_screen")
+    data object WalkthroughScreen : Screen("walkthrough_screen")
 
     fun withArgs(vararg args: String): String {
         return buildString {

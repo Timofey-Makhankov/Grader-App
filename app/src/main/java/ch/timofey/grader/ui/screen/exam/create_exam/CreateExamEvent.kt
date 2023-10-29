@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.exam.exam_list.create_exam
+package ch.timofey.grader.ui.screen.exam.create_exam
 
 sealed class CreateExamEvent {
     object OnBackButtonPress : CreateExamEvent()

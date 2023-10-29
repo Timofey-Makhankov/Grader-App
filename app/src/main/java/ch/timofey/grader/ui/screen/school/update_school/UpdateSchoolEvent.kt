@@ -1,6 +1,6 @@
 package ch.timofey.grader.ui.screen.school.update_school
 
-import ch.timofey.grader.ui.screen.create_school.CreateSchoolEvent
+import ch.timofey.grader.ui.screen.school.create_school.CreateSchoolEvent
 
 sealed class UpdateSchoolEvent {
     object OnUpdateSchool : UpdateSchoolEvent()

@@ -2,10 +2,8 @@ package ch.timofey.grader.di
 
 import android.app.Application
 import android.content.Context
-import androidx.compose.runtime.collectAsState
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import androidx.room.Room
 import ch.timofey.grader.db.AppSettings
@@ -27,11 +25,9 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Singleton
 
 private const val DATA_STORE_FILE_NAME = "app_settings.pb"
-private const val USER_APP_SETTINGS = "user_app_settings"
 
 @Module
 @InstallIn(SingletonComponent::class)

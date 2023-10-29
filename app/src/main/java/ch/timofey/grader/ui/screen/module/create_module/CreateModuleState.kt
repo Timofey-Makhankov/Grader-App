@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.module.module_list.create_module
+package ch.timofey.grader.ui.screen.module.create_module
 
 data class CreateModuleState(
     val name: String = "",

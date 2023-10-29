@@ -36,7 +36,6 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.gradeColors
 import ch.timofey.grader.ui.theme.spacing
 import io.github.serpro69.kfaker.Faker
-import io.github.serpro69.kfaker.FakerConfig
 import io.github.serpro69.kfaker.fakerConfig
 import java.util.UUID
 

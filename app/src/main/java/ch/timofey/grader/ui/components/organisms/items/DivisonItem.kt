@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.components.items
+package ch.timofey.grader.ui.components.organisms.items
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec

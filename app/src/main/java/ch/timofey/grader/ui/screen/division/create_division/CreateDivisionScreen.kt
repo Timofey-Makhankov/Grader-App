@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.division.division_list.create_division
+package ch.timofey.grader.ui.screen.division.create_division
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*

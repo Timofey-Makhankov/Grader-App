@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.division.division_list.create_division
+package ch.timofey.grader.ui.screen.division.create_division
 
 import android.widget.Toast
 import androidx.lifecycle.SavedStateHandle

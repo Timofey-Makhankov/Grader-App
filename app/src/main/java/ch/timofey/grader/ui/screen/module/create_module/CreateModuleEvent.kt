@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.module.module_list.create_module
+package ch.timofey.grader.ui.screen.module.create_module
 
 sealed class CreateModuleEvent {
     data class OnNameChange(val name: String) : CreateModuleEvent()

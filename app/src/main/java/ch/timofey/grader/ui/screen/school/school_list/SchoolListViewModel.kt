@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.school.update_school.school_list
+package ch.timofey.grader.ui.screen.school.school_list
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

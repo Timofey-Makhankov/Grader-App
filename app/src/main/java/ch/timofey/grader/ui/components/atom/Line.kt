@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.components
+package ch.timofey.grader.ui.components.atom
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

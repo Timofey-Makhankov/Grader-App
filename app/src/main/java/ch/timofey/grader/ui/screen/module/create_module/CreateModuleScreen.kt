@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.module.module_list.create_module
+package ch.timofey.grader.ui.screen.module.create_module
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*

@@ -2,7 +2,6 @@ package ch.timofey.grader.ui.theme
 
 import android.app.Activity
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +16,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import ch.timofey.grader.db.AppTheme
-import javax.inject.Inject
 
 private val darkColorPalette = ColorSchemas.darkColorSchema
 private val lightColorPalette = ColorSchemas.lightColorSchema

@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.exam.exam_list.create_exam
+package ch.timofey.grader.ui.screen.exam.create_exam
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState

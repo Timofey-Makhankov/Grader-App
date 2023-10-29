@@ -18,28 +18,28 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ch.timofey.grader.ui.screen.calculator.CalculatorScreen
 import ch.timofey.grader.ui.screen.calculator.CalculatorViewModel
-import ch.timofey.grader.ui.screen.create_division.CreateDivisionScreen
-import ch.timofey.grader.ui.screen.create_division.CreateDivisionViewModel
-import ch.timofey.grader.ui.screen.create_exam.CreateExamScreen
-import ch.timofey.grader.ui.screen.create_exam.CreateExamViewModel
-import ch.timofey.grader.ui.screen.create_module.CreateModuleScreen
-import ch.timofey.grader.ui.screen.create_module.CreateModuleViewModel
-import ch.timofey.grader.ui.screen.create_school.CreateSchoolScreen
+import ch.timofey.grader.ui.screen.division.create_division.CreateDivisionScreen
+import ch.timofey.grader.ui.screen.division.create_division.CreateDivisionViewModel
+import ch.timofey.grader.ui.screen.exam.create_exam.CreateExamScreen
+import ch.timofey.grader.ui.screen.exam.create_exam.CreateExamViewModel
+import ch.timofey.grader.ui.screen.module.create_module.CreateModuleScreen
+import ch.timofey.grader.ui.screen.module.create_module.CreateModuleViewModel
+import ch.timofey.grader.ui.screen.school.create_school.CreateSchoolScreen
 import ch.timofey.grader.ui.screen.settings.SettingsScreen
-import ch.timofey.grader.ui.screen.create_school.CreateSchoolViewModel
-import ch.timofey.grader.ui.screen.division_list.DivisionListScreen
-import ch.timofey.grader.ui.screen.division_list.DivisionListViewModel
-import ch.timofey.grader.ui.screen.exam_list.ExamListScreen
-import ch.timofey.grader.ui.screen.exam_list.ExamListViewModel
-import ch.timofey.grader.ui.screen.module_list.ModuleListScreen
-import ch.timofey.grader.ui.screen.module_list.ModuleListViewModel
-import ch.timofey.grader.ui.screen.school_list.SchoolListScreen
-import ch.timofey.grader.ui.screen.school_list.SchoolListViewModel
+import ch.timofey.grader.ui.screen.school.create_school.CreateSchoolViewModel
+import ch.timofey.grader.ui.screen.division.division_list.DivisionListScreen
+import ch.timofey.grader.ui.screen.division.division_list.DivisionListViewModel
+import ch.timofey.grader.ui.screen.exam.exam_list.ExamListScreen
+import ch.timofey.grader.ui.screen.exam.exam_list.ExamListViewModel
+import ch.timofey.grader.ui.screen.module.module_list.ModuleListScreen
+import ch.timofey.grader.ui.screen.module.module_list.ModuleListViewModel
+import ch.timofey.grader.ui.screen.school.school_list.SchoolListScreen
+import ch.timofey.grader.ui.screen.school.school_list.SchoolListViewModel
 import ch.timofey.grader.ui.screen.settings.SettingsViewModel
 import ch.timofey.grader.ui.screen.about.AboutScreen
 import ch.timofey.grader.ui.screen.about.AboutViewModel
-import ch.timofey.grader.ui.screen.update_school.UpdateSchoolScreen
-import ch.timofey.grader.ui.screen.update_school.UpdateSchoolViewModel
+import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolScreen
+import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolViewModel
 
 @Composable
 fun Navigation() {

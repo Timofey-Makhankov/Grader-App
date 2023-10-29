@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.components
+package ch.timofey.grader.ui.components.molecules
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ch.timofey.grader.ui.components.atom.Line
 import ch.timofey.grader.ui.components.atom.Circle
 import ch.timofey.grader.ui.components.atom.Triangle
 import ch.timofey.grader.ui.theme.GraderTheme

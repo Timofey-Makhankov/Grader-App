@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.utils
+package ch.timofey.grader.ui.utils.exception
 
 class UnevenListDistributionException : RuntimeException {
     constructor() : super()

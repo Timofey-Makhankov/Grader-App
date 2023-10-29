@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.ui.theme.GraderTheme
 
 @Composable

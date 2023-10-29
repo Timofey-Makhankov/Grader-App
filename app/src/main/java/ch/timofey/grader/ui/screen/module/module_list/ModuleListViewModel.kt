@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.screen.module_list
+package ch.timofey.grader.ui.screen.module.module_list
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
