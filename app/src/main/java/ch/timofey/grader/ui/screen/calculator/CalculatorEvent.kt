@@ -1,7 +1,8 @@
 package ch.timofey.grader.ui.screen.calculator
 
 sealed class CalculatorEvent {
-    data class OnGradeChange(val id: Int, val grade: Double) : CalculatorEvent()
-    data class OnWeightChange(val id: Int, val weight: Double) : CalculatorEvent()
-    object OnFieldEmpty : CalculatorEvent()
+    data class OnGradeChange(val index: Int, val grade: String) : CalculatorEvent()
+    data class OnWeightChange(val index: Int, val weight: String) : CalculatorEvent()
+    data object OnAddFieldClick : CalculatorEvent()
+    data object OnRemoveFieldClick : CalculatorEvent()
 }
