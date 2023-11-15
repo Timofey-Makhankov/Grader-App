@@ -35,16 +35,13 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                     grades = _uiState.value.grades + "",
                     weights = _uiState.value.weights + "1.0"
                 )
+
             }
 
             is CalculatorEvent.OnGradeChange -> {
                 _uiState.value =
                     _uiState.value.copy(grades = _uiState.value.grades.mapIndexed { index, s -> if (index == event.index) event.grade else s })
-                _uiState.value = _uiState.value.copy(
-                    calculatedGrade = calculateGrade(
-                        _uiState.value.grades, _uiState.value.weights
-                    )
-                )
+                updateGrade()
             }
 
             is CalculatorEvent.OnRemoveFieldClick -> {
@@ -53,13 +50,23 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                     grades = _uiState.value.grades.dropLast(1),
                     weights = _uiState.value.weights.dropLast(1)
                 )
+                updateGrade()
             }
 
             is CalculatorEvent.OnWeightChange -> {
                 _uiState.value =
                     _uiState.value.copy(weights = _uiState.value.weights.mapIndexed { index, s -> if (index == event.index) event.weight else s })
+                updateGrade()
             }
         }
+    }
+
+    private fun updateGrade(){
+        _uiState.value = _uiState.value.copy(
+            calculatedGrade = calculateGrade(
+                _uiState.value.grades, _uiState.value.weights
+            )
+        )
     }
 
     private fun calculateGrade(grades: List<String>, weights: List<String>): Double {
