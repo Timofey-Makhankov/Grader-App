@@ -12,6 +12,7 @@ sealed class Screen(var route: String) {
     data object SettingsScreen : Screen("settings_screen")
     data object ShareScreen : Screen("share_screen")
     data object SchoolEditScreen : Screen("edit_school_screen")
+    data object DivisionEditScreen : Screen("edit_division_screen")
     data object CalculatorScreen : Screen("calculator_screen")
     data object WalkthroughScreen : Screen("walkthrough_screen")
 

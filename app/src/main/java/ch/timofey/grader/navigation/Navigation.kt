@@ -1,5 +1,6 @@
 package ch.timofey.grader.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,9 +12,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ch.timofey.grader.ui.screen.calculator.CalculatorScreen
@@ -38,6 +42,8 @@ import ch.timofey.grader.ui.screen.school.school_list.SchoolListViewModel
 import ch.timofey.grader.ui.screen.settings.SettingsViewModel
 import ch.timofey.grader.ui.screen.about.AboutScreen
 import ch.timofey.grader.ui.screen.about.AboutViewModel
+import ch.timofey.grader.ui.screen.division.update_division.UpdateDivisionScreen
+import ch.timofey.grader.ui.screen.division.update_division.UpdateDivisionViewModel
 import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolScreen
 import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolViewModel
 
@@ -73,7 +79,7 @@ fun Navigation() {
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStack() },
+                onPopBackStack = { navController.popBackStackSafe() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -118,7 +124,7 @@ fun Navigation() {
                     navController.navigate(it.route)
                 },
                 onPopBackStack = {
-                    navController.popBackStack()
+                    navController.popBackStackSafe()
                 },
                 drawerState = drawerState,
                 uiEvent = viewModel.uiEvent,
@@ -139,7 +145,7 @@ fun Navigation() {
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
                 onPopBackStack = {
-                    navController.popBackStack()
+                    navController.popBackStackSafe()
                 })
         }
         composable(
@@ -157,7 +163,7 @@ fun Navigation() {
                 uiEvent = viewModel.uiEvent,
                 onNavigate = { navController.navigate(it.route) },
                 drawerState = drawerState,
-                onPopBackStack = { navController.popBackStack() },
+                onPopBackStack = { navController.popBackStackSafe() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -175,7 +181,7 @@ fun Navigation() {
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
                 onPopBackStack = {
-                    navController.popBackStack()
+                    navController.popBackStackSafe()
                 })
         }
         composable(
@@ -192,7 +198,7 @@ fun Navigation() {
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
                 drawerState = drawerState,
-                onPopBackStack = { navController.popBackStack() },
+                onPopBackStack = { navController.popBackStackSafe() },
                 onNavigate = { navController.navigate(it.route) },
                 snackBarHostState = snackBarHostState
             )
@@ -209,7 +215,7 @@ fun Navigation() {
             CreateExamScreen(state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStack() })
+                onPopBackStack = { navController.popBackStackSafe() })
         }
         composable(
             route = Screen.SchoolEditScreen.route + "/{id}", arguments = listOf(navArgument("id"){
@@ -224,9 +230,34 @@ fun Navigation() {
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStack() },
+                onPopBackStack = { navController.popBackStackSafe() },
+                snackBarHostState = snackBarHostState
+            )
+        }
+        composable(
+            route = Screen.DivisionEditScreen.route + "/{id}", arguments = listOf(navArgument("id"){
+                type = NavType.StringType
+                defaultValue = "None"
+                nullable = false
+            })
+        ) {
+            val viewModel = hiltViewModel<UpdateDivisionViewModel>()
+            val state by viewModel.uiState.collectAsState()
+            UpdateDivisionScreen(
+                state = state,
+                onEvent = viewModel::onEvent,
+                uiEvent = viewModel.uiEvent,
+                onPopBackStack = { navController.popBackStackSafe() },
                 snackBarHostState = snackBarHostState
             )
         }
     }
 }
+
+@SuppressLint("RestrictedApi")
+private fun NavController.popBackStackSafe(): Boolean =
+    if (currentBackStack.value.size <= 2) {
+        false
+    } else {
+        popBackStack()
+    }
