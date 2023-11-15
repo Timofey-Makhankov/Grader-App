@@ -94,7 +94,7 @@ fun CreateSchoolScreen(
                     })
                 },
                 onValueChange = { name ->
-                    onEvent(CreateSchoolEvent.OnNameChange(name, ValidateSchool.Name(name)))
+                    onEvent(CreateSchoolEvent.OnNameChange(name))
                 },
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.small)
@@ -136,7 +136,7 @@ fun CreateSchoolScreen(
             }, onValueChange = { address ->
                 onEvent(
                     CreateSchoolEvent.OnAddressChange(
-                        address, ValidateSchool.Address(address)
+                        address
                     )
                 )
             }, minLines = 3
@@ -167,7 +167,7 @@ fun CreateSchoolScreen(
                 onValueChange = { zip ->
                     onEvent(
                         CreateSchoolEvent.OnZipChange(
-                            zip, ValidateSchool.Zip(zip)
+                            zip
                         )
                     )
                 },
@@ -204,7 +204,7 @@ fun CreateSchoolScreen(
                 onValueChange = { city ->
                     onEvent(
                         CreateSchoolEvent.OnCityChange(
-                            city, ValidateSchool.City(city)
+                            city
                         )
                     )
                 },
@@ -223,7 +223,7 @@ fun CreateSchoolScreen(
                 onValueChange = { description ->
                     onEvent(
                         CreateSchoolEvent.OnDescriptionChange(
-                            description, ValidateSchool.Description(description)
+                            description
                         )
                     )
                 },

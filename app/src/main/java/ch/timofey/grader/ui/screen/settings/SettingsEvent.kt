@@ -7,4 +7,5 @@ sealed class SettingsEvent {
     data class OnCalculatePointsChange(val value: Boolean) : SettingsEvent()
     data class OnDoublePointsChange(val value: Boolean) : SettingsEvent()
     data object OnDeleteDatabaseButtonClick : SettingsEvent()
+    data object OnCreateExportClick : SettingsEvent()
 }

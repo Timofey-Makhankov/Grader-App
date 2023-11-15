@@ -215,6 +215,16 @@ fun UpdateSchoolScreen(
                         )
                     )
                 },
+                isError = state.validDescription,
+                supportingText = {
+                    if (!state.validDescription) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = state.descriptionErrorMessage,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 modifier = Modifier
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),

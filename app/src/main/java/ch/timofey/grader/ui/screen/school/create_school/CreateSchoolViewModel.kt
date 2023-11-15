@@ -7,6 +7,7 @@ import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.validation.SchoolValidationFields
 import ch.timofey.grader.validation.ValidateSchool
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -35,7 +36,7 @@ class CreateSchoolViewModel @Inject constructor(
             }
 
             is CreateSchoolEvent.OnNameChange -> {
-                val result = ValidateSchool.Name(event.name).validate()
+                val result = ValidateSchool.name(event.name)
                 _uiState.value = _uiState.value.copy(
                     name = event.name,
                     validName = result.isValid,
@@ -44,7 +45,7 @@ class CreateSchoolViewModel @Inject constructor(
             }
 
             is CreateSchoolEvent.OnDescriptionChange -> {
-                val result = ValidateSchool.Description(event.description).validate()
+                val result = ValidateSchool.description(event.description)
                 _uiState.value = _uiState.value.copy(
                     description = event.description,
                     validDescription = result.isValid,
@@ -53,7 +54,7 @@ class CreateSchoolViewModel @Inject constructor(
             }
 
             is CreateSchoolEvent.OnAddressChange -> {
-                val result = ValidateSchool.Address(event.address).validate()
+                val result = ValidateSchool.address(event.address)
                 _uiState.value = _uiState.value.copy(
                     address = event.address,
                     validAddress = result.isValid,
@@ -62,7 +63,7 @@ class CreateSchoolViewModel @Inject constructor(
             }
 
             is CreateSchoolEvent.OnZipChange -> {
-                val result = ValidateSchool.Zip(event.zip).validate()
+                val result = ValidateSchool.zip(event.zip)
                 _uiState.value = _uiState.value.copy(
                     zip = event.zip,
                     validZip = result.isValid,
@@ -71,7 +72,7 @@ class CreateSchoolViewModel @Inject constructor(
             }
 
             is CreateSchoolEvent.OnCityChange -> {
-                val result = ValidateSchool.City(event.city).validate()
+                val result = ValidateSchool.city(event.city)
                 _uiState.value = _uiState.value.copy(
                     city = event.city,
                     validCity = result.isValid,
@@ -105,6 +106,7 @@ class CreateSchoolViewModel @Inject constructor(
             }
         }
     }
+
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)

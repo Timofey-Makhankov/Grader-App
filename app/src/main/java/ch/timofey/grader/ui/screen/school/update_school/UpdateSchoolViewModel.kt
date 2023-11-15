@@ -5,9 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp
-import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.validation.ValidateSchool
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,69 +62,52 @@ class UpdateSchoolViewModel @Inject constructor(
             }
 
             is UpdateSchoolEvent.OnNameChange -> {
-                if (event.name.isNotBlank()) {
-                    if (event.name.length > 60) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackBar(
-                                "The Name has to be not over 60 characters long",
-                                withDismissAction = true
-                            )
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(name = event.name, validName = true)
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        name = "",
-                        validName = false,
-                        nameErrorMessage = "Please Enter a valid School Name"
-                    )
-                }
+                val result = ValidateSchool.name(event.name)
+                _uiState.value = _uiState.value.copy(
+                    name = event.name,
+                    validName = result.isValid,
+                    nameErrorMessage = result.errorMessage
+                )
             }
 
             is UpdateSchoolEvent.OnDescriptionChange -> {
-                _uiState.value = _uiState.value.copy(description = event.description)
+                val result = ValidateSchool.description(event.description)
+                _uiState.value = _uiState.value.copy(
+                    description = event.description,
+                    validDescription = result.isValid,
+                    descriptionErrorMessage = result.errorMessage
+                )
             }
 
             is UpdateSchoolEvent.OnAddressChange -> {
-                if (event.address.isNotBlank()) {
-                    _uiState.value =
-                        _uiState.value.copy(address = event.address, validAddress = true)
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        address = "",
-                        validAddress = false,
-                        addressErrorMessage = "Please Enter a valid Address"
-                    )
-                }
+                val result = ValidateSchool.address(event.address)
+                _uiState.value = _uiState.value.copy(
+                    address = event.address,
+                    validAddress = result.isValid,
+                    addressErrorMessage = result.errorMessage
+                )
             }
 
             is UpdateSchoolEvent.OnCityChange -> {
-                if (event.city.isNotBlank()) {
-                    _uiState.value = _uiState.value.copy(city = event.city, validCity = true)
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        city = "",
-                        validCity = false,
-                        cityErrorMessage = "Please Enter a Valid City Name"
-                    )
-                }
+                val result = ValidateSchool.city(event.city)
+                _uiState.value = _uiState.value.copy(
+                    city = event.city,
+                    validCity = result.isValid,
+                    cityErrorMessage = result.errorMessage
+                )
             }
 
             is UpdateSchoolEvent.OnZipChange -> {
-                if (event.zip.isNotBlank()) {
-                    _uiState.value = _uiState.value.copy(zip = event.zip, validZip = true)
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        zip = "",
-                        validZip = false,
-                        zipErrorMessage = "Please Enter a Valid Zip Code"
-                    )
-                }
+                val result = ValidateSchool.zip(event.zip)
+                _uiState.value = _uiState.value.copy(
+                    city = event.zip,
+                    validCity = result.isValid,
+                    cityErrorMessage = result.errorMessage
+                )
             }
 
             is UpdateSchoolEvent.OnUpdateSchool -> {
-                if (isValidateInput(_uiState.value)) {
+                if (ValidateSchool.validateAll(_uiState.value)) {
                     val updatedSchool = _uiState.value.currentSchool!!.copy(
                         name = _uiState.value.name,
                         description = _uiState.value.description,
@@ -149,21 +132,11 @@ class UpdateSchoolViewModel @Inject constructor(
             }
         }
     }
-
-    private fun isValidateInput(state: UpdateSchoolState): Boolean {
-        return if (state.name.isNotBlank() && state.address.isNotBlank() && state.zip.isNotBlank() && state.city.isNotBlank()) {
-            state.validName && state.validAddress && state.validCity && state.validZip
-        } else {
-            false
-        }
-    }
-
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
         }
     }
-
     private fun sendUiEvents(vararg events: UiEvent) {
         viewModelScope.launch {
             for (event in events) {

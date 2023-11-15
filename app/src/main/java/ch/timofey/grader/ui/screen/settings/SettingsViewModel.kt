@@ -20,6 +20,7 @@ class SettingsViewModel @Inject constructor(
     private val dataStore: DataStore<AppSettings>,
     private val database: AppDatabase
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState
 
@@ -42,7 +43,7 @@ class SettingsViewModel @Inject constructor(
         when (event) {
             is SettingsEvent.OnThemeChange -> {
                 _uiState.value = _uiState.value.copy(appTheme = event.theme)
-                viewModelScope.launch{
+                viewModelScope.launch {
                     updateDataStore()
                 }
             }
@@ -69,6 +70,8 @@ class SettingsViewModel @Inject constructor(
                     updateDataStore()
                 }
             }
+
+            is SettingsEvent.OnCreateExportClick -> {}
         }
     }
 

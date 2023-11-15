@@ -1,11 +1,13 @@
 package ch.timofey.grader.ui.screen.school.create_school
 
+import ch.timofey.grader.validation.SchoolValidationFields
+
 data class CreateSchoolState(
-    val name: String = "",
-    val description: String = "",
-    val address: String = "",
-    val zip: String = "",
-    val city: String = "",
+    override val name: String = "",
+    override val description: String = "",
+    override val address: String = "",
+    override val zip: String = "",
+    override val city: String = "",
     val validName: Boolean = true,
     val validAddress: Boolean = true,
     val validZip: Boolean = true,
@@ -16,4 +18,4 @@ data class CreateSchoolState(
     val zipErrorMessage: String = "",
     val cityErrorMessage: String = "",
     val descriptionErrorMessage: String = ""
-)
+) : SchoolValidationFields
