@@ -172,32 +172,51 @@ fun DivisionListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item(key = 0) {
-                    if (state.locationTitles.isNotEmpty()){
+                    if (state.locationTitles.isNotEmpty()) {
                         BreadCrumb(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                             locationTitles = state.locationTitles
                         )
+                        Divider(
+                            modifier = Modifier.padding(
+                                horizontal = MaterialTheme.spacing.medium,
+                                vertical = MaterialTheme.spacing.extraSmall
+                            )
+                        )
                     }
                 }
                 items(items = state.divisionList, key = { division -> division.id }) { division ->
-                    DivisionItem(division = division, onSwipe = { divisionItem ->
-                        deletedDivisionId.value = divisionItem.id
-                        onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
-                    }, onCheckBoxClick = {
-                        onEvent(
-                            DivisionListEvent.OnCheckChange(
-                                id = division.id, value = !division.isSelected
-                            )
-                        )
-                    }, onLongClick = {
-                        onNavigate(
-                            UiEvent.Navigate(
-                                Screen.ModuleScreen.withArgs(
-                                    division.id.toString()
+                    DivisionItem(division = division,
+                        onSwipe = { divisionItem ->
+                            deletedDivisionId.value = divisionItem.id
+                            onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
+                        },
+                        onCheckBoxClick = {
+                            onEvent(
+                                DivisionListEvent.OnCheckChange(
+                                    id = division.id, value = !division.isSelected
                                 )
                             )
-                        )
-                    })
+                        },
+                        onLongClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.ModuleScreen.withArgs(
+                                        division.id.toString()
+                                    )
+                                )
+                            )
+                        },
+                        onDeleteClick = { DivisionListEvent.OnDeleteIconClick(division.id) },
+                        onUpdateClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.DivisionEditScreen.withArgs(
+                                        division.id.toString()
+                                    )
+                                )
+                            )
+                        })
                 }
             }
         }
@@ -235,8 +254,7 @@ private fun DivisionListScreenPreview() {
                         schoolId = UUID.randomUUID(),
                         grade = 0.0
                     )
-                ),
-                locationTitles = listOf("Given School Name", "Divisions")
+                ), locationTitles = listOf("Given School Name", "Divisions")
             ),
             onEvent = {},
             uiEvent = emptyFlow(),
@@ -277,8 +295,7 @@ private fun DivisionListScreenDarkModePreview() {
                         schoolId = UUID.randomUUID(),
                         grade = 0.0
                     )
-                ),
-                locationTitles = listOf("Given School Name", "Divisions")
+                ), locationTitles = listOf("Given School Name", "Divisions")
             ),
             onEvent = {},
             uiEvent = emptyFlow(),

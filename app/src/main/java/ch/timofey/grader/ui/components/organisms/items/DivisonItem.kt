@@ -22,6 +22,8 @@ fun DivisionItem(
     division: Division,
     onSwipe: (Division) -> Unit,
     onCheckBoxClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onUpdateClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -61,7 +63,9 @@ fun DivisionItem(
                 modifier = Modifier.padding(MaterialTheme.spacing.small).then(modifier),
                 division = division,
                 onCheckBoxClick = onCheckBoxClick,
-                onLongClick = onLongClick
+                onLongClick = onLongClick,
+                onEditClick = onUpdateClick,
+                onDeleteClick = onDeleteClick
             )
         }
     )

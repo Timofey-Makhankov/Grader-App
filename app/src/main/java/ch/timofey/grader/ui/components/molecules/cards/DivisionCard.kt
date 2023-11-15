@@ -9,6 +9,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -16,11 +19,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
 import java.util.UUID
 
@@ -32,6 +42,8 @@ fun DivisionCard(
     isOpen: Boolean = false,
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
     val checkedState = remember { mutableStateOf(division.isSelected) }
@@ -82,18 +94,60 @@ fun DivisionCard(
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            AnimatedVisibility(visible = expanded.value) {}
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(end = MaterialTheme.spacing.small)
             ) {
                 Text(
-                    text = "${division.schoolYear}", style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.labelLarge,
+                    text = if (division.grade == 0.0) AnnotatedString("") else buildAnnotatedString {
+                        withStyle(
+                            SpanStyle(
+                                fontStyle = FontStyle.Italic
+                            )
+                        ) {
+                            append("Average Grade: ")
+                        }
+                        withStyle(
+                            SpanStyle(
+                                color = getGradeColors(division.grade),
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("${division.grade}")
+                        }
+                    }
                 )
-                if (division.grade != 0.0) {
-                    Text(
-                        text = "Average Grade: ${division.grade}",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                Text(
+                    text = "${division.schoolYear}",
+                    style = MaterialTheme.typography.bodyMedium.plus(SpanStyle(fontWeight = FontWeight.Bold)),
+                )
+            }
+            AnimatedVisibility(visible = expanded.value) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
+                ) {
+                    Box {
+                        Row {
+                            IconButton(
+                                onClick = onEditClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Create,
+                                    contentDescription = "Edit the School Card"
+                                )
+                            }
+                            IconButton(
+                                onClick = onDeleteClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Edit the School Card"
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -112,7 +166,7 @@ private fun DivisionCardPreview() {
             schoolId = UUID.randomUUID(),
             isSelected = false,
             grade = 0.0
-        ), onLongClick = {}, onCheckBoxClick = {})
+        ), onLongClick = {}, onCheckBoxClick = {}, onDeleteClick = {}, onEditClick = {})
     }
 }
 
@@ -130,7 +184,11 @@ private fun DivisionCardDarkModePreview() {
             schoolId = UUID.randomUUID(),
             isSelected = true,
             grade = 4.0
-        ), onLongClick = {}, onCheckBoxClick = {}, isOpen = true
-        )
+        ),
+            onLongClick = {},
+            onCheckBoxClick = {},
+            isOpen = true,
+            onDeleteClick = {},
+            onEditClick = {})
     }
 }

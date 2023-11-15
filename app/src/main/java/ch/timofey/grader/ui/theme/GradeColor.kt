@@ -49,6 +49,15 @@ val ColorScheme.gradeColors: ColorGradePalette
     @ReadOnlyComposable
     get() = LocalColorGradePalette.current
 
+@Composable
+fun getGradeColors(grade: Double): Color {
+    return when {
+        grade == 4.0 -> MaterialTheme.colorScheme.gradeColors.minimumGrade
+        grade > 4.0 -> MaterialTheme.colorScheme.gradeColors.overGrade
+        grade < 4.0 -> MaterialTheme.colorScheme.gradeColors.lowerGrade
+        else -> Color.Unspecified
+    }
+}
 @Preview
 @Composable
 private fun PreviewGradeColorsLight() {

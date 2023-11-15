@@ -26,7 +26,7 @@ data class School(
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "zip") val zipCode: String,
     @ColumnInfo(name = "city") val city: String,
-    @ColumnInfo(name = "is_selected") val isSelected: Boolean = false,
+    @ColumnInfo(name = "is_selected") val isSelected: Boolean = true,
     @ColumnInfo(name = "grade", defaultValue = "0.0") val grade: Double = 0.0,
     @ColumnInfo(name = "on_delete", defaultValue = "false") val onDelete: Boolean = false
 )

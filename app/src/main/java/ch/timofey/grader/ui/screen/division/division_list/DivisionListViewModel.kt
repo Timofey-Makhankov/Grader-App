@@ -106,6 +106,17 @@ class DivisionListViewModel @Inject constructor(
                 }
             }
 
+            is DivisionListEvent.OnDeleteIconClick -> {
+                viewModelScope.launch {
+                    repository.updateOnDeleteDivision(event.id, true)
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "Division was deleted", true, "Undo"
+                        )
+                    )
+                }
+            }
+
             is DivisionListEvent.OnUndoDeleteClick -> {
                 viewModelScope.launch {
                     repository.updateOnDeleteDivision(event.id, false)

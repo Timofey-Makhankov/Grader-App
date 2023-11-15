@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.gradeColors
 import ch.timofey.grader.ui.theme.spacing
 import io.github.serpro69.kfaker.Faker
@@ -111,12 +112,7 @@ fun SchoolCard(
                         }
                         withStyle(
                             SpanStyle(
-                                color = when {
-                                    school.grade == 4.0 -> MaterialTheme.colorScheme.gradeColors.minimumGrade
-                                    school.grade > 4.0 -> MaterialTheme.colorScheme.gradeColors.overGrade
-                                    school.grade < 4.0 -> MaterialTheme.colorScheme.gradeColors.lowerGrade
-                                    else -> Color.Unspecified
-                                },
+                                color = getGradeColors(school.grade),
                                 fontWeight = FontWeight.Bold
                             )
                         ) {
