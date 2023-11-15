@@ -180,6 +180,12 @@ fun SchoolListScreen(
                         modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                         locationTitles = listOf("Home")
                     )
+                    Divider(
+                        modifier = Modifier.padding(
+                            horizontal = MaterialTheme.spacing.medium,
+                            vertical = MaterialTheme.spacing.extraSmall
+                        )
+                    )
                 }
                 items(
                     items = state.schoolList,

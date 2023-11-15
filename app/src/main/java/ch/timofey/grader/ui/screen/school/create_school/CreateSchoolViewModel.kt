@@ -7,6 +7,7 @@ import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.validation.ValidateSchool
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +30,57 @@ class CreateSchoolViewModel @Inject constructor(
 
     fun onEvent(event: CreateSchoolEvent) {
         when (event) {
+            is CreateSchoolEvent.OnReturnBack -> {
+                sendUiEvent(UiEvent.PopBackStack)
+            }
+
+            is CreateSchoolEvent.OnNameChange -> {
+                val result = ValidateSchool.Name(event.name).validate()
+                _uiState.value = _uiState.value.copy(
+                    name = event.name,
+                    validName = result.isValid,
+                    nameErrorMessage = result.errorMessage
+                )
+            }
+
+            is CreateSchoolEvent.OnDescriptionChange -> {
+                val result = ValidateSchool.Description(event.description).validate()
+                _uiState.value = _uiState.value.copy(
+                    description = event.description,
+                    validDescription = result.isValid,
+                    descriptionErrorMessage = result.errorMessage
+                )
+            }
+
+            is CreateSchoolEvent.OnAddressChange -> {
+                val result = ValidateSchool.Address(event.address).validate()
+                _uiState.value = _uiState.value.copy(
+                    address = event.address,
+                    validAddress = result.isValid,
+                    addressErrorMessage = result.errorMessage
+                )
+            }
+
+            is CreateSchoolEvent.OnZipChange -> {
+                val result = ValidateSchool.Zip(event.zip).validate()
+                _uiState.value = _uiState.value.copy(
+                    zip = event.zip,
+                    validZip = result.isValid,
+                    zipErrorMessage = result.errorMessage
+                )
+            }
+
+            is CreateSchoolEvent.OnCityChange -> {
+                val result = ValidateSchool.City(event.city).validate()
+                _uiState.value = _uiState.value.copy(
+                    city = event.city,
+                    validCity = result.isValid,
+                    cityErrorMessage = result.errorMessage
+                )
+            }
+
             is CreateSchoolEvent.OnCreateSchool -> {
-                if (isValidateInput(_uiState.value)) {
+                if (ValidateSchool.validateAll(_uiState.value)) {
                     val newSchool = School(
                         id = UUID.randomUUID(),
                         name = _uiState.value.name,
@@ -53,83 +103,8 @@ class CreateSchoolViewModel @Inject constructor(
                     ).show()
                 }
             }
-
-            is CreateSchoolEvent.OnNameChange -> {
-                if (event.name.isNotBlank()) {
-                    if (event.name.length > 60) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackBar(
-                                "The Name has to be not over 60 characters long",
-                                withDismissAction = true
-                            )
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(name = event.name, validName = true)
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        name = "",
-                        validName = false,
-                        nameErrorMessage = "Please Enter a valid School Name"
-                    )
-                }
-            }
-
-            is CreateSchoolEvent.OnDescriptionChange -> {
-                _uiState.value = _uiState.value.copy(description = event.description)
-            }
-
-            is CreateSchoolEvent.OnAddressChange -> {
-                if (event.address.isNotBlank()) {
-                    _uiState.value =
-                        _uiState.value.copy(address = event.address, validAddress = true)
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        address = "",
-                        validAddress = false,
-                        addressErrorMessage = "Please Enter a valid Address"
-                    )
-                }
-            }
-
-            is CreateSchoolEvent.OnZipChange -> {
-                if (event.zip.isNotBlank()) {
-                    _uiState.value = _uiState.value.copy(zip = event.zip, validZip = true)
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        zip = "",
-                        validZip = false,
-                        zipErrorMessage = "Please Enter a Valid Zip Code"
-                    )
-                }
-            }
-
-            is CreateSchoolEvent.OnCityChange -> {
-                if (event.city.isNotBlank()) {
-                    _uiState.value = _uiState.value.copy(city = event.city, validCity = true)
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        city = "",
-                        validCity = false,
-                        cityErrorMessage = "Please Enter a Valid City Name"
-                    )
-                }
-            }
-
-            is CreateSchoolEvent.OnReturnBack -> {
-                sendUiEvent(UiEvent.PopBackStack)
-            }
         }
     }
-
-    private fun isValidateInput(state: CreateSchoolState): Boolean {
-        return if (state.name.isNotBlank() && state.address.isNotBlank() && state.zip.isNotBlank() && state.city.isNotBlank()) {
-            state.validName && state.validAddress && state.validCity && state.validZip
-        } else {
-            false
-        }
-    }
-
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)

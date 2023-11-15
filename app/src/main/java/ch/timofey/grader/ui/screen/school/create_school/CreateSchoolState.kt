@@ -10,8 +10,10 @@ data class CreateSchoolState(
     val validAddress: Boolean = true,
     val validZip: Boolean = true,
     val validCity: Boolean = true,
+    val validDescription: Boolean = true,
     val nameErrorMessage: String = "",
     val addressErrorMessage: String = "",
     val zipErrorMessage: String = "",
-    val cityErrorMessage: String = ""
+    val cityErrorMessage: String = "",
+    val descriptionErrorMessage: String = ""
 )
