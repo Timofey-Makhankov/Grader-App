@@ -2,6 +2,7 @@ package ch.timofey.grader.db.domain.division
 
 import androidx.room.*
 import ch.timofey.grader.db.domain.school.School
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
 /**
