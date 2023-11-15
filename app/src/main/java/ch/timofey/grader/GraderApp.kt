@@ -6,7 +6,6 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class GraderApp : Application() {
-
     override fun onCreate() {
         super.onCreate()
         application = this

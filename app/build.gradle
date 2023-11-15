@@ -4,7 +4,6 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version "1.9.0"
     id 'dagger.hilt.android.plugin'
     id "com.google.devtools.ksp"
-    //id 'kotlin-kapt'
 }
 
 android {
@@ -16,7 +15,7 @@ android {
         minSdk 28
         targetSdk 34
         versionCode 1
-        versionName "0.4.1-Beta"
+        versionName "0.4.2-Beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
