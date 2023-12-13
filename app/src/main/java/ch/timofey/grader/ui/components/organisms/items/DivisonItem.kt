@@ -19,13 +19,13 @@ import ch.timofey.grader.ui.theme.spacing
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DivisionItem(
-    division: Division,
+    modifier: Modifier = Modifier,
     onSwipe: (Division) -> Unit,
     onCheckBoxClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onUpdateClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    division: Division
 ) {
     val currentItem by rememberUpdatedState(division)
     val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->

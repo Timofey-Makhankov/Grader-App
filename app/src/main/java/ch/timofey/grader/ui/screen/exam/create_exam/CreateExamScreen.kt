@@ -1,11 +1,25 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -18,8 +32,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import ch.timofey.grader.ui.components.organisms.AppBar
+import androidx.compose.ui.window.DialogProperties
 import ch.timofey.grader.ui.components.atom.icons.CalendarToday
+import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.UiEvent
@@ -94,16 +109,18 @@ fun CreateExamScreen(
             OutlinedTextField(modifier = Modifier
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
-                value = state.date,
+                value = state.dateTaken,
                 onValueChange = {},
                 readOnly = true,
                 isError = !state.validDate,
-                label = { Text(text = buildAnnotatedString {
-                    append("Exam taken ")
-                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
-                    }
-                }) },
+                label = {
+                    Text(text = buildAnnotatedString {
+                        append("Exam taken ")
+                        withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
+                            append("(Required)")
+                        }
+                    })
+                },
                 placeholder = { Text(text = "YYYY-MM-DD") },
                 supportingText = {
                     if (!state.validDate) {
@@ -126,12 +143,14 @@ fun CreateExamScreen(
                 onValueChange = { value -> onEvent(CreateExamEvent.OnGradeChange(value)) },
                 singleLine = true,
                 isError = !state.validGrade,
-                label = { Text(text = buildAnnotatedString {
-                    append("Grade ")
-                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
-                    }
-                }) },
+                label = {
+                    Text(text = buildAnnotatedString {
+                        append("Grade ")
+                        withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
+                            append("(Required)")
+                        }
+                    })
+                },
                 supportingText = {
                     if (!state.validGrade) {
                         Text(
@@ -148,12 +167,14 @@ fun CreateExamScreen(
                 onValueChange = { value -> onEvent(CreateExamEvent.OnWeightChange(value)) },
                 singleLine = true,
                 isError = !state.validWeight,
-                label = { Text(buildAnnotatedString {
-                    append("Weight ")
-                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
-                    }
-                }) },
+                label = {
+                    Text(buildAnnotatedString {
+                        append("Weight ")
+                        withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
+                            append("(Required)")
+                        }
+                    })
+                },
                 supportingText = {
                     if (!state.validWeight) {
                         Text(
@@ -178,22 +199,32 @@ fun CreateExamScreen(
                 Text(text = "Create")
             }
             if (openDialog.value) {
-                DatePickerDialog(onDismissRequest = { openDialog.value = false }, confirmButton = {
-                    TextButton(onClick = {
-                        openDialog.value = false; onEvent(
-                        CreateExamEvent.OnSetDate(
-                            datePickerState.selectedDateMillis!!
-                        )
-                    )
+                DatePickerDialog(
+                    properties = DialogProperties(
+                        dismissOnBackPress = true,
+                        dismissOnClickOutside = true
+                    ),
+                    onDismissRequest = { openDialog.value = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            openDialog.value = false;
+                            onEvent(
+                                CreateExamEvent.OnSetDate(
+                                    datePickerState.selectedDateMillis!!
+                                )
+                            )
+                        }) {
+                            Text(text = "OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { openDialog.value = false }) {
+                            Text(text = "Cancel")
+                        }
                     }) {
-                        Text(text = "OK")
-                    }
-                }, dismissButton = {
-                    TextButton(onClick = { openDialog.value = false }) {
-                        Text(text = "Cancel")
-                    }
-                }) {
-                    DatePicker(state = datePickerState)
+                    DatePicker(
+                        state = datePickerState
+                    )
                 }
             }
         }

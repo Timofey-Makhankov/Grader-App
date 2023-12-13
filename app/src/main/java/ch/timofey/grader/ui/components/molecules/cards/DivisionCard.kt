@@ -86,13 +86,15 @@ fun DivisionCard(
                     }, colors = CheckboxDefaults.colors()
                 )
             }
-            Text(
-                modifier = Modifier.padding(end = MaterialTheme.spacing.extraSmall),
-                text = division.description ?: "",
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = if (expanded.value) 4 else 2,
-                overflow = TextOverflow.Ellipsis
-            )
+            if (division.description != ""){
+                Text(
+                    modifier = Modifier.padding(end = MaterialTheme.spacing.extraSmall),
+                    text = division.description ?: "",
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = if (expanded.value) 4 else 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             Row (
                 verticalAlignment = Alignment.CenterVertically,
@@ -125,10 +127,7 @@ fun DivisionCard(
                 )
             }
             AnimatedVisibility(visible = expanded.value) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
-                ) {
-                    Box {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
                         Row {
                             IconButton(
                                 onClick = onEditClick
@@ -148,7 +147,7 @@ fun DivisionCard(
                             }
                         }
                     }
-                }
+
             }
         }
     }

@@ -1,5 +1,6 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
+import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.exam.ExamRepository
+import ch.timofey.grader.db.domain.exam.ExamValidation
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -14,11 +16,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.text.Format
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import java.util.UUID
 import javax.inject.Inject
 
@@ -41,101 +44,59 @@ class CreateExamViewModel @Inject constructor(
             }
 
             is CreateExamEvent.OnNameChange -> {
-                if (event.name.isNotBlank()) {
-                    if (event.name.length > 60) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackBar(
-                                "The Name cannot Exceed over 60 Characters", true
-                            )
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(name = event.name)
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        name = "", validName = false, errorMessageName = "Please Enter a valid Name"
-                    )
-                }
+                val result = ExamValidation.name(event.name)
+                _uiState.value = _uiState.value.copy(
+                    name = event.name, validName = result.valid, errorMessageName = result.message
+                )
             }
 
             is CreateExamEvent.OnDescriptionChange -> {
-                _uiState.value = _uiState.value.copy(description = event.description)
+                val result = ExamValidation.description(event.description)
+                _uiState.value = _uiState.value.copy(
+                    description = event.description,
+                    validDescription = result.valid,
+                    errorMessageDescription = result.message
+                )
             }
 
             is CreateExamEvent.OnGradeChange -> {
-                if (event.grade.isNotBlank()) {
-                    if (numberIsValidFloatingPointNumber(event.grade)) {
-                        _uiState.value = _uiState.value.copy(grade = event.grade, validGrade = true)
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            grade = event.grade,
-                            validGrade = false,
-                            errorMessageGrade = "Please enter a Grade that is a Floating Point Number"
-                        )
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        grade = "",
-                        validGrade = false,
-                        errorMessageGrade = "Please Enter a valid Grade"
-                    )
-                }
+                val result = ExamValidation.grade(event.grade, true)
+                _uiState.value = _uiState.value.copy(
+                    grade = event.grade,
+                    validGrade = result.valid,
+                    errorMessageGrade = result.message
+                )
             }
 
             is CreateExamEvent.OnWeightChange -> {
-                when {
-                    event.weight.isNotBlank() -> _uiState.value = _uiState.value.copy(
-                        weight = "",
-                        validWeight = false,
-                        errorMessageWeight = "Please Enter a valid Weight"
-                    )
-
-                    !numberIsValidFloatingPointNumber(event.weight) -> _uiState.value =
-                        _uiState.value.copy(
-                            weight = event.weight,
-                            validWeight = false,
-                            errorMessageWeight = "Please enter a Weight that is a Floating Point Number"
-                        )
-
-                    !weightOverZeroAndUnderOrEqualOne(event.weight.toDouble()) -> _uiState.value =
-                        _uiState.value.copy(
-                            weight = event.weight,
-                            validWeight = false,
-                            errorMessageWeight = "Please Enter a Weight that is over 0 and under or equal 1"
-                        )
-
-                    else -> _uiState.value =
-                        _uiState.value.copy(weight = event.weight, validWeight = true)
-                }
+                val result = ExamValidation.weight(event.weight)
+                _uiState.value = _uiState.value.copy(
+                    weight = event.weight,
+                    validWeight = result.valid,
+                    errorMessageWeight = result.message
+                )
             }
 
             is CreateExamEvent.OnDateChange -> {
-                if (event.date.isNotBlank()) {
-                    if (dateIsValid(event.date)) {
-                        _uiState.value = _uiState.value.copy(date = event.date)
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            date = event.date,
-                            validDate = false,
-                            errorMessageDate = "Please Enter a Valid Date in YYYY-mm-dd format"
-                        )
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        date = "", validDate = false, errorMessageDate = "Please Enter a valid Date"
-                    )
-                }
+                val result = ExamValidation.dateTaken(event.date)
+                _uiState.value = _uiState.value.copy(
+                    dateTaken = event.date,
+                    validDate = result.valid,
+                    errorMessageDate = result.message
+                )
             }
 
             is CreateExamEvent.OnSetDate -> {
+                val format = DateFormat.getDateFormat(GraderApp.getContext())
                 _uiState.value = _uiState.value.copy(
-                    date = Instant.ofEpochMilli(event.date).atZone(ZoneId.systemDefault())
-                        .toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                    dateTaken = Instant.ofEpochMilli(event.date).atZone(ZoneId.systemDefault())
+                        .format(DateTimeFormatter.ofPattern((format as SimpleDateFormat).toLocalizedPattern()))
                 )
             }
 
             is CreateExamEvent.OnCreateExamButtonPress -> {
-                if (isValidInput(_uiState.value)) {
+                if (ExamValidation.validateAll(_uiState.value)) {
+                    val dateFormat: Format = DateFormat.getDateFormat(GraderApp.getContext())
                     viewModelScope.launch {
                         repository.saveExam(
                             Exam(
@@ -145,7 +106,8 @@ class CreateExamViewModel @Inject constructor(
                                 grade = _uiState.value.grade.toDouble(),
                                 weight = _uiState.value.weight.toDouble(),
                                 date = LocalDate.parse(
-                                    _uiState.value.date, DateTimeFormatter.ISO_LOCAL_DATE
+                                    _uiState.value.dateTaken,
+                                    DateTimeFormatter.ofPattern((dateFormat as SimpleDateFormat).toLocalizedPattern())
                                 ),
                                 moduleId = UUID.fromString(moduleId)
                             )
@@ -161,36 +123,6 @@ class CreateExamViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun isValidInput(state: CreateExamState): Boolean {
-        return if (state.name.isNotBlank() && state.date.isNotBlank() && state.grade.isNotBlank() && state.weight.isNotBlank()) {
-            state.validName && state.validDate && state.validGrade && state.validWeight
-        } else {
-            false
-        }
-    }
-
-    private fun dateIsValid(date: String): Boolean {
-        return try {
-            LocalDate.parse(date)
-            true
-        } catch (_: DateTimeParseException) {
-            false
-        }
-    }
-
-    private fun numberIsValidFloatingPointNumber(number: String): Boolean {
-        return try {
-            number.toDouble()
-            true
-        } catch (_: NumberFormatException) {
-            false
-        }
-    }
-
-    private fun weightOverZeroAndUnderOrEqualOne(weight: Double): Boolean {
-        return weight > 0 && weight <= 1.0
     }
 
     private fun sendUiEvent(event: UiEvent) {
