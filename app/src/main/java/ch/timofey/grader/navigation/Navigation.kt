@@ -44,14 +44,17 @@ import ch.timofey.grader.ui.screen.about.AboutScreen
 import ch.timofey.grader.ui.screen.about.AboutViewModel
 import ch.timofey.grader.ui.screen.division.update_division.UpdateDivisionScreen
 import ch.timofey.grader.ui.screen.division.update_division.UpdateDivisionViewModel
+import ch.timofey.grader.ui.screen.module.update_module.UpdateModuleScreen
+import ch.timofey.grader.ui.screen.module.update_module.UpdateModuleViewModel
 import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolScreen
 import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolViewModel
 
 @Composable
-fun Navigation() {
+fun Navigation(
+    snackBarHostState: SnackbarHostState
+) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val snackBarHostState = remember { SnackbarHostState() }
     NavHost(
         navController = navController,
         startDestination = Screen.MainScreen.route,
@@ -244,6 +247,23 @@ fun Navigation() {
             val viewModel = hiltViewModel<UpdateDivisionViewModel>()
             val state by viewModel.uiState.collectAsState()
             UpdateDivisionScreen(
+                state = state,
+                onEvent = viewModel::onEvent,
+                uiEvent = viewModel.uiEvent,
+                onPopBackStack = { navController.popBackStackSafe() },
+                snackBarHostState = snackBarHostState
+            )
+        }
+        composable(
+            route = Screen.ModuleEditScreen.route + "/{id}", arguments = listOf(navArgument("id"){
+                type = NavType.StringType
+                defaultValue = "None"
+                nullable = false
+            })
+        ) {
+            val viewModel = hiltViewModel<UpdateModuleViewModel>()
+            val state by viewModel.uiState.collectAsState()
+            UpdateModuleScreen(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,

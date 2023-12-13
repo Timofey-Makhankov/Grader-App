@@ -84,7 +84,7 @@ fun CreateModuleScreen(
             OutlinedTextField(modifier = Modifier
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
-                value = state.teacherFirstname,
+                value = state.teacherFirstName,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnTeacherFirstnameChange(value)) },
                 minLines = 2,
                 isError = !state.validTeacherFirstname,
@@ -106,7 +106,7 @@ fun CreateModuleScreen(
             OutlinedTextField(modifier = Modifier
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
-                value = state.teacherLastname,
+                value = state.teacherLastName,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnTeacherLastnameChange(value)) },
                 minLines = 2,
                 isError = !state.validTeacherLastname,

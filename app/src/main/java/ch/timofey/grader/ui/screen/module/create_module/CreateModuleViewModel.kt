@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.db.domain.module.ModuleRepository
+import ch.timofey.grader.db.domain.module.ModuleValidation
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -36,84 +37,51 @@ class CreateModuleViewModel @Inject constructor(
             }
 
             is CreateModuleEvent.OnNameChange -> {
-                if (event.name.isNotBlank()) {
-                    if (event.name.length > 60) {
-                        _uiState.value = _uiState.value.copy(
-                            validName = false,
-                            errorMessageName = "The name cannot exceed 60 characters long"
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            name = event.name, validName = true
-                        )
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        name = "",
-                        validName = false,
-                        errorMessageName = "Please enter a valid Module name"
-                    )
-                }
+                val result = ModuleValidation.name(event.name)
+                _uiState.value = _uiState.value.copy(
+                    name = event.name,
+                    validName = result.valid,
+                    errorMessageName = result.message
+                )
             }
 
             is CreateModuleEvent.OnDescriptionChange -> {
+                val result = ModuleValidation.description(event.description)
                 _uiState.value = _uiState.value.copy(
-                    description = event.description
+                    description = event.description,
+                    validDescription = result.valid,
+                    errorMessageDescription = result.message
                 )
             }
 
             is CreateModuleEvent.OnTeacherFirstnameChange -> {
-                if (event.teacherFirstname.isNotBlank()) {
-                    if (event.teacherFirstname.length > 60) {
-                        _uiState.value = _uiState.value.copy(
-                            validTeacherFirstname = false,
-                            errorMessageTeacherFirstname = "The teacher firstname cannot exceed 60 characters long"
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            teacherFirstname = event.teacherFirstname, validTeacherFirstname = true
-                        )
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        teacherFirstname = "",
-                        validTeacherFirstname = false,
-                        errorMessageTeacherFirstname = "Please enter a valid teacher firstname"
-                    )
-                }
+                val result = ModuleValidation.teacherFirstName(event.teacherFirstname)
+                _uiState.value = _uiState.value.copy(
+                    teacherFirstName = event.teacherFirstname,
+                    validTeacherFirstname = result.valid,
+                    errorMessageTeacherFirstname = result.message
+                )
             }
 
             is CreateModuleEvent.OnTeacherLastnameChange -> {
-                if (event.teacherLastname.isNotBlank()) {
-                    if (event.teacherLastname.length > 60) {
-                        _uiState.value = _uiState.value.copy(
-                            validTeacherLastname = false,
-                            errorMessageTeacherLastname = "The teacher lastname cannot exceed 60 characters long"
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            teacherLastname = event.teacherLastname, validTeacherLastname = true
-                        )
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        teacherLastname = "",
-                        validTeacherLastname = false,
-                        errorMessageTeacherLastname = "Please enter a valid teacher lastname"
-                    )
-                }
+                val result = ModuleValidation.teacherLastName(event.teacherLastname)
+                _uiState.value = _uiState.value.copy(
+                    teacherLastName = event.teacherLastname,
+                    validTeacherFirstname = result.valid,
+                    errorMessageTeacherFirstname = result.message
+                )
             }
 
             is CreateModuleEvent.OnCreateModuleButtonClick -> {
-                if (isValidInput(_uiState.value)) {
+                if (ModuleValidation.validateAll(_uiState.value)) {
                     viewModelScope.launch {
                         repository.saveModule(
                             Module(
                                 id = UUID.randomUUID(),
                                 name = _uiState.value.name,
                                 description = _uiState.value.description,
-                                teacherFirstname = _uiState.value.teacherFirstname,
-                                teacherLastname = _uiState.value.teacherLastname,
+                                teacherFirstname = _uiState.value.teacherFirstName,
+                                teacherLastname = _uiState.value.teacherLastName,
                                 divisionId = UUID.fromString(divisionId)
                             )
                         )
@@ -129,14 +97,6 @@ class CreateModuleViewModel @Inject constructor(
                     ).show()
                 }
             }
-        }
-    }
-
-    private fun isValidInput(state: CreateModuleState): Boolean {
-        return if (state.name.isNotBlank() && state.teacherFirstname.isNotBlank() && state.teacherLastname.isNotBlank()) {
-            state.validName && state.validTeacherLastname && state.validTeacherFirstname
-        } else {
-            false
         }
     }
 

@@ -15,7 +15,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -28,10 +38,10 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.components.organisms.items.ModuleItem
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.organisms.AppBar
+import ch.timofey.grader.ui.components.organisms.items.ModuleItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -54,25 +64,33 @@ fun ModuleListScreen(
     val scope = rememberCoroutineScope()
     val deletedModuleId = remember { mutableStateOf<UUID?>(value = null) }
     LaunchedEffect(key1 = true) {
-        uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.Navigate -> {
-                    onNavigate(event)
-                }
+        scope.launch {
+            uiEvent.collect { event ->
+                when (event) {
+                    is UiEvent.Navigate -> {
+                        onNavigate(event)
+                    }
 
-                is UiEvent.PopBackStack -> {
-                    onPopBackStack()
-                }
+                    is UiEvent.PopBackStack -> {
+                        onPopBackStack()
+                    }
 
-                is UiEvent.ShowSnackBar -> {
-                    val result = snackBarHostState.showSnackbar(
-                        message = event.message,
-                        withDismissAction = event.withDismissAction,
-                        actionLabel = event.action,
-                        duration = SnackbarDuration.Short
-                    )
-                    if (result == SnackbarResult.ActionPerformed) {
-                        onEvent(ModuleListEvent.OnUndoDeleteClick(deletedModuleId.value!!))
+                    is UiEvent.ShowSnackBar -> {
+                        scope.launch {
+                            val result = snackBarHostState.showSnackbar(
+                                message = event.message,
+                                withDismissAction = event.withDismissAction,
+                                actionLabel = event.action,
+                                duration = SnackbarDuration.Long
+                            )
+                            when (result) {
+                                SnackbarResult.ActionPerformed -> {
+                                    onEvent(ModuleListEvent.OnUndoDeleteClick(deletedModuleId.value!!))
+                                }
+
+                                SnackbarResult.Dismissed -> Unit
+                            }
+                        }
                     }
                 }
             }
@@ -187,7 +205,7 @@ fun ModuleListScreen(
                     }
                 }
                 items(items = state.moduleList, key = { module -> module.id }) { module ->
-                    ModuleItem(module = module, onCheckBoxClick = {
+                    ModuleItem(module = module, disableSwipe = true, onCheckBoxClick = {
                         onEvent(
                             ModuleListEvent.OnCheckChange(
                                 module.id, !module.isSelected
@@ -202,6 +220,17 @@ fun ModuleListScreen(
                     }, onSwipe = { moduleItem ->
                         deletedModuleId.value = moduleItem.id
                         onEvent(ModuleListEvent.OnSwipeDelete(moduleItem.id))
+                    }, onDeleteClick = {
+                        deletedModuleId.value = module.id
+                        onEvent(ModuleListEvent.OnDeleteButtonClick(module.id))
+                    }, onUpdateClick = {
+                        onNavigate(
+                            UiEvent.Navigate(
+                                Screen.ModuleEditScreen.withArgs(
+                                    module.id.toString()
+                                )
+                            )
+                        )
                     })
                 }
             }
@@ -224,8 +253,7 @@ private fun ModuleListScreenPreview() {
                         description = LoremIpsum(20).values.joinToString(""),
                         teacherFirstname = "",
                         teacherLastname = ""
-                    ),
-                    Module(
+                    ), Module(
                         id = UUID.randomUUID(),
                         divisionId = UUID.randomUUID(),
                         name = LoremIpsum(3).values.joinToString(""),
@@ -234,8 +262,7 @@ private fun ModuleListScreenPreview() {
                         teacherLastname = "",
                         isSelected = true,
 
-                        ),
-                    Module(
+                        ), Module(
                         id = UUID.randomUUID(),
                         divisionId = UUID.randomUUID(),
                         name = LoremIpsum(3).values.joinToString(""),
@@ -243,8 +270,7 @@ private fun ModuleListScreenPreview() {
                         teacherFirstname = "",
                         teacherLastname = ""
                     )
-                ),
-                locationsTitles = listOf("school item", "division item", "Modules")
+                ), locationsTitles = listOf("school item", "division item", "Modules")
             ),
             onEvent = {},
             uiEvent = emptyFlow(),
@@ -270,8 +296,7 @@ private fun ModuleListScreenDarkModePreview() {
                         description = LoremIpsum(20).values.joinToString(""),
                         teacherFirstname = "",
                         teacherLastname = ""
-                    ),
-                    Module(
+                    ), Module(
                         id = UUID.randomUUID(),
                         divisionId = UUID.randomUUID(),
                         name = LoremIpsum(3).values.joinToString(""),
@@ -280,8 +305,7 @@ private fun ModuleListScreenDarkModePreview() {
                         teacherLastname = "",
                         isSelected = true,
 
-                        ),
-                    Module(
+                        ), Module(
                         id = UUID.randomUUID(),
                         divisionId = UUID.randomUUID(),
                         name = LoremIpsum(3).values.joinToString(""),
@@ -289,8 +313,7 @@ private fun ModuleListScreenDarkModePreview() {
                         teacherFirstname = "",
                         teacherLastname = ""
                     )
-                ),
-                locationsTitles = listOf("school item", "division item", "Modules")
+                ), locationsTitles = listOf("school item", "division item", "Modules")
             ),
             onEvent = {},
             uiEvent = emptyFlow(),

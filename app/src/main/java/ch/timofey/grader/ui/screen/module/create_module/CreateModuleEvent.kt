@@ -5,6 +5,6 @@ sealed class CreateModuleEvent {
     data class OnDescriptionChange(val description: String) : CreateModuleEvent()
     data class OnTeacherFirstnameChange(val teacherFirstname: String) : CreateModuleEvent()
     data class OnTeacherLastnameChange(val teacherLastname: String) : CreateModuleEvent()
-    object OnBackButtonClick : CreateModuleEvent()
-    object OnCreateModuleButtonClick : CreateModuleEvent()
+    data object OnBackButtonClick : CreateModuleEvent()
+    data object OnCreateModuleButtonClick : CreateModuleEvent()
 }

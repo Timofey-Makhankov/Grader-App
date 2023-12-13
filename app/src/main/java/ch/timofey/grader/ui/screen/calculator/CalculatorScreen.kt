@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
@@ -28,12 +29,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.components.atom.GradeInputField
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
-import ch.timofey.grader.ui.components.organisms.BottomAppBar
+import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -49,6 +51,7 @@ fun CalculatorScreen(
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
     NavigationDrawer(drawerState = drawerState,
         currentScreen = Screen.CalculatorScreen,
         items = NavigationDrawerItems.list,
@@ -61,32 +64,44 @@ fun CalculatorScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(
-            topBar = {
-                AppBar(
-                    onNavigationIconClick = { scope.launch { drawerState.open() } },
-                    actionIcon = Icons.Default.Menu,
-                    actionContentDescription = "Toggle Drawer",
-                    appBarTitle = "Calculator"
-                )
-            },
-            bottomBar = {
-                BottomAppBar(
-                    text = String.format(
-                        "Calculated Grade: %.2f",
-                        state.calculatedGrade
-                    )
-                )
-            }) {
+        Scaffold(topBar = {
+            AppBar(
+                onNavigationIconClick = { scope.launch { drawerState.open() } },
+                actionIcon = Icons.Default.Menu,
+                actionContentDescription = "Toggle Drawer",
+                appBarTitle = "Calculator"
+            )
+        }) {
             LazyColumn(
+                state = lazyListState,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
                     .padding(all = MaterialTheme.spacing.small)
             ) {
+                item(key = "result") {
+                    Row(modifier = Modifier) {
+                        Text(
+                            modifier = Modifier.padding(
+                                start = MaterialTheme.spacing.small,
+                                bottom = MaterialTheme.spacing.small
+                            ),
+                            style = MaterialTheme.typography.titleLarge,
+                            text = "Calculated Result: "
+                        )
+                        Spacer(Modifier.weight(1f))
+                        Text(
+                            modifier = Modifier.padding(end = MaterialTheme.spacing.small),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontStyle = FontStyle.Italic,
+                            text = String.format(
+                                "%.2f", state.calculatedGrade
+                            )
+                        )
+                    }
+                }
                 items((0..<state.rowCount).toList(), key = { index -> index }) { index ->
-                    GradeInputField(
-                        modifier = Modifier.animateItemPlacement(),
+                    GradeInputField(modifier = Modifier.animateItemPlacement(),
                         weight = state.weights[index],
                         grade = state.grades[index],
                         onGradeChange = { grade ->
@@ -94,25 +109,35 @@ fun CalculatorScreen(
                         },
                         onWeightChange = { weight ->
                             onEvent(CalculatorEvent.OnWeightChange(index, weight))
-                        }
-                    )
+                        })
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 }
                 item(key = "Buttons") {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = MaterialTheme.spacing.small)
-                        .animateItemPlacement()) {
-                        Button(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = MaterialTheme.spacing.small),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = MaterialTheme.spacing.small)
+                            .animateItemPlacement()
+                    ) {
+                        Button(modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = MaterialTheme.spacing.small),
                             colors = ButtonDefaults.buttonColors(),
                             onClick = { onEvent(CalculatorEvent.OnAddFieldClick) }) {
-                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier) {
-                                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Text Field")
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+                            ) {
+                                Icon(
+                                    modifier = Modifier.weight(0.2f),
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = "Add Text Field"
+                                )
                                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
-                                Text(text = "Add Field")
+                                Text(
+                                    modifier = Modifier.weight(0.8f),
+                                    textAlign = TextAlign.Center,
+                                    text = "Add Field"
+                                )
                             }
                         }
                         Button(
@@ -123,10 +148,20 @@ fun CalculatorScreen(
                             onClick = { onEvent(CalculatorEvent.OnRemoveFieldClick) },
                             enabled = state.rowCount > 3
                         ) {
-                            Row(modifier = Modifier) {
-                                Icon(imageVector = Icons.Default.Remove, contentDescription = "Remove Text Field")
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+                            ) {
+                                Icon(
+                                    modifier = Modifier.weight(0.2f),
+                                    imageVector = Icons.Default.Remove,
+                                    contentDescription = "Remove Text Field"
+                                )
                                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
-                                Text(text = "Remove Field")
+                                Text(
+                                    modifier = Modifier.weight(0.8f),
+                                    textAlign = TextAlign.Center,
+                                    text = "Remove Field"
+                                )
                             }
                         }
                     }
@@ -142,11 +177,9 @@ fun CalculatorScreen(
 @Composable
 private fun CalculatorScreenPreview() {
     GraderTheme {
-        CalculatorScreen(
-            state = CalculatorState(
-                grades = listOf("", "", ""),
-                weights = listOf("1.0", "1.0", "1.0")
-            ),
+        CalculatorScreen(state = CalculatorState(
+            grades = listOf("", "", ""), weights = listOf("1.0", "1.0", "1.0")
+        ),
             onEvent = {},
             onNavigate = {},
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -161,12 +194,11 @@ private fun CalculatorScreenPreview() {
 @Composable
 private fun CalculatorScreenDarkModePreview() {
     GraderTheme {
-        CalculatorScreen(
-            state = CalculatorState(
-                grades = listOf("", "", "", ""),
-                weights = listOf("1.0", "1.0", "1.0", "1.0"),
-                rowCount = 4
-            ),
+        CalculatorScreen(state = CalculatorState(
+            grades = listOf("", "", "", ""),
+            weights = listOf("1.0", "1.0", "1.0", "1.0"),
+            rowCount = 4
+        ),
             onEvent = {},
             onNavigate = {},
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)

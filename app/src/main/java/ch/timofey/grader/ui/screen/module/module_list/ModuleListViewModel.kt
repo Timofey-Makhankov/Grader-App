@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
@@ -36,16 +37,13 @@ class ModuleListViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        println(divisionId)
         viewModelScope.launch {
             repository.getAllModulesFromDivisionId(UUID.fromString(divisionId))
                 .collect { moduleList ->
-                    println("ModuleList: $moduleList")
                     _uiState.value =
                         _uiState.value.copy(moduleList = moduleList.filter { module -> !module.onDelete })
                     if (moduleList.isNotEmpty()) {
                         val averageGrade = calculateAverageGrade(moduleList)
-                        println("calculate Grade: $averageGrade")
                         repository.updateDivisionGradeById(
                             UUID.fromString(divisionId), averageGrade
                         )
@@ -58,7 +56,6 @@ class ModuleListViewModel @Inject constructor(
                     } else {
                         _uiState.value = _uiState.value.copy(averageGradeIsZero = true)
                     }
-                    println("calculate Grade after toString: ${_uiState.value.averageGrade}")
                 }
         }
         viewModelScope.launch {
@@ -100,6 +97,21 @@ class ModuleListViewModel @Inject constructor(
             is ModuleListEvent.OnCheckChange -> {
                 viewModelScope.launch {
                     repository.updateIsSelectedModule(event.id, event.value)
+                }
+            }
+            is ModuleListEvent.OnDeleteButtonClick -> {
+                viewModelScope.launch {
+                    repository.updateOnDeleteModule(event.moduleId, true)
+//                    repository.getAllFlowModules().collect { moduleList ->
+//                        _uiState.value = _uiState.value.copy(
+//                            moduleList = moduleList.filter { module -> !module.onDelete }
+//                        )
+//                    }
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "Module has been deleted", true, "Undo"
+                        )
+                    )
                 }
             }
 

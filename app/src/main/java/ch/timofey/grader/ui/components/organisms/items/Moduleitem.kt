@@ -25,43 +25,55 @@ import ch.timofey.grader.ui.theme.spacing
 @Composable
 fun ModuleItem(
     modifier: Modifier = Modifier,
-    module: Module,
+    disableSwipe: Boolean = false,
     onSwipe: (Module) -> Unit,
     onCheckBoxClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
+    onUpdateClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    module: Module
 ) {
     val currentItem by rememberUpdatedState(module)
-    val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->
-        when (dismissValue) {
-            DismissValue.DismissedToStart -> {
-                onSwipe(currentItem)
-            }
+    val card: @Composable () -> Unit = {
+        ModuleCard(
+            modifier = Modifier
+                .padding(MaterialTheme.spacing.small)
+                .then(modifier),
+            module = currentItem,
+            onCheckBoxClick = onCheckBoxClick,
+            onLongClick = onLongClick,
+            onEditClick = onUpdateClick,
+            onDeleteClick = onDeleteClick
+        )
+    }
+    if (!disableSwipe) {
+        val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->
+            when (dismissValue) {
+                DismissValue.DismissedToStart -> {
+                    onSwipe(currentItem)
+                }
 
-            else -> Unit
-        }
-        true
-    }, positionalThreshold = { value -> (value / 8).dp.toPx() })
-    SwipeToDismiss(modifier = Modifier,
-        directions = setOf(DismissDirection.EndToStart),
-        state = dismissState,
-        background = {
-            val visible = dismissState.targetValue == DismissValue.DismissedToStart
-            AnimatedVisibility(
-                visible = visible,
-                enter = fadeIn(animationSpec = TweenSpec(durationMillis = 400)),
-                exit = fadeOut(animationSpec = TweenSpec(durationMillis = 400))
-            ) {
-                DismissDeleteBackground(dismissState = dismissState)
+                else -> Unit
             }
-        },
-        dismissContent = {
-            ModuleCard(
-                modifier = Modifier
-                    .padding(MaterialTheme.spacing.small)
-                    .then(modifier),
-                module = currentItem,
-                onCheckBoxClick = onCheckBoxClick,
-                onLongClick = onLongClick
-            )
-        })
+            true
+        }, positionalThreshold = { value -> (value / 8).dp.toPx() })
+        SwipeToDismiss(modifier = Modifier,
+            directions = setOf(DismissDirection.EndToStart),
+            state = dismissState,
+            background = {
+                val visible = dismissState.targetValue == DismissValue.DismissedToStart
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn(animationSpec = TweenSpec(durationMillis = 400)),
+                    exit = fadeOut(animationSpec = TweenSpec(durationMillis = 400))
+                ) {
+                    DismissDeleteBackground(dismissState = dismissState)
+                }
+            },
+            dismissContent = {
+                card()
+            })
+    } else {
+        card()
+    }
 }
