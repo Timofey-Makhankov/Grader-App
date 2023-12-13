@@ -1,13 +1,20 @@
 package ch.timofey.grader.ui.screen.division.create_division
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -70,9 +77,11 @@ fun CreateDivisionScreen(
                 label = {
                     Text(text = buildAnnotatedString {
                         append("Division Name ")
-                        withStyle(SpanStyle(
-                            fontStyle = FontStyle.Italic, fontSize = 8.sp
-                        )){
+                        withStyle(
+                            SpanStyle(
+                                fontStyle = FontStyle.Italic, fontSize = 8.sp
+                            )
+                        ) {
                             append("(Required)")
                         }
                     })
@@ -95,12 +104,14 @@ fun CreateDivisionScreen(
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.year,
-                label = { Text(text = buildAnnotatedString {
-                    append("Division Year ")
-                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
-                    }
-                }) },
+                label = {
+                    Text(text = buildAnnotatedString {
+                        append("Division Year ")
+                        withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
+                            append("(Required)")
+                        }
+                    })
+                },
                 onValueChange = { year ->
                     onEvent(CreateDivisionEvent.OnYearChange(year))
                 },

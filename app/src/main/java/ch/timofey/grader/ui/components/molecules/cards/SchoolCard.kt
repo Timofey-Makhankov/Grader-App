@@ -174,7 +174,7 @@ private fun PreviewSchoolCard() {
         SchoolCard(school = School(
             UUID.randomUUID(),
             f.airport.europeanUnion.large(),
-            LoremIpsum(20).values.joinToString(""),
+            "",//LoremIpsum(20).values.joinToString(""),
             "",
             "",
             "",

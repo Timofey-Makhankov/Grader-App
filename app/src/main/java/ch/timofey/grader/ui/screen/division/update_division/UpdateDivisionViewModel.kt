@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.division.DivisionRepository
-import ch.timofey.grader.ui.utils.RegexPatterns
 import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.db.domain.division.DivisionValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,36 +56,34 @@ class UpdateDivisionViewModel @Inject constructor(
             }
 
             is UpdateDivisionEvent.OnNameChange -> {
-                if (event.name.isNotBlank()) {
-                    if (event.name.length > 60) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackBar(
-                                "The Name has to be not over 60 characters long",
-                                withDismissAction = true
-                            )
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(name = event.name, validName = true)
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        name = "",
-                        validName = false,
-                        errorMessageName = "Please Enter a valid School Name"
-                    )
-                }
+                val result = DivisionValidation.name(event.name)
+                _uiState.value = _uiState.value.copy(
+                    name = event.name,
+                    validName = result.valid,
+                    errorMessageName = result.message
+                )
             }
 
             is UpdateDivisionEvent.OnDescriptionChange -> {
-                _uiState.value = _uiState.value.copy(description = event.description)
+                val result = DivisionValidation.description(event.description)
+                _uiState.value = _uiState.value.copy(
+                    description = event.description,
+                    validDescription = result.valid,
+                    errorMessageDescription = result.message
+                )
             }
 
             is UpdateDivisionEvent.OnYearChange -> {
-                _uiState.value = _uiState.value.copy(description = event.year)
+                val result = DivisionValidation.year(event.year)
+                _uiState.value = _uiState.value.copy(
+                    year = event.year,
+                    validYear = result.valid,
+                    errorMessageYear = result.message
+                )
             }
 
             is UpdateDivisionEvent.OnUpdateDivision -> {
-                if (isValidateInput(_uiState.value)) {
+                if (DivisionValidation.validateAll(_uiState.value)) {
                     val updatedDivision = _uiState.value.currentDivision!!.copy(
                         name = _uiState.value.name,
                         description = _uiState.value.description,
@@ -108,18 +106,6 @@ class UpdateDivisionViewModel @Inject constructor(
             }
         }
     }
-
-    private fun isValidateInput(state: UpdateDivisionState): Boolean {
-        return if (state.name.isNotBlank() && state.year.isNotBlank() && state.year.matches(
-                RegexPatterns.OnlyNumberRegex
-            )
-        ) {
-            state.validName && state.validYear
-        } else {
-            false
-        }
-    }
-
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)

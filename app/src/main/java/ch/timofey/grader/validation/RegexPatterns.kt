@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.utils
+package ch.timofey.grader.validation
 
 object RegexPatterns {
     val OnlyNumberRegex = Regex("^\\d+\$")
