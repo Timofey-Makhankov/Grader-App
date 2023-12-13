@@ -7,8 +7,7 @@ import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.ui.utils.UiEvent
-import ch.timofey.grader.validation.SchoolValidationFields
-import ch.timofey.grader.validation.ValidateSchool
+import ch.timofey.grader.db.domain.school.SchoolValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,52 +35,52 @@ class CreateSchoolViewModel @Inject constructor(
             }
 
             is CreateSchoolEvent.OnNameChange -> {
-                val result = ValidateSchool.name(event.name)
+                val result = SchoolValidation.name(event.name)
                 _uiState.value = _uiState.value.copy(
                     name = event.name,
-                    validName = result.isValid,
-                    nameErrorMessage = result.errorMessage
+                    validName = result.valid,
+                    nameErrorMessage = result.message
                 )
             }
 
             is CreateSchoolEvent.OnDescriptionChange -> {
-                val result = ValidateSchool.description(event.description)
+                val result = SchoolValidation.description(event.description)
                 _uiState.value = _uiState.value.copy(
                     description = event.description,
-                    validDescription = result.isValid,
-                    descriptionErrorMessage = result.errorMessage
+                    validDescription = result.valid,
+                    descriptionErrorMessage = result.message
                 )
             }
 
             is CreateSchoolEvent.OnAddressChange -> {
-                val result = ValidateSchool.address(event.address)
+                val result = SchoolValidation.address(event.address)
                 _uiState.value = _uiState.value.copy(
                     address = event.address,
-                    validAddress = result.isValid,
-                    addressErrorMessage = result.errorMessage
+                    validAddress = result.valid,
+                    addressErrorMessage = result.message
                 )
             }
 
             is CreateSchoolEvent.OnZipChange -> {
-                val result = ValidateSchool.zip(event.zip)
+                val result = SchoolValidation.zip(event.zip)
                 _uiState.value = _uiState.value.copy(
                     zip = event.zip,
-                    validZip = result.isValid,
-                    zipErrorMessage = result.errorMessage
+                    validZip = result.valid,
+                    zipErrorMessage = result.message
                 )
             }
 
             is CreateSchoolEvent.OnCityChange -> {
-                val result = ValidateSchool.city(event.city)
+                val result = SchoolValidation.city(event.city)
                 _uiState.value = _uiState.value.copy(
                     city = event.city,
-                    validCity = result.isValid,
-                    cityErrorMessage = result.errorMessage
+                    validCity = result.valid,
+                    cityErrorMessage = result.message
                 )
             }
 
             is CreateSchoolEvent.OnCreateSchool -> {
-                if (ValidateSchool.validateAll(_uiState.value)) {
+                if (SchoolValidation.validateAll(_uiState.value)) {
                     val newSchool = School(
                         id = UUID.randomUUID(),
                         name = _uiState.value.name,

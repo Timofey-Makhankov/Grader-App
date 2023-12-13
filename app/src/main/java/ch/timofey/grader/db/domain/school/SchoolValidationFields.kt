@@ -1,4 +1,4 @@
-package ch.timofey.grader.validation
+package ch.timofey.grader.db.domain.school
 
 interface SchoolValidationFields {
     val name: String

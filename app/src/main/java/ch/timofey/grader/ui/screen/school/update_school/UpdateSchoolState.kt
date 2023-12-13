@@ -1,7 +1,7 @@
 package ch.timofey.grader.ui.screen.school.update_school
 
 import ch.timofey.grader.db.domain.school.School
-import ch.timofey.grader.validation.SchoolValidationFields
+import ch.timofey.grader.db.domain.school.SchoolValidationFields
 
 data class UpdateSchoolState(
     val currentSchool: School? = null,

@@ -215,7 +215,7 @@ fun UpdateSchoolScreen(
                         )
                     )
                 },
-                isError = state.validDescription,
+                isError = !state.validDescription,
                 supportingText = {
                     if (!state.validDescription) {
                         Text(

@@ -1,6 +1,6 @@
 package ch.timofey.grader.ui.screen.school.create_school
 
-import ch.timofey.grader.validation.SchoolValidationFields
+import ch.timofey.grader.db.domain.school.SchoolValidationFields
 
 data class CreateSchoolState(
     override val name: String = "",

@@ -15,7 +15,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -28,14 +38,15 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.components.organisms.items.SchoolItem
+import ch.timofey.grader.ui.components.atom.FloatingActionButton
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.organisms.AppBar
-import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.ui.components.organisms.items.SchoolItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
+import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -114,7 +125,7 @@ fun SchoolListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        ch.timofey.grader.ui.components.atom.FloatingActionButton(
+                        FloatingActionButton(
                             modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                             onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
                             contentDescription = "Create a new School",
@@ -147,7 +158,7 @@ fun SchoolListScreen(
                     )) {
                         ch.timofey.grader.ui.components.organisms.BottomAppBar(text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
-                                ch.timofey.grader.ui.components.atom.FloatingActionButton(
+                                FloatingActionButton(
                                     onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
                                     contentDescription = "Create a new Exam Card"
                                 )
