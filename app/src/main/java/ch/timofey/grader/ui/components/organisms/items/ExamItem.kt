@@ -32,6 +32,8 @@ fun ExamItem(
     modifier: Modifier = Modifier,
     exam: Exam,
     points: Double? = null,
+    onDeleteClick: () -> Unit,
+    onUpdateClick: () -> Unit,
     onSwipe: (Exam) -> Unit,
     onCheckBoxClick: () -> Unit,
 ) {
@@ -71,7 +73,9 @@ fun ExamItem(
                     .padding(MaterialTheme.spacing.small)
                     .then(modifier),
                 exam = exam,
-                onCheckBoxClick = onCheckBoxClick
+                onCheckBoxClick = onCheckBoxClick,
+                onEditClick = onUpdateClick,
+                onDeleteClick = onDeleteClick
             )
         })
 }
@@ -90,6 +94,6 @@ private fun PreviewExamCard() {
             grade = 4.5,
             onDelete = false,
             description = LoremIpsum(15).values.joinToString()
-        ), isOpen = true, onCheckBoxClick = {})
+        ), isOpen = true, onCheckBoxClick = {}, onDeleteClick = {}, onEditClick = {})
     }
 }

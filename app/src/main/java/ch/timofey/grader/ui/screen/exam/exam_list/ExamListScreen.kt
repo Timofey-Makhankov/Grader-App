@@ -15,7 +15,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -28,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
-import ch.timofey.grader.ui.components.organisms.items.ExamItem
 import ch.timofey.grader.ui.components.organisms.AppBar
+import ch.timofey.grader.ui.components.organisms.items.ExamItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -191,6 +200,17 @@ fun ExamListScreen(
                         onEvent(
                             ExamListEvent.OnCheckChange(
                                 id = exam.id, value = !exam.isSelected
+                            )
+                        )
+                    }, onDeleteClick = {
+                        deletedExamId.value = exam.id
+                        onEvent(ExamListEvent.OnDeleteButtonClick(examId = exam.id))
+                    }, onUpdateClick = {
+                        onNavigate(
+                            UiEvent.Navigate(
+                                Screen.ExamEditScreen.withArgs(
+                                    exam.id.toString()
+                                )
                             )
                         )
                     })

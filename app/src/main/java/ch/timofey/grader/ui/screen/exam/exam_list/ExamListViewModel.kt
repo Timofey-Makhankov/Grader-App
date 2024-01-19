@@ -102,6 +102,17 @@ class ExamListViewModel @Inject constructor(
                 }
             }
 
+            is ExamListEvent.OnDeleteButtonClick -> {
+                viewModelScope.launch {
+                    repository.updateOnDelete(event.examId, true)
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "Exam has been deleted", true, "Undo"
+                        )
+                    )
+                }
+            }
+
             is ExamListEvent.OnSwipeDelete -> {
                 viewModelScope.launch {
                     repository.updateOnDelete(event.id, true)

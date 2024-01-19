@@ -1,8 +1,11 @@
 package ch.timofey.grader.ui.screen.settings
 
+import android.app.Application
 import androidx.datastore.core.DataStore
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.MainActivity
 import ch.timofey.grader.db.AppDatabase
 import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.ui.utils.UiEvent
@@ -18,8 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val dataStore: DataStore<AppSettings>,
-    private val database: AppDatabase
-) : ViewModel() {
+    private val database: AppDatabase,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState

@@ -1,6 +1,5 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
-import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,12 +15,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.text.Format
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.UUID
 import javax.inject.Inject
 
@@ -77,26 +75,15 @@ class CreateExamViewModel @Inject constructor(
                 )
             }
 
-            is CreateExamEvent.OnDateChange -> {
-                val result = ExamValidation.dateTaken(event.date)
-                _uiState.value = _uiState.value.copy(
-                    dateTaken = event.date,
-                    validDate = result.valid,
-                    errorMessageDate = result.message
-                )
-            }
-
             is CreateExamEvent.OnSetDate -> {
-                val format = DateFormat.getDateFormat(GraderApp.getContext())
                 _uiState.value = _uiState.value.copy(
                     dateTaken = Instant.ofEpochMilli(event.date).atZone(ZoneId.systemDefault())
-                        .format(DateTimeFormatter.ofPattern((format as SimpleDateFormat).toLocalizedPattern()))
+                        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
                 )
             }
 
             is CreateExamEvent.OnCreateExamButtonPress -> {
                 if (ExamValidation.validateAll(_uiState.value)) {
-                    val dateFormat: Format = DateFormat.getDateFormat(GraderApp.getContext())
                     viewModelScope.launch {
                         repository.saveExam(
                             Exam(
@@ -105,10 +92,7 @@ class CreateExamViewModel @Inject constructor(
                                 description = _uiState.value.description,
                                 grade = _uiState.value.grade.toDouble(),
                                 weight = _uiState.value.weight.toDouble(),
-                                date = LocalDate.parse(
-                                    _uiState.value.dateTaken,
-                                    DateTimeFormatter.ofPattern((dateFormat as SimpleDateFormat).toLocalizedPattern())
-                                ),
+                                date = LocalDate.parse(_uiState.value.dateTaken, DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
                                 moduleId = UUID.fromString(moduleId)
                             )
                         )

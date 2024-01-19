@@ -3,6 +3,8 @@ package ch.timofey.grader
 import android.app.Application
 import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 
 @HiltAndroidApp
 class GraderApp : Application() {

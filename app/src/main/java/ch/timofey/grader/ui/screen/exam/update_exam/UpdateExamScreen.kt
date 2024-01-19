@@ -1,6 +1,5 @@
-package ch.timofey.grader.ui.screen.exam.create_exam
+package ch.timofey.grader.ui.screen.exam.update_exam
 
-import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +33,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
-import ch.timofey.grader.GraderApp
 import ch.timofey.grader.ui.components.atom.icons.CalendarToday
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
@@ -42,13 +40,14 @@ import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateExamScreen(
-    state: CreateExamState,
-    onEvent: (CreateExamEvent) -> Unit,
+fun UpdateExamScreen(
+    state: UpdateExamState,
+    onEvent: (UpdateExamEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onPopBackStack: () -> Unit,
     isDialogOpen: Boolean = false
@@ -68,7 +67,7 @@ fun CreateExamScreen(
     }
     Scaffold(topBar = {
         AppBar(
-            onNavigationIconClick = { onEvent(CreateExamEvent.OnBackButtonPress) },
+            onNavigationIconClick = { onEvent(UpdateExamEvent.OnBackButtonPress) },
             actionIcon = Icons.Default.ArrowBack,
             actionContentDescription = "Go back to previous Screen"
         )
@@ -79,14 +78,14 @@ fun CreateExamScreen(
                 .padding(it)
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Create Exam", style = MaterialTheme.typography.titleLarge)
+            Text(text = "Update Exam", style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.small)
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.name,
-                onValueChange = { value -> onEvent(CreateExamEvent.OnNameChange(value)) },
+                onValueChange = { value -> onEvent(UpdateExamEvent.OnNameChange(value)) },
                 minLines = 2,
                 isError = !state.validName,
                 label = {
@@ -124,7 +123,7 @@ fun CreateExamScreen(
                         }
                     })
                 },
-                placeholder = { Text(text = (DateFormat.getDateFormat(GraderApp.getContext()) as SimpleDateFormat).toLocalizedPattern()) },
+                placeholder = { Text(text = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).toString()) },
                 supportingText = {
                     if (!state.validDate) {
                         Text(
@@ -143,7 +142,7 @@ fun CreateExamScreen(
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
                 value = state.grade,
-                onValueChange = { value -> onEvent(CreateExamEvent.OnGradeChange(value)) },
+                onValueChange = { value -> onEvent(UpdateExamEvent.OnGradeChange(value)) },
                 singleLine = true,
                 isError = !state.validGrade,
                 label = {
@@ -167,7 +166,7 @@ fun CreateExamScreen(
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
                 value = state.weight,
-                onValueChange = { value -> onEvent(CreateExamEvent.OnWeightChange(value)) },
+                onValueChange = { value -> onEvent(UpdateExamEvent.OnWeightChange(value)) },
                 singleLine = true,
                 isError = !state.validWeight,
                 label = {
@@ -191,14 +190,14 @@ fun CreateExamScreen(
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
                 value = state.description,
-                onValueChange = { value -> onEvent(CreateExamEvent.OnDescriptionChange(value)) },
+                onValueChange = { value -> onEvent(UpdateExamEvent.OnDescriptionChange(value)) },
                 minLines = 6,
                 label = { Text(text = "Description") })
             Button(modifier = Modifier.padding(
                 top = MaterialTheme.spacing.medium
             ),
                 shape = MaterialTheme.shapes.large,
-                onClick = { onEvent(CreateExamEvent.OnCreateExamButtonPress) }) {
+                onClick = { onEvent(UpdateExamEvent.OnUpdateExamButtonPress) }) {
                 Text(text = "Create")
             }
             if (openDialog.value) {
@@ -208,7 +207,7 @@ fun CreateExamScreen(
                     TextButton(onClick = {
                         openDialog.value = false
                         onEvent(
-                            CreateExamEvent.OnSetDate(
+                            UpdateExamEvent.OnSetDate(
                                 datePickerState.selectedDateMillis!!
                             )
                         )
@@ -231,9 +230,9 @@ fun CreateExamScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun CreateExamScreenPreview() {
+private fun UpdateExamScreenPreview() {
     GraderTheme {
-        CreateExamScreen(state = CreateExamState(),
+        UpdateExamScreen(state = UpdateExamState(),
             onEvent = {},
             uiEvent = emptyFlow(),
             onPopBackStack = {})

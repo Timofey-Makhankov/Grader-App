@@ -4,6 +4,7 @@ import java.time.LocalDate
 import java.time.Year
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.time.format.FormatStyle
 
 object Validate {
     fun year(year: String): Boolean {
@@ -15,8 +16,8 @@ object Validate {
         }
     }
 
-    fun date(date: String, format: String): Boolean {
-        val formatter = DateTimeFormatter.ofPattern(format)
+    fun date(date: String): Boolean {
+        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
         return try {
             LocalDate.parse(date, formatter)
             true

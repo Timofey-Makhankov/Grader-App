@@ -1,12 +1,8 @@
 package ch.timofey.grader.db.domain.exam
 
-import android.text.format.DateFormat
-import ch.timofey.grader.GraderApp
 import ch.timofey.grader.validation.Validatable
 import ch.timofey.grader.validation.Validate
 import ch.timofey.grader.validation.ValidationResponse
-import java.text.Format
-import java.text.SimpleDateFormat
 
 object ExamValidation : Validatable<ExamValidationFields> {
     fun name(name: String): ValidationResponse {
@@ -69,14 +65,12 @@ object ExamValidation : Validatable<ExamValidationFields> {
         return ValidationResponse(true)
     }
 
-    fun dateTaken(date: String): ValidationResponse {
-        val dateFormat: Format =
-            DateFormat.getDateFormat(GraderApp.getContext())
+    private fun dateTaken(date: String): ValidationResponse {
         return when {
             date.isBlank() -> ValidationResponse(valid = false, message = "Date Taken is Required")
-            !Validate.date(
-                date, (dateFormat as SimpleDateFormat).toLocalizedPattern()
-            ) -> ValidationResponse(valid = false, message = "The Date is not formatted correctly")
+            !Validate.date(date) -> ValidationResponse(
+                valid = false, message = "The Date is not formatted correctly"
+            )
 
             else -> ValidationResponse(true)
         }

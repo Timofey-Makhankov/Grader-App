@@ -19,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class UpdateModuleViewModel @Inject constructor(
     private val repository: ModuleRepository,
-    private val app: GraderApp,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val moduleId = savedStateHandle.get<String>("id").orEmpty()
@@ -103,7 +102,7 @@ class UpdateModuleViewModel @Inject constructor(
                     viewModelScope.launch {
                         repository.updateModule(updatedModule)
                         sendUiEvent(UiEvent.PopBackStack)
-                        sendUiEvent(UiEvent.ShowSnackBar("RTEst"))
+                        sendUiEvent(UiEvent.ShowSnackBar("Module was successfully updated"))
                     }
                 } else {
                     sendUiEvent(

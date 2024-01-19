@@ -102,11 +102,6 @@ class ModuleListViewModel @Inject constructor(
             is ModuleListEvent.OnDeleteButtonClick -> {
                 viewModelScope.launch {
                     repository.updateOnDeleteModule(event.moduleId, true)
-//                    repository.getAllFlowModules().collect { moduleList ->
-//                        _uiState.value = _uiState.value.copy(
-//                            moduleList = moduleList.filter { module -> !module.onDelete }
-//                        )
-//                    }
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
                             "Module has been deleted", true, "Undo"

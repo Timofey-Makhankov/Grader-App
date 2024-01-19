@@ -38,5 +38,9 @@ class MainActivity : ComponentActivity() {
             MainEntry(snackBarHostState)
         }
     }
+
+    fun saveFileToStorage(){
+        println("trying to save a file")
+    }
 }
 
