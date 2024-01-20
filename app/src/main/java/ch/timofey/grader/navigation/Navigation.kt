@@ -98,7 +98,7 @@ fun Navigation(
             val viewModel = hiltViewModel<AboutViewModel>()
             AboutScreen(drawerState = drawerState, uiEvent = viewModel.uiEvent, onNavigate = {
                 navController.navigate(it.route)
-            })
+            }, onEvent = viewModel::onEvent)
         }
         composable(route = Screen.CalculatorScreen.route) {
             val viewModel = hiltViewModel<CalculatorViewModel>()

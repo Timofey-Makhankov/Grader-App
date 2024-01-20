@@ -18,6 +18,7 @@ import ch.timofey.grader.R
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
+import ch.timofey.grader.ui.screen.calculator.CalculatorEvent
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -28,7 +29,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AboutScreen(
-    drawerState: DrawerState, uiEvent: Flow<UiEvent>, onNavigate: (UiEvent.Navigate) -> Unit
+    drawerState: DrawerState,
+    uiEvent: Flow<UiEvent>,
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    onEvent: (AboutEvent) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
@@ -79,7 +83,7 @@ fun AboutScreen(
                 Button(modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { onEvent(AboutEvent.OnButtonSourceCLick) }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -94,7 +98,7 @@ fun AboutScreen(
                 Button(modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { onEvent(AboutEvent.OnButtonShareClick) }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -116,7 +120,8 @@ fun ShareScreenPreview() {
     GraderTheme {
         AboutScreen(drawerState = DrawerState(initialValue = DrawerValue.Closed),
             uiEvent = emptyFlow(),
-            onNavigate = {})
+            onNavigate = {},
+            onEvent = {})
     }
 }
 
@@ -126,6 +131,7 @@ fun ShareScreenDarkModePreview() {
     GraderTheme {
         AboutScreen(drawerState = DrawerState(initialValue = DrawerValue.Closed),
             uiEvent = emptyFlow(),
-            onNavigate = {})
+            onNavigate = {},
+            onEvent = {})
     }
 }
