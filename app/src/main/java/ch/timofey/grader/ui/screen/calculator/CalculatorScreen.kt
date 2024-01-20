@@ -42,7 +42,7 @@ import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalStdlibApi::class)
 @Composable
 fun CalculatorScreen(
     state: CalculatorState,

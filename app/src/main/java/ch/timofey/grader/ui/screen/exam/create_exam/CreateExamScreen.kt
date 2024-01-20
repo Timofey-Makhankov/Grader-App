@@ -43,6 +43,8 @@ import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,7 +126,7 @@ fun CreateExamScreen(
                         }
                     })
                 },
-                placeholder = { Text(text = (DateFormat.getDateFormat(GraderApp.getContext()) as SimpleDateFormat).toLocalizedPattern()) },
+                placeholder = { Text(text = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).toString()) },
                 supportingText = {
                     if (!state.validDate) {
                         Text(

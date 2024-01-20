@@ -60,7 +60,6 @@ fun UpdateExamScreen(
                 is UiEvent.PopBackStack -> {
                     onPopBackStack()
                 }
-
                 else -> Unit
             }
         }

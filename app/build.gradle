@@ -15,7 +15,7 @@ android {
         minSdk 28
         targetSdk 34
         versionCode 1
-        versionName "0.4.2-Beta"
+        versionName "0.6.2-Beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -27,9 +27,9 @@ android {
         }
     }
 
-    sourceSets {
+    sourceSets.named("androidTest") {
         // Adds exported schema location as test app assets.
-        getByName("androidTest").assets.srcDir("$projectDir/schemas")
+        it.assets.srcDir("$projectDir/schemas")
     }
 
     buildTypes {
@@ -56,13 +56,14 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    buildToolsVersion '34.0.0'
 }
 
 dependencies {
     implementation 'androidx.test:monitor:1.6.1'
-    def compose_ui_version = "1.5.3"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
-    implementation 'androidx.activity:activity-compose:1.8.0'
+    def compose_ui_version = "1.5.4"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.activity:activity-compose:1.8.2'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
     implementation 'androidx.core:core-ktx:1.12.0'
@@ -75,7 +76,7 @@ dependencies {
     implementation 'io.github.serpro69:kotlin-faker:1.15.0'
 
     //Mockito framework
-    testImplementation "org.mockito:mockito-core:5.6.0"
+    testImplementation "org.mockito:mockito-core:5.7.0"
     //mockito-kotlin
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.1.0"
 
@@ -99,11 +100,11 @@ dependencies {
     implementation "androidx.compose.material3:material3-window-size-class:1.1.2"
 
     // Navigation
-    def nav_version = "2.7.4"
+    def nav_version = "2.7.6"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     // ROOM Database
-    def room_version = "2.6.0"
+    def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
@@ -115,10 +116,10 @@ dependencies {
     ksp "com.google.dagger:dagger-compiler:2.48" // Dagger compiler
     ksp "com.google.dagger:hilt-compiler:2.48"   // Hilt compiler
 
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    implementation "androidx.hilt:hilt-navigation-compose:1.1.0"
 
     // MVVM
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
 
     // system bars customization
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"

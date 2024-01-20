@@ -79,16 +79,16 @@ class UpdateExamViewModel @Inject constructor(
                 val result = ExamValidation.grade(event.grade, true)
                 _uiState.value = _uiState.value.copy(
                     grade = event.grade,
-                    validDescription = result.valid,
-                    errorMessageDescription = result.message
+                    validGrade = result.valid,
+                    errorMessageGrade = result.message
                 )
             }
             is UpdateExamEvent.OnWeightChange -> {
                 val result = ExamValidation.weight(event.weight)
                 _uiState.value = _uiState.value.copy(
                     weight = event.weight,
-                    validDescription = result.valid,
-                    errorMessageDescription = result.message
+                    validWeight = result.valid,
+                    errorMessageWeight = result.message
                 )
             }
             is UpdateExamEvent.OnSetDate -> {
