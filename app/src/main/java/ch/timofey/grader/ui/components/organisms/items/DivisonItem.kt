@@ -5,12 +5,15 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.ui.components.atom.DismissDeleteBackground
 import ch.timofey.grader.ui.components.molecules.cards.DivisionCard
@@ -28,22 +31,21 @@ fun DivisionItem(
     division: Division
 ) {
     val currentItem by rememberUpdatedState(division)
-    val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->
+    val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
         when (dismissValue) {
-            DismissValue.DismissedToStart -> {
+            SwipeToDismissBoxValue.EndToStart -> {
                 onSwipe(currentItem)
             }
-
             else -> Unit
         }
         true
-    }, positionalThreshold = { value -> (value / 8).dp.toPx() })
-    SwipeToDismiss(
+    }, positionalThreshold = { value -> (value / 8) })
+    SwipeToDismissBox(
         modifier = Modifier,
-        directions = setOf(DismissDirection.EndToStart),
+        enableDismissFromEndToStart = true,
         state = dismissState,
-        background = {
-            val isVisible = dismissState.targetValue == DismissValue.DismissedToStart
+        backgroundContent = {
+            val isVisible = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart
             AnimatedVisibility(
                 visible = isVisible, enter = fadeIn(
                     animationSpec = TweenSpec(
@@ -57,16 +59,15 @@ fun DivisionItem(
             ) {
                 DismissDeleteBackground(dismissState)
             }
-        },
-        dismissContent = {
-            DivisionCard(
-                modifier = Modifier.padding(MaterialTheme.spacing.small).then(modifier),
-                division = division,
-                onCheckBoxClick = onCheckBoxClick,
-                onLongClick = onLongClick,
-                onEditClick = onUpdateClick,
-                onDeleteClick = onDeleteClick
-            )
         }
-    )
+    ){
+        DivisionCard(
+            modifier = Modifier.padding(MaterialTheme.spacing.small).then(modifier),
+            division = division,
+            onCheckBoxClick = onCheckBoxClick,
+            onLongClick = onLongClick,
+            onEditClick = onUpdateClick,
+            onDeleteClick = onDeleteClick
+        )
+    }
 }

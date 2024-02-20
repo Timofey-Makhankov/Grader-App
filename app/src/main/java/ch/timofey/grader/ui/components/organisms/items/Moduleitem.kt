@@ -5,17 +5,15 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.ui.components.atom.DismissDeleteBackground
 import ch.timofey.grader.ui.components.molecules.cards.ModuleCard
@@ -47,21 +45,21 @@ fun ModuleItem(
         )
     }
     if (!disableSwipe) {
-        val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->
+        val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
             when (dismissValue) {
-                DismissValue.DismissedToStart -> {
+                SwipeToDismissBoxValue.EndToStart -> {
                     onSwipe(currentItem)
                 }
 
                 else -> Unit
             }
             true
-        }, positionalThreshold = { value -> (value / 8).dp.toPx() })
-        SwipeToDismiss(modifier = Modifier,
-            directions = setOf(DismissDirection.EndToStart),
+        }, positionalThreshold = { value -> (value / 8) })
+        SwipeToDismissBox(modifier = Modifier,
+            enableDismissFromEndToStart = true,
             state = dismissState,
-            background = {
-                val visible = dismissState.targetValue == DismissValue.DismissedToStart
+            backgroundContent = {
+                val visible = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart
                 AnimatedVisibility(
                     visible = visible,
                     enter = fadeIn(animationSpec = TweenSpec(durationMillis = 400)),
@@ -69,10 +67,9 @@ fun ModuleItem(
                 ) {
                     DismissDeleteBackground(dismissState = dismissState)
                 }
-            },
-            dismissContent = {
-                card()
-            })
+            }){
+            card()
+        }
     } else {
         card()
     }

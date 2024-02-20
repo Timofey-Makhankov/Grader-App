@@ -49,14 +49,13 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.2'
+        kotlinCompilerExtensionVersion '1.5.9'
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    buildToolsVersion '34.0.0'
 }
 
 dependencies {
@@ -82,13 +81,13 @@ dependencies {
 
     // Android Testing
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
-    androidTestImplementation platform("androidx.compose:compose-bom:2023.06.00")
+    androidTestImplementation platform("androidx.compose:compose-bom:2024.02.00")
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
 
-    implementation platform("androidx.compose:compose-bom:2023.06.00")
+    implementation platform("androidx.compose:compose-bom:2024.02.00")
 
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
@@ -96,11 +95,11 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended'
 
     // Material 3
-    implementation "androidx.compose.material3:material3:1.1.2"
-    implementation "androidx.compose.material3:material3-window-size-class:1.1.2"
+    implementation "androidx.compose.material3:material3:1.2.0"
+    implementation "androidx.compose.material3:material3-window-size-class:1.2.0"
 
     // Navigation
-    def nav_version = "2.7.6"
+    def nav_version = "2.7.7"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     // ROOM Database
@@ -146,7 +145,5 @@ dependencies {
 
     implementation "org.jetbrains.dokka:android-documentation-plugin:1.9.0"
 }
-
-//kapt { correctErrorTypes true }
 
 hilt { enableAggregatingTask = true }

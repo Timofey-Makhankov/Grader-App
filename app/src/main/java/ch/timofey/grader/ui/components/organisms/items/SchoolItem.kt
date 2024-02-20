@@ -5,17 +5,15 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.ui.components.atom.DismissDeleteBackground
 import ch.timofey.grader.ui.components.molecules.cards.SchoolCard
@@ -33,21 +31,20 @@ fun SchoolItem(
     modifier: Modifier = Modifier
 ) {
     val currentItem by rememberUpdatedState(school)
-    val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->
+    val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
         when (dismissValue) {
-            DismissValue.DismissedToStart -> {
+            SwipeToDismissBoxValue.EndToStart -> {
                 onSwipe(currentItem)
                 true
             }
-
             else -> false
         }
-    }, positionalThreshold = { value -> (value / 8).dp.toPx() })
-    SwipeToDismiss(state = dismissState,
+    }, positionalThreshold = { value -> (value / 8) })
+    SwipeToDismissBox(state = dismissState,
         modifier = Modifier,
-        directions = setOf(DismissDirection.EndToStart),
-        background = {
-            val isVisible = dismissState.targetValue == DismissValue.DismissedToStart
+        enableDismissFromEndToStart = true,
+        backgroundContent = {
+            val isVisible = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart
 
             AnimatedVisibility(
                 visible = isVisible,
@@ -56,17 +53,16 @@ fun SchoolItem(
             ) {
                 DismissDeleteBackground(dismissState)
             }
-        },
-        dismissContent = {
-            SchoolCard(
-                modifier = Modifier
-                    .padding(MaterialTheme.spacing.small)
-                    .then(modifier),
-                school = currentItem,
-                onCheckBoxClick = onCheckBoxClick,
-                onLongClick = onLongClick,
-                onDeleteClick = onDeleteClick,
-                onEditClick = onUpdateClick
-            )
-        })
+        }){
+        SchoolCard(
+            modifier = Modifier
+                .padding(MaterialTheme.spacing.small)
+                .then(modifier),
+            school = currentItem,
+            onCheckBoxClick = onCheckBoxClick,
+            onLongClick = onLongClick,
+            onDeleteClick = onDeleteClick,
+            onEditClick = onUpdateClick
+        )
+    }
 }

@@ -8,11 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
-import androidx.compose.material3.DismissState
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -22,12 +22,12 @@ import ch.timofey.grader.ui.theme.spacing
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DismissDeleteBackground(
-    dismissState: DismissState
+    dismissState: SwipeToDismissBoxState
 ){
-    dismissState.dismissDirection ?: return
+    dismissState.dismissDirection
     val color by animateColorAsState(
         targetValue = when (dismissState.targetValue) {
-            DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
+            SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.errorContainer
             else -> MaterialTheme.colorScheme.background
         }, label = "Color"
     )

@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
                 Color.TRANSPARENT, Color.TRANSPARENT
             )
         )
+
         super.onCreate(savedInstanceState)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
             val bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
@@ -39,8 +40,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun saveFileToStorage(){
-        println("trying to save a file")
-    }
+
 }
 

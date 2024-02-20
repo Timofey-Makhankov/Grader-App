@@ -109,6 +109,17 @@ fun AboutScreen(
                         )
                     }
                 }
+
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
+                    onClick = { onEvent(AboutEvent.OnButtonCreateClick) }) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Create Document")
+                    }
+                }
             }
         }
     }

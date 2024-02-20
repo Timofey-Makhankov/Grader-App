@@ -14,8 +14,18 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -27,10 +37,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.components.organisms.items.DivisionItem
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.organisms.AppBar
+import ch.timofey.grader.ui.components.organisms.items.DivisionItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
@@ -158,7 +168,7 @@ fun DivisionListScreen(
             topBar = {
                 AppBar(
                     onNavigationIconClick = { onEvent(DivisionListEvent.OnReturnBack) },
-                    actionIcon = Icons.Default.ArrowBack,
+                    actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
                     actionContentDescription = "Go Back to previous Screen",
                     appBarTitle = "Divisions",
                     locationIndicator = true,
@@ -177,7 +187,7 @@ fun DivisionListScreen(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                             locationTitles = state.locationTitles
                         )
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.padding(
                                 horizontal = MaterialTheme.spacing.medium,
                                 vertical = MaterialTheme.spacing.extraSmall

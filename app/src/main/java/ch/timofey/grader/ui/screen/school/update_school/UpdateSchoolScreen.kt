@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -66,7 +66,7 @@ fun UpdateSchoolScreen(
     Scaffold(topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(UpdateSchoolEvent.OnReturnBack) },
-            actionIcon = Icons.Default.ArrowBack,
+            actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
             actionContentDescription = "Go back to School Screen"
         )
     }, snackbarHost = { SnackbarHost(snackBarHostState) }) {
