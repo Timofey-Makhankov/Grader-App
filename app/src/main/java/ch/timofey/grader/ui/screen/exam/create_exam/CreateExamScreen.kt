@@ -1,13 +1,16 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
 import android.text.format.DateFormat
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -30,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -71,7 +75,7 @@ fun CreateExamScreen(
     Scaffold(topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(CreateExamEvent.OnBackButtonPress) },
-            actionIcon = Icons.Default.ArrowBack,
+            actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
             actionContentDescription = "Go back to previous Screen"
         )
     }) {
@@ -120,13 +124,12 @@ fun CreateExamScreen(
                 isError = !state.validDate,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam taken ")
+                        append("Exam date ")
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
                             append("(Required)")
                         }
                     })
                 },
-                placeholder = { Text(text = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).toString()) },
                 supportingText = {
                     if (!state.validDate) {
                         Text(
@@ -144,6 +147,7 @@ fun CreateExamScreen(
             OutlinedTextField(modifier = Modifier
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 value = state.grade,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnGradeChange(value)) },
                 singleLine = true,
@@ -168,6 +172,7 @@ fun CreateExamScreen(
             OutlinedTextField(modifier = Modifier
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 value = state.weight,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnWeightChange(value)) },
                 singleLine = true,

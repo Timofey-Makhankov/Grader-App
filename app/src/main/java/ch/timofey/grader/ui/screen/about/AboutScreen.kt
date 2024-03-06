@@ -1,6 +1,10 @@
 package ch.timofey.grader.ui.screen.about
 
 import android.content.res.Configuration
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -14,18 +18,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import ch.timofey.grader.R
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
-import ch.timofey.grader.ui.screen.calculator.CalculatorEvent
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
+import ch.timofey.grader.ui.utils.DeviceInfo
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.InputStream
+import java.io.OutputStream
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Composable
 fun AboutScreen(
@@ -35,6 +46,31 @@ fun AboutScreen(
     onEvent: (AboutEvent) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    val documentPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        context.contentResolver.openInputStream(uri)?.use { file: InputStream ->
+            Log.d("chosen file", file.bufferedReader().use { it.readText() })
+        }
+    }
+
+    val createBackup = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) {uri: Uri? ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        context.contentResolver.openOutputStream(uri)?.use {file: OutputStream ->
+            file.bufferedWriter().use { it.write("This file was created from the Application") }
+        }
+    }
+
+    val createReport = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {uri: Uri? ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        val reportData = Json.encodeToString(DeviceInfo.serializer(), DeviceInfo())
+        Log.d("CREATE-REPORT", reportData)
+        context.contentResolver.openOutputStream(uri)?.use {file: OutputStream ->
+            file.bufferedWriter().use { it.write(reportData) }
+        }
+    }
+
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -113,11 +149,35 @@ fun AboutScreen(
                 Button(modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { onEvent(AboutEvent.OnButtonCreateClick) }) {
+                    onClick = { /*onEvent(AboutEvent.OnButtonCreateClick)*/ createBackup.launch("from-application.txt") }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "Create Document")
+                    }
+                }
+
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
+                    onClick = { documentPicker.launch(arrayOf("text/plain")) }) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = " Open Document")
+                    }
+                }
+                Text(text = "${android.os.Build.BRAND} - ${android.os.Build.MODEL} - ${android.os.Build.DEVICE}")
+                Text(text = "${CalendarLocale.getDefault()}")
+
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
+                    onClick = { createReport.launch("report-${LocalDateTime.now()}.json") }) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Create Report")
                     }
                 }
             }
