@@ -24,7 +24,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateExamViewModel @Inject constructor(
+class CreateExamViewModel @Inject constructor (
     private val repository: ExamRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val moduleId = savedStateHandle.get<String>("id").orEmpty()

@@ -3,6 +3,9 @@ package ch.timofey.grader.db.domain.school
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import ch.timofey.grader.db.converter.UUIDSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
 /**
@@ -18,8 +21,10 @@ import java.util.UUID
  * @property grade average grade of previous items
  * @property onDelete to delete entity in future
  */
+@Serializable
 @Entity(tableName = "school")
 data class School(
+    @Serializable(with = UUIDSerializer::class)
     @PrimaryKey(autoGenerate = false) val id: UUID,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "description") val description: String?,

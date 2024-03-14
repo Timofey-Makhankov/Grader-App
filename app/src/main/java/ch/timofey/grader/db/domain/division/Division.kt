@@ -1,6 +1,7 @@
 package ch.timofey.grader.db.domain.division
 
 import androidx.room.*
+import ch.timofey.grader.db.converter.UUIDSerializer
 import ch.timofey.grader.db.domain.school.School
 import kotlinx.serialization.Serializable
 import java.util.UUID
@@ -25,8 +26,11 @@ import java.util.UUID
         onDelete = ForeignKey.CASCADE
     )]
 )
+@Serializable
 data class Division(
+    @Serializable(with = UUIDSerializer::class)
     @PrimaryKey(autoGenerate = false) val id: UUID,
+    @Serializable(with = UUIDSerializer::class)
     @ColumnInfo(name = "school_id", index = true) val schoolId: UUID,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "description") val description: String?,
