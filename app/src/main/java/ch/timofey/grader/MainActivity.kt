@@ -38,7 +38,5 @@ class MainActivity : ComponentActivity() {
             MainEntry()
         }
     }
-
-
 }
 
