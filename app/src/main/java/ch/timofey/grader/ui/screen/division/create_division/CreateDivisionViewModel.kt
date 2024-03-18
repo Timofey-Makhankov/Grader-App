@@ -78,8 +78,8 @@ class CreateDivisionViewModel @Inject constructor(
                         repository.saveDivision(newDivision)
                     }
                     sendUiEvent(UiEvent.PopBackStack)
-                    Toast.makeText(GraderApp.getContext(), "Division Created", Toast.LENGTH_SHORT)
-                        .show()
+                    //Toast.makeText(GraderApp.getContext(), "Division Created", Toast.LENGTH_SHORT)
+                    //   .show()
                 } else {
                     Toast.makeText(
                         GraderApp.getContext(),

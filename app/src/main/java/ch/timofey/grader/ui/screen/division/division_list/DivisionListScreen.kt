@@ -25,6 +25,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -58,11 +59,19 @@ fun DivisionListScreen(
     uiEvent: Flow<UiEvent>,
     onPopBackStack: () -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
+    stackEntryValue: SnackbarVisuals?
 ) {
     val scope = rememberCoroutineScope()
+    LaunchedEffect(key1 = Unit) {
+        if (stackEntryValue != null) {
+            this.launch {
+                snackBarHostState.showSnackbar(stackEntryValue)
+            }
+        }
+    }
     val deletedDivisionId = remember { mutableStateOf<UUID?>(null) }
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = Unit) {
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.Navigate -> {
@@ -99,7 +108,7 @@ fun DivisionListScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        Scaffold(//snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
@@ -270,7 +279,8 @@ private fun DivisionListScreenPreview() {
             uiEvent = emptyFlow(),
             onPopBackStack = {},
             onNavigate = {},
-            snackBarHostState = SnackbarHostState()
+            snackBarHostState = SnackbarHostState(),
+            stackEntryValue = null
         )
     }
 }
@@ -311,7 +321,8 @@ private fun DivisionListScreenDarkModePreview() {
             uiEvent = emptyFlow(),
             onPopBackStack = {},
             onNavigate = {},
-            snackBarHostState = SnackbarHostState()
+            snackBarHostState = SnackbarHostState(),
+            stackEntryValue = null
         )
     }
 }

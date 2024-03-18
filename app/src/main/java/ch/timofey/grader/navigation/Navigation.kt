@@ -48,7 +48,6 @@ import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolScreen
 import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolViewModel
 import ch.timofey.grader.ui.screen.settings.SettingsScreen
 import ch.timofey.grader.ui.screen.settings.SettingsViewModel
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun Navigation(
@@ -61,7 +60,8 @@ fun Navigation(
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(500)) }) {
         composable(route = Screen.MainScreen.route) { navBackStackEntry ->
-            val stackEntry = navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackbar")
+            val stackEntry =
+                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<SchoolListViewModel>()
             val state by viewModel.uiState.collectAsState()
             SchoolListScreen(
@@ -87,7 +87,7 @@ fun Navigation(
                     if (data != null) {
                         navController.previousBackStackEntry
                             ?.savedStateHandle
-                            ?.set("show-snackbar", data)
+                            ?.set("show-snackBar", data)
                     }
                     navController.popBackStackSafe()
                 },
@@ -126,7 +126,9 @@ fun Navigation(
                 defaultValue = "None"
                 nullable = false
             })
-        ) {
+        ) { navBackStackEntry ->
+            val stackEntry =
+                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<DivisionListViewModel>()
             val state by viewModel.uiState.collectAsState()
             DivisionListScreen(
@@ -140,7 +142,8 @@ fun Navigation(
                 },
                 drawerState = drawerState,
                 uiEvent = viewModel.uiEvent,
-                snackBarHostState = snackBarHostState
+                snackBarHostState = snackBarHostState,
+                stackEntryValue = stackEntry
             )
         }
         composable(
@@ -156,7 +159,12 @@ fun Navigation(
             CreateDivisionScreen(state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = {
+                onPopBackStack = { data ->
+                    if (data != null) {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("show-snackBar", data)
+                    }
                     navController.popBackStackSafe()
                 })
         }
@@ -166,7 +174,9 @@ fun Navigation(
                 defaultValue = "None"
                 nullable = false
             })
-        ) {
+        ) { navBackStackEntry ->
+            val stackEntry =
+                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<ModuleListViewModel>()
             val state by viewModel.uiState.collectAsState()
             ModuleListScreen(
@@ -176,7 +186,8 @@ fun Navigation(
                 onNavigate = { navController.navigate(it.route) },
                 drawerState = drawerState,
                 onPopBackStack = { navController.popBackStackSafe() },
-                snackBarHostState = snackBarHostState
+                snackBarHostState = snackBarHostState,
+                stackEntryValue = stackEntry
             )
         }
         composable(
@@ -192,7 +203,12 @@ fun Navigation(
             CreateModuleScreen(state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = {
+                onPopBackStack = { data ->
+                    if (data != null) {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("show-snackBar", data)
+                    }
                     navController.popBackStackSafe()
                 })
         }
@@ -202,7 +218,9 @@ fun Navigation(
                 defaultValue = "None"
                 nullable = false
             })
-        ) {
+        ) { navBackStackEntry ->
+            val stackEntry =
+                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<ExamListViewModel>()
             val state by viewModel.uiState.collectAsState()
             ExamListScreen(
@@ -212,7 +230,8 @@ fun Navigation(
                 drawerState = drawerState,
                 onPopBackStack = { navController.popBackStackSafe() },
                 onNavigate = { navController.navigate(it.route) },
-                snackBarHostState = snackBarHostState
+                snackBarHostState = snackBarHostState,
+                stackEntryValue = stackEntry
             )
         }
         composable(
@@ -227,7 +246,14 @@ fun Navigation(
             CreateExamScreen(state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStackSafe() })
+                onPopBackStack = { data ->
+                    if (data != null) {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("show-snackBar", data)
+                    }
+                    navController.popBackStackSafe()
+                })
         }
         composable(
             route = Screen.SchoolEditScreen.route + "/{id}", arguments = listOf(navArgument("id") {
@@ -242,7 +268,14 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStackSafe() },
+                onPopBackStack = { data ->
+                    if (data != null) {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("show-snackBar", data)
+                    }
+                    navController.popBackStackSafe()
+                },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -260,7 +293,14 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStackSafe() },
+                onPopBackStack = { data ->
+                    if (data != null) {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("show-snackBar", data)
+                    }
+                    navController.popBackStackSafe()
+                },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -277,7 +317,14 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStackSafe() },
+                onPopBackStack = { data ->
+                    if (data != null) {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("show-snackBar", data)
+                    }
+                    navController.popBackStackSafe()
+                },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -295,7 +342,14 @@ fun Navigation(
             UpdateExamScreen(state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStackSafe() })
+                onPopBackStack = { data ->
+                    if (data != null) {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("show-snackBar", data)
+                    }
+                    navController.popBackStackSafe()
+                })
         }
     }
 }

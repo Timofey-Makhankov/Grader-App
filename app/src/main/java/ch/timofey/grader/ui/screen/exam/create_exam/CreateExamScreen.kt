@@ -21,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -43,6 +44,7 @@ import ch.timofey.grader.ui.components.atom.icons.CalendarToday
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
+import ch.timofey.grader.ui.utils.SnackBarMessage
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -56,7 +58,7 @@ fun CreateExamScreen(
     state: CreateExamState,
     onEvent: (CreateExamEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
-    onPopBackStack: () -> Unit,
+    onPopBackStack: (SnackbarVisuals?) -> Unit,
     isDialogOpen: Boolean = false
 ) {
     val openDialog = remember { mutableStateOf(isDialogOpen) }
@@ -65,7 +67,7 @@ fun CreateExamScreen(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack()
+                    onPopBackStack(SnackBarMessage("New Exam was created", withDismissAction = true))
                 }
 
                 else -> Unit

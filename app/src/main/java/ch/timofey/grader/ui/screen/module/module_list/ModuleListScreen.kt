@@ -14,17 +14,18 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,9 +60,17 @@ fun ModuleListScreen(
     onPopBackStack: () -> Unit,
     uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
+    stackEntryValue: SnackbarVisuals?
 ) {
     val scope = rememberCoroutineScope()
+    LaunchedEffect(key1 = Unit) {
+        if (stackEntryValue != null) {
+            this.launch {
+                snackBarHostState.showSnackbar(stackEntryValue)
+            }
+        }
+    }
     val deletedModuleId = remember { mutableStateOf<UUID?>(value = null) }
     LaunchedEffect(key1 = true) {
         scope.launch {
@@ -107,7 +116,7 @@ fun ModuleListScreen(
             }
         },
     ) {
-        Scaffold(snackbarHost = { SnackbarHost(snackBarHostState) },
+        Scaffold(//snackbarHost = { SnackbarHost(snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
@@ -177,7 +186,7 @@ fun ModuleListScreen(
             topBar = {
                 AppBar(
                     onNavigationIconClick = { onEvent(ModuleListEvent.OnReturnBack) },
-                    actionIcon = Icons.Default.ArrowBack,
+                    actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
                     actionContentDescription = "Go Back to previous Screen",
                     appBarTitle = "Modules",
                     locationIndicator = true,
@@ -196,7 +205,7 @@ fun ModuleListScreen(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                             locationTitles = state.locationsTitles
                         )
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.padding(
                                 horizontal = MaterialTheme.spacing.medium,
                                 vertical = MaterialTheme.spacing.extraSmall
@@ -276,7 +285,8 @@ private fun ModuleListScreenPreview() {
             uiEvent = emptyFlow(),
             onPopBackStack = {},
             onNavigate = {},
-            snackBarHostState = SnackbarHostState()
+            snackBarHostState = SnackbarHostState(),
+            stackEntryValue =  null
         )
     }
 }
@@ -319,7 +329,8 @@ private fun ModuleListScreenDarkModePreview() {
             uiEvent = emptyFlow(),
             onPopBackStack = {},
             onNavigate = {},
-            snackBarHostState = SnackbarHostState()
+            snackBarHostState = SnackbarHostState(),
+            stackEntryValue = null
         )
     }
 }

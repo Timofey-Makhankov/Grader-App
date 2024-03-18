@@ -14,16 +14,17 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,9 +57,17 @@ fun ExamListScreen(
     drawerState: DrawerState,
     onPopBackStack: () -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
+    stackEntryValue: SnackbarVisuals?
 ) {
     val scope = rememberCoroutineScope()
+    LaunchedEffect(key1 = Unit) {
+        if (stackEntryValue != null) {
+            this.launch {
+                snackBarHostState.showSnackbar(stackEntryValue)
+            }
+        }
+    }
     val deletedExamId = remember { mutableStateOf<UUID?>(null) }
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
@@ -95,12 +104,12 @@ fun ExamListScreen(
             }
         }, currentScreen = Screen.ExamScreen
     ) {
-        Scaffold(snackbarHost = { SnackbarHost(snackBarHostState) },
+        Scaffold(//snackbarHost = { SnackbarHost(snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             topBar = {
                 AppBar(
                     onNavigationIconClick = { onEvent(ExamListEvent.OnBackButtonClick) },
-                    actionIcon = Icons.Default.ArrowBack,
+                    actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
                     actionContentDescription = "Go Back to previous Screen",
                     appBarTitle = "Exams",
                     locationIndicator = true,
@@ -184,7 +193,7 @@ fun ExamListScreen(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                             locationTitles = state.locationsTitles
                         )
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.padding(
                                 horizontal = MaterialTheme.spacing.medium,
                                 vertical = MaterialTheme.spacing.extraSmall
@@ -237,7 +246,8 @@ private fun ExamListScreenPreview() {
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onPopBackStack = {},
             onNavigate = {},
-            snackBarHostState = SnackbarHostState()
+            snackBarHostState = SnackbarHostState(),
+            stackEntryValue = null
         )
     }
 }
@@ -255,7 +265,8 @@ private fun ExamListScreenDarkModePreview() {
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onPopBackStack = {},
             onNavigate = {},
-            snackBarHostState = SnackbarHostState()
+            snackBarHostState = SnackbarHostState(),
+            stackEntryValue = null
         )
     }
 }
