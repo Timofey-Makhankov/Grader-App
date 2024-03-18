@@ -1,7 +1,11 @@
 package ch.timofey.grader
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -13,16 +17,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ch.timofey.grader.navigation.Navigation
 import ch.timofey.grader.ui.theme.GraderTheme
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainEntry(snackBarHostState: SnackbarHostState) {
+fun MainEntry() {
     val viewModel = hiltViewModel<MainViewModel>()
     val state by viewModel.uiState.collectAsState()
+    val snackBarHostState = remember { SnackbarHostState() }
     GraderTheme(themeSetting = state.theme) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Navigation(snackBarHostState)
+            Scaffold(
+                snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
+            ) {
+                Navigation(snackBarHostState)
+            }
         }
     }
 }

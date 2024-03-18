@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,6 +48,7 @@ import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolScreen
 import ch.timofey.grader.ui.screen.school.update_school.UpdateSchoolViewModel
 import ch.timofey.grader.ui.screen.settings.SettingsScreen
 import ch.timofey.grader.ui.screen.settings.SettingsViewModel
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun Navigation(
@@ -58,7 +60,8 @@ fun Navigation(
         startDestination = Screen.MainScreen.route,
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(500)) }) {
-        composable(route = Screen.MainScreen.route) {
+        composable(route = Screen.MainScreen.route) { navBackStackEntry ->
+            val stackEntry = navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackbar")
             val viewModel = hiltViewModel<SchoolListViewModel>()
             val state by viewModel.uiState.collectAsState()
             SchoolListScreen(
@@ -69,7 +72,8 @@ fun Navigation(
                 onNavigate = {
                     navController.navigate(it.route)
                 },
-                snackBarHostState = snackBarHostState
+                snackBarHostState = snackBarHostState,
+                stackEntryValue = stackEntry
             )
         }
         composable(route = Screen.CreateSchoolScreen.route) {
@@ -79,7 +83,14 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { navController.popBackStackSafe() },
+                onPopBackStack = { data ->
+                    if (data != null) {
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("show-snackbar", data)
+                    }
+                    navController.popBackStackSafe()
+                },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -118,7 +129,8 @@ fun Navigation(
         ) {
             val viewModel = hiltViewModel<DivisionListViewModel>()
             val state by viewModel.uiState.collectAsState()
-            DivisionListScreen(state = state,
+            DivisionListScreen(
+                state = state,
                 onEvent = viewModel::onEvent,
                 onNavigate = {
                     navController.navigate(it.route)

@@ -91,10 +91,11 @@ class CreateSchoolViewModel @Inject constructor(
                     )
                     viewModelScope.launch {
                         repository.saveSchool(newSchool)
+                        //sendUiEvent(UiEvent.ShowSnackBar("Shool Created", true))
                     }
                     sendUiEvent(UiEvent.PopBackStack)
-                    Toast.makeText(GraderApp.getContext(), "School Created", Toast.LENGTH_SHORT)
-                        .show()
+                //Toast.makeText(GraderApp.getContext(), "School Created", Toast.LENGTH_SHORT)
+                    //    .show()
                 } else {
                     Toast.makeText(
                         GraderApp.getContext(),

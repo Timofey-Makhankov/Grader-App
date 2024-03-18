@@ -15,16 +15,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +46,7 @@ import ch.timofey.grader.ui.components.organisms.items.SchoolItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
+import ch.timofey.grader.ui.utils.SnackBarMessage
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -59,11 +60,19 @@ fun SchoolListScreen(
     onEvent: (SchoolListEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
+    stackEntryValue: SnackbarVisuals?
 ) {
     val scope = rememberCoroutineScope()
+    LaunchedEffect(key1 = Unit) {
+        if (stackEntryValue != null) {
+            this.launch {
+                snackBarHostState.showSnackbar(stackEntryValue)
+            }
+        }
+    }
     val deletedSchoolId = remember { mutableStateOf<UUID?>(value = null) }
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = Unit) {
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.Navigate -> {
@@ -72,11 +81,12 @@ fun SchoolListScreen(
 
                 is UiEvent.ShowSnackBar -> {
                     scope.launch {
+                        snackBarHostState.currentSnackbarData?.dismiss()
                         val result = snackBarHostState.showSnackbar(
                             message = event.message,
                             actionLabel = event.action,
                             withDismissAction = event.withDismissAction,
-                            duration = SnackbarDuration.Short
+                            duration = SnackbarDuration.Long
                         )
                         if (result == SnackbarResult.ActionPerformed) {
                             onEvent(SchoolListEvent.OnUndoDeleteClick(deletedSchoolId.value!!))
@@ -100,7 +110,7 @@ fun SchoolListScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        Scaffold(//snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
@@ -191,7 +201,7 @@ fun SchoolListScreen(
                         modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                         locationTitles = listOf("Home")
                     )
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.padding(
                             horizontal = MaterialTheme.spacing.medium,
                             vertical = MaterialTheme.spacing.extraSmall
@@ -294,7 +304,8 @@ private fun PreviewMainScreen() {
             ),
             uiEvent = emptyFlow(),
             onNavigate = {},
-            snackBarHostState = SnackbarHostState()
+            snackBarHostState = SnackbarHostState(),
+            stackEntryValue = SnackBarMessage("")
         )
     }
 }
@@ -313,7 +324,8 @@ private fun PreviewMainScreenDarkMode() {
             state = SchoolListState(),
             uiEvent = emptyFlow(),
             onNavigate = {},
-            snackBarHostState = SnackbarHostState()
+            snackBarHostState = SnackbarHostState(),
+            stackEntryValue = SnackBarMessage("")
         )
     }
 }

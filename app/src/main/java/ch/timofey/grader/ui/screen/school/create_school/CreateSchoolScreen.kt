@@ -8,14 +8,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
+import ch.timofey.grader.ui.utils.SnackBarMessage
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -40,21 +44,21 @@ fun CreateSchoolScreen(
     state: CreateSchoolState,
     onEvent: (CreateSchoolEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
-    onPopBackStack: () -> Unit,
+    onPopBackStack: (SnackbarVisuals?) -> Unit,
     snackBarHostState: SnackbarHostState
 ) {
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack()
+                    onPopBackStack(SnackBarMessage("New School was created", withDismissAction = true))
                 }
 
                 is UiEvent.ShowSnackBar -> {
                     snackBarHostState.showSnackbar(
                         message = event.message,
                         withDismissAction = event.withDismissAction,
-                        duration = SnackbarDuration.Short
+                        duration = SnackbarDuration.Long
                     )
                 }
 
@@ -66,10 +70,11 @@ fun CreateSchoolScreen(
     Scaffold(topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(CreateSchoolEvent.OnReturnBack) },
-            actionIcon = Icons.Default.ArrowBack,
+            actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
             actionContentDescription = "Go back to School Screen"
         )
-    }, snackbarHost = { SnackbarHost(snackBarHostState) }) {
+    }//, snackbarHost = { SnackbarHost(snackBarHostState) }
+    ) {
         Column(
             modifier = Modifier
                 .verticalScroll(state = rememberScrollState())

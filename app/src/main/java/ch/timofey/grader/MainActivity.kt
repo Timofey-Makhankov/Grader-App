@@ -35,8 +35,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val snackBarHostState = remember { SnackbarHostState() }
-            MainEntry(snackBarHostState)
+            MainEntry()
         }
     }
 
