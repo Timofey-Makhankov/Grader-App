@@ -47,6 +47,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -66,14 +67,14 @@ fun ModuleListScreen(
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
         if (stackEntryValue != null) {
-            this.launch {
+            this.launch(Dispatchers.Main) {
                 snackBarHostState.showSnackbar(stackEntryValue)
             }
         }
     }
     val deletedModuleId = remember { mutableStateOf<UUID?>(value = null) }
     LaunchedEffect(key1 = true) {
-        scope.launch {
+        scope.launch(Dispatchers.Main) {
             uiEvent.collect { event ->
                 when (event) {
                     is UiEvent.Navigate -> {
@@ -85,7 +86,7 @@ fun ModuleListScreen(
                     }
 
                     is UiEvent.ShowSnackBar -> {
-                        scope.launch {
+                        scope.launch(Dispatchers.Main) {
                             val result = snackBarHostState.showSnackbar(
                                 message = event.message,
                                 withDismissAction = event.withDismissAction,
@@ -111,7 +112,7 @@ fun ModuleListScreen(
         currentScreen = Screen.ModuleScreen,
         onItemClick = { menuItem ->
             onEvent(ModuleListEvent.OnDeleteItems(menuItem.onNavigate))
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 drawerState.close()
             }
         },
@@ -213,34 +214,36 @@ fun ModuleListScreen(
                         )
                     }
                 }
-                items(items = state.moduleList, key = { module -> module.id }) { module ->
-                    ModuleItem(module = module, disableSwipe = true, onCheckBoxClick = {
-                        onEvent(
-                            ModuleListEvent.OnCheckChange(
-                                module.id, !module.isSelected
-                            )
-                        )
-                    }, onLongClick = {
-                        onNavigate(
-                            UiEvent.Navigate(
-                                Screen.ExamScreen.withArgs(module.id.toString())
-                            )
-                        )
-                    }, onSwipe = { moduleItem ->
-                        deletedModuleId.value = moduleItem.id
-                        onEvent(ModuleListEvent.OnSwipeDelete(moduleItem.id))
-                    }, onDeleteClick = {
-                        deletedModuleId.value = module.id
-                        onEvent(ModuleListEvent.OnDeleteButtonClick(module.id))
-                    }, onUpdateClick = {
-                        onNavigate(
-                            UiEvent.Navigate(
-                                Screen.ModuleEditScreen.withArgs(
-                                    module.id.toString()
+                if (state.swipingEnabled != null) {
+                    items(items = state.moduleList, key = { module -> module.id }) { module ->
+                        ModuleItem(module = module, disableSwipe = !state.swipingEnabled, onCheckBoxClick = {
+                            onEvent(
+                                ModuleListEvent.OnCheckChange(
+                                    module.id, !module.isSelected
                                 )
                             )
-                        )
-                    })
+                        }, onLongClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.ExamScreen.withArgs(module.id.toString())
+                                )
+                            )
+                        }, onSwipe = { moduleItem ->
+                            deletedModuleId.value = moduleItem.id
+                            onEvent(ModuleListEvent.OnSwipeDelete(moduleItem.id))
+                        }, onDeleteClick = {
+                            deletedModuleId.value = module.id
+                            onEvent(ModuleListEvent.OnDeleteButtonClick(module.id))
+                        }, onUpdateClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.ModuleEditScreen.withArgs(
+                                        module.id.toString()
+                                    )
+                                )
+                            )
+                        })
+                    }
                 }
             }
         }

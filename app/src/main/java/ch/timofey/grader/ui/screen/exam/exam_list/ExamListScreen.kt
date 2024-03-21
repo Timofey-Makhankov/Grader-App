@@ -44,6 +44,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -63,7 +64,7 @@ fun ExamListScreen(
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
         if (stackEntryValue != null) {
-            this.launch {
+            this.launch(Dispatchers.Main) {
                 snackBarHostState.showSnackbar(stackEntryValue)
             }
         }
@@ -82,7 +83,7 @@ fun ExamListScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
-                    scope.launch {
+                    scope.launch(Dispatchers.Main) {
                         val result = snackBarHostState.showSnackbar(
                             message = event.message,
                             actionLabel = event.action,
@@ -99,12 +100,12 @@ fun ExamListScreen(
     NavigationDrawer(
         drawerState = drawerState, items = NavigationDrawerItems.list, onItemClick = { menuItem ->
             onEvent(ExamListEvent.OnDeleteItems(menuItem.onNavigate))
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 drawerState.close()
             }
         }, currentScreen = Screen.ExamScreen
     ) {
-        Scaffold(//snackbarHost = { SnackbarHost(snackBarHostState) },
+        Scaffold(
             floatingActionButtonPosition = FabPosition.End,
             topBar = {
                 AppBar(
@@ -201,28 +202,30 @@ fun ExamListScreen(
                         )
                     }
                 }
-                items(items = state.exams, key = { exam -> exam.id }) { exam ->
-                    ExamItem(exam = exam, onSwipe = { examItem ->
-                        deletedExamId.value = examItem.id
-                        onEvent(ExamListEvent.OnSwipeDelete(examItem.id))
-                    }, onCheckBoxClick = {
-                        onEvent(
-                            ExamListEvent.OnCheckChange(
-                                id = exam.id, value = !exam.isSelected
-                            )
-                        )
-                    }, onDeleteClick = {
-                        deletedExamId.value = exam.id
-                        onEvent(ExamListEvent.OnDeleteButtonClick(examId = exam.id))
-                    }, onUpdateClick = {
-                        onNavigate(
-                            UiEvent.Navigate(
-                                Screen.ExamEditScreen.withArgs(
-                                    exam.id.toString()
+                if (state.swipingEnabled != null){
+                    items(items = state.exams, key = { exam -> exam.id }) { exam ->
+                        ExamItem(exam = exam, disableSwipe = !state.swipingEnabled, onSwipe = { examItem ->
+                            deletedExamId.value = examItem.id
+                            onEvent(ExamListEvent.OnSwipeDelete(examItem.id))
+                        }, onCheckBoxClick = {
+                            onEvent(
+                                ExamListEvent.OnCheckChange(
+                                    id = exam.id, value = !exam.isSelected
                                 )
                             )
-                        )
-                    })
+                        }, onDeleteClick = {
+                            deletedExamId.value = exam.id
+                            onEvent(ExamListEvent.OnDeleteButtonClick(examId = exam.id))
+                        }, onUpdateClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.ExamEditScreen.withArgs(
+                                        exam.id.toString()
+                                    )
+                                )
+                            )
+                        })
+                    }
                 }
             }
         }

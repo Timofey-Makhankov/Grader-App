@@ -10,6 +10,7 @@ import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.exam.ExamValidation
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -84,7 +85,7 @@ class CreateExamViewModel @Inject constructor (
 
             is CreateExamEvent.OnCreateExamButtonPress -> {
                 if (ExamValidation.validateAll(_uiState.value)) {
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         repository.saveExam(
                             Exam(
                                 id = UUID.randomUUID(),
@@ -98,19 +99,15 @@ class CreateExamViewModel @Inject constructor (
                         )
                     }
                     sendUiEvent(UiEvent.PopBackStack)
-                    Toast.makeText(GraderApp.getContext(), "Exam Created", Toast.LENGTH_SHORT)
-                        .show()
                 } else {
-                    Toast.makeText(
-                        GraderApp.getContext(), "Exam was unable to be created", Toast.LENGTH_SHORT
-                    ).show()
+                    sendUiEvent(UiEvent.ShowSnackBar("Exam was unable to be created", true))
                 }
             }
         }
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

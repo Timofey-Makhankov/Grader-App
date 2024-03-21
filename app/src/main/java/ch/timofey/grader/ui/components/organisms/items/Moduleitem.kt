@@ -57,6 +57,7 @@ fun ModuleItem(
         }, positionalThreshold = { value -> (value / 8) })
         SwipeToDismissBox(modifier = Modifier,
             enableDismissFromEndToStart = true,
+            enableDismissFromStartToEnd = false,
             state = dismissState,
             backgroundContent = {
                 val visible = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart

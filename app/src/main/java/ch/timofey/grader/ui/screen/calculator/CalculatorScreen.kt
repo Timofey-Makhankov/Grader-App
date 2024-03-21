@@ -40,6 +40,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalStdlibApi::class)
@@ -60,13 +61,13 @@ fun CalculatorScreen(
             if (menuItem.onNavigate != Screen.CalculatorScreen.route) {
                 onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 drawerState.close()
             }
         }) {
         Scaffold(topBar = {
             AppBar(
-                onNavigationIconClick = { scope.launch { drawerState.open() } },
+                onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
                 actionContentDescription = "Toggle Drawer",
                 appBarTitle = "Calculator"

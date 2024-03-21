@@ -1,8 +1,10 @@
 package ch.timofey.grader.ui.screen.division.division_list
 
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.school.SchoolRepository
@@ -10,20 +12,25 @@ import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.util.UUID
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class DivisionListViewModel @Inject constructor(
     private val repository: DivisionRepository,
     private val schoolRepository: SchoolRepository,
+    private val dataStore: DataStore<AppSettings>,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -36,7 +43,15 @@ class DivisionListViewModel @Inject constructor(
     val uiState: StateFlow<DivisionListState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStore.data.collectLatest {
+                _uiState.value = _uiState.value.copy(
+                    showPoints = it.calculatePoints,
+                    swipingEnabled = it.enableSwipeToDelete
+                )
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getAllDivisionsFromSchoolId(UUID.fromString(schoolId))
                 .collect { divisionList ->
                     println("division List $divisionList")
@@ -56,7 +71,7 @@ class DivisionListViewModel @Inject constructor(
                     }
                 }
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val school = schoolRepository.getSchoolById(UUID.fromString(schoolId))
             school?.let {
                 _uiState.value = _uiState.value.copy(
@@ -69,34 +84,34 @@ class DivisionListViewModel @Inject constructor(
     fun onEvent(event: DivisionListEvent) {
         when (event) {
             is DivisionListEvent.OnReturnBack -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteDivisionItems()
                 }
                 sendUiEvent(UiEvent.PopBackStack)
             }
 
             is DivisionListEvent.OnCreateDivision -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteDivisionItems()
                 }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateDivisionScreen.withArgs(schoolId)))
             }
 
             is DivisionListEvent.OnDeleteItems -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteDivisionItems()
                 }
                 sendUiEvent(UiEvent.Navigate(route = event.route))
             }
 
             is DivisionListEvent.OnCheckChange -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateIsSelectedDivision(event.id, event.value)
                 }
             }
 
             is DivisionListEvent.OnSwipeDelete -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteDivision(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
@@ -107,7 +122,7 @@ class DivisionListViewModel @Inject constructor(
             }
 
             is DivisionListEvent.OnDeleteIconClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteDivision(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
@@ -118,7 +133,7 @@ class DivisionListViewModel @Inject constructor(
             }
 
             is DivisionListEvent.OnUndoDeleteClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteDivision(event.id, false)
                 }
             }
@@ -140,7 +155,7 @@ class DivisionListViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

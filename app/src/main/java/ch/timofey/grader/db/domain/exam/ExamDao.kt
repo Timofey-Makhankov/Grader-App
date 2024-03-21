@@ -16,7 +16,7 @@ interface ExamDao {
      * @param exam entity
      * @see Exam
      */
-    @Insert(entity = Exam::class)
+    @Insert(entity = Exam::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun save(exam: Exam)
 
     /**

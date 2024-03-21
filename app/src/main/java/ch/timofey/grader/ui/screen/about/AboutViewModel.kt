@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -52,7 +53,7 @@ class AboutViewModel @Inject constructor(application: Application) : AndroidView
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

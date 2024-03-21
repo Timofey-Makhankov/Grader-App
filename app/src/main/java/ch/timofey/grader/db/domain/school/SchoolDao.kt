@@ -18,7 +18,7 @@ interface SchoolDao {
      * @param school [School] Entity
      * @see School
      */
-    @Insert(entity = School::class, onConflict = OnConflictStrategy.ABORT)
+    @Insert(entity = School::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun save(school: School)
 
     /**

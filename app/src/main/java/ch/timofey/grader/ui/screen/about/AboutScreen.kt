@@ -28,6 +28,7 @@ import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.DeviceInfo
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -48,26 +49,10 @@ fun AboutScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    val documentPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        context.contentResolver.openInputStream(uri)?.use { file: InputStream ->
-            Log.d("chosen file", file.bufferedReader().use { it.readText() })
-        }
-    }
-
     val createBackup = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) {uri: Uri? ->
         if (uri == null) return@rememberLauncherForActivityResult
         context.contentResolver.openOutputStream(uri)?.use {file: OutputStream ->
             file.bufferedWriter().use { it.write("This file was created from the Application") }
-        }
-    }
-
-    val createReport = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {uri: Uri? ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        val reportData = Json.encodeToString(DeviceInfo.serializer(), DeviceInfo())
-        Log.d("CREATE-REPORT", reportData)
-        context.contentResolver.openOutputStream(uri)?.use {file: OutputStream ->
-            file.bufferedWriter().use { it.write(reportData) }
         }
     }
 
@@ -87,14 +72,14 @@ fun AboutScreen(
             if (menuItem.onNavigate != Screen.ShareScreen.route) {
                 onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 drawerState.close()
             }
         }, currentScreen = Screen.ShareScreen
     ) {
         Scaffold(topBar = {
             AppBar(
-                onNavigationIconClick = { scope.launch { drawerState.open() } },
+                onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
                 actionContentDescription = "Toggle Drawer",
                 appBarTitle = "About"
@@ -156,30 +141,8 @@ fun AboutScreen(
                         Text(text = "Create Document")
                     }
                 }
-
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { documentPicker.launch(arrayOf("text/plain")) }) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = " Open Document")
-                    }
-                }
                 Text(text = "${android.os.Build.BRAND} - ${android.os.Build.MODEL} - ${android.os.Build.DEVICE}")
                 Text(text = "${CalendarLocale.getDefault()}")
-
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { createReport.launch("report-${LocalDateTime.now()}.json") }) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "Create Report")
-                    }
-                }
             }
         }
     }

@@ -10,6 +10,7 @@ import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.module.ModuleValidation
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -74,7 +75,7 @@ class CreateModuleViewModel @Inject constructor(
 
             is CreateModuleEvent.OnCreateModuleButtonClick -> {
                 if (ModuleValidation.validateAll(_uiState.value)) {
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         repository.saveModule(
                             Module(
                                 id = UUID.randomUUID(),
@@ -87,21 +88,15 @@ class CreateModuleViewModel @Inject constructor(
                         )
                     }
                     sendUiEvent(UiEvent.PopBackStack)
-                    Toast.makeText(GraderApp.getContext(), "Module Created", Toast.LENGTH_SHORT)
-                        .show()
                 } else {
-                    Toast.makeText(
-                        GraderApp.getContext(),
-                        "Module was unable to be created",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    sendUiEvent(UiEvent.ShowSnackBar("Module was unable to be created", true))
                 }
             }
         }
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

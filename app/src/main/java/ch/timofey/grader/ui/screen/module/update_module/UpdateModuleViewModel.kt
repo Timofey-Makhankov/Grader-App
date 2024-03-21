@@ -8,6 +8,7 @@ import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.module.ModuleValidation
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +31,7 @@ class UpdateModuleViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getModuleById(UUID.fromString(moduleId))?.also { module ->
                 _uiState.value = _uiState.value.copy(
                     currentModule = module,
@@ -99,10 +100,10 @@ class UpdateModuleViewModel @Inject constructor(
                         teacherFirstname = _uiState.value.teacherFirstName,
                         teacherLastname = _uiState.value.teacherLastName
                     )
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         repository.updateModule(updatedModule)
                         sendUiEvent(UiEvent.PopBackStack)
-                        sendUiEvent(UiEvent.ShowSnackBar("Module was successfully updated"))
+                        //sendUiEvent(UiEvent.ShowSnackBar("Module was successfully updated"))
                     }
                 } else {
                     sendUiEvent(
@@ -116,14 +117,14 @@ class UpdateModuleViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }
 
     private fun sendUiEvents(vararg events: UiEvent) {
         for (event in events) {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.Main) {
                 _uiEvent.send(event)
             }
         }

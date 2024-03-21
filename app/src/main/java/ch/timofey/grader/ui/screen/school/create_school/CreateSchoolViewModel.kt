@@ -9,6 +9,7 @@ import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.db.domain.school.SchoolValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -89,7 +90,7 @@ class CreateSchoolViewModel @Inject constructor(
                         zipCode = _uiState.value.zip,
                         city = _uiState.value.city
                     )
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         repository.saveSchool(newSchool)
                         //sendUiEvent(UiEvent.ShowSnackBar("Shool Created", true))
                     }
@@ -97,18 +98,14 @@ class CreateSchoolViewModel @Inject constructor(
                 //Toast.makeText(GraderApp.getContext(), "School Created", Toast.LENGTH_SHORT)
                     //    .show()
                 } else {
-                    Toast.makeText(
-                        GraderApp.getContext(),
-                        "School was unable to be created",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    sendUiEvent(UiEvent.ShowSnackBar("School was unable to be created", true))
                 }
             }
         }
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

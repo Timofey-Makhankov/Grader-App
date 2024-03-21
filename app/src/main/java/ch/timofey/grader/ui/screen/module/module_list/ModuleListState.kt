@@ -6,5 +6,7 @@ data class ModuleListState(
     val moduleList: List<Module> = emptyList(),
     val locationsTitles: List<String> = emptyList(),
     val averageGrade: String = "",
-    val averageGradeIsZero: Boolean? = null
+    val averageGradeIsZero: Boolean? = null,
+    val swipingEnabled: Boolean? = null,
+    val showPoints: Boolean? = null,
 )

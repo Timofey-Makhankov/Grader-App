@@ -17,7 +17,7 @@ interface ModuleDao {
      * @param module entity
      * @see Module
      */
-    @Insert(entity = Module::class)
+    @Insert(entity = Module::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun save(module: Module)
 
     /**
