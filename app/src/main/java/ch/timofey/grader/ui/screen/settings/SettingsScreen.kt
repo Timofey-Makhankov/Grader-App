@@ -5,18 +5,22 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenuItem
@@ -38,8 +42,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
@@ -72,30 +81,33 @@ fun SettingsScreen(
     val scope = rememberCoroutineScope()
     val expanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val createReport = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        val reportData = Json.encodeToString(DeviceInfo.serializer(), DeviceInfo())
-        Log.d("CREATE-REPORT", reportData)
-        context.contentResolver.openOutputStream(uri)?.use {file: OutputStream ->
-            file.bufferedWriter().use { it.write(reportData) }
+    val createReport =
+        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            val reportData = Json.encodeToString(DeviceInfo.serializer(), DeviceInfo())
+            Log.d("CREATE-REPORT", reportData)
+            context.contentResolver.openOutputStream(uri)?.use { file: OutputStream ->
+                file.bufferedWriter().use { it.write(reportData) }
+            }
         }
-    }
-    val loadBackup = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        context.contentResolver.openInputStream(uri)?.use { file: InputStream ->
-            //Log.d("chosen file", file.bufferedReader().use { it.readText() })
-            onEvent(SettingsEvent.OnLoadBackupFile(file))
+    val loadBackup =
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            context.contentResolver.openInputStream(uri)?.use { file: InputStream ->
+                //Log.d("chosen file", file.bufferedReader().use { it.readText() })
+                onEvent(SettingsEvent.OnLoadBackupFile(file))
+            }
         }
-    }
-    val createBackup = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        //val reportData = Json.encodeToString(DeviceInfo.serializer(), DeviceInfo())
-        //Log.d("CREATE-REPORT", reportData)
-        context.contentResolver.openOutputStream(uri)?.use {file: OutputStream ->
-            //file.bufferedWriter().use { it.write(reportData) }
-            onEvent(SettingsEvent.OnCreateBackupFile(file))
+    val createBackup =
+        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            //val reportData = Json.encodeToString(DeviceInfo.serializer(), DeviceInfo())
+            //Log.d("CREATE-REPORT", reportData)
+            context.contentResolver.openOutputStream(uri)?.use { file: OutputStream ->
+                //file.bufferedWriter().use { it.write(reportData) }
+                onEvent(SettingsEvent.OnCreateBackupFile(file))
+            }
         }
-    }
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -133,12 +145,25 @@ fun SettingsScreen(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextButton(colors = ButtonDefaults.textButtonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.error,
-                ), onClick = { onEvent(SettingsEvent.OnDeleteDatabaseButtonClick) }) {
-                    Text(text = "Clear Data")
-                }
+                Text(
+                    "App Styling",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.spacing.large),
+                    textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                HorizontalDivider(
+                    modifier = Modifier
+                        .padding(
+                            top = MaterialTheme.spacing.small,
+                            bottom = MaterialTheme.spacing.large,
+                            start = MaterialTheme.spacing.medium,
+                            end = MaterialTheme.spacing.medium
+                        )
+                )
                 ExposedDropdownMenuBox(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -176,73 +201,210 @@ fun SettingsScreen(
                             }
                     }
                 }
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                Box(
+                SwitchText(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                    onValueChange = { value ->
+                        onEvent(
+                            SettingsEvent.OnEnableSwipeToDeleteChange(
+                                value
+                            )
+                        )
+                    },
+                    value = state.enableSwipeToDelete,
+                    name = "Enable Swipe Right for Deletion",
+                    dialog = {
+                        Dialog(
+                            onDismissRequest = { it() },
+                            properties = DialogProperties(
+                                dismissOnBackPress = true,
+                                dismissOnClickOutside = true,
+                                usePlatformDefaultWidth = true,
+                            )
+                        ) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = MaterialTheme.spacing.medium),
+                                shape = MaterialTheme.shapes.medium
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.Start,
+                                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small)
+                                ) {
+                                    Text(text = "This is a description")
+                                    Row{
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        TextButton(onClick = { it() }) {
+                                            Text(text = "Close")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    showExtraInformation = true
+                )
+                Spacer(Modifier.height(MaterialTheme.spacing.large))
+                Text(
+                    "Data Manipulation",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.spacing.medium)
-                ) {
-                    Text(
-                        text = "Data",
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(start = MaterialTheme.spacing.medium)
-                    )
-                }
+                        .padding(horizontal = MaterialTheme.spacing.large),
+                    textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
                 HorizontalDivider(
-                    modifier = Modifier.padding(
-                        horizontal = MaterialTheme.spacing.large,
-                        vertical = MaterialTheme.spacing.small
-                    )
+                    modifier = Modifier
+                        .padding(
+                            top = MaterialTheme.spacing.small,
+                            bottom = MaterialTheme.spacing.large,
+                            start = MaterialTheme.spacing.medium,
+                            end = MaterialTheme.spacing.medium
+                        )
                 )
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                     onValueChange = { value -> onEvent(SettingsEvent.OnCalculatePointsChange(value)) },
                     value = state.calculatePointsState,
-                    name = "Calculate Points"
+                    name = "Calculate Points from Grade",
+                    dialog = {
+                        Dialog(
+                            onDismissRequest = { it() },
+                            properties = DialogProperties(
+                                dismissOnBackPress = true,
+                                dismissOnClickOutside = true,
+                                usePlatformDefaultWidth = true,
+                            )
+                        ) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = MaterialTheme.spacing.medium),
+                                shape = MaterialTheme.shapes.medium
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.Start,
+                                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small)
+                                ) {
+                                    Text(text = "This is a description")
+                                    Row{
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        TextButton(onClick = { it() }) {
+                                            Text(text = "Close")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    showExtraInformation = true
                 )
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                     onValueChange = { value -> onEvent(SettingsEvent.OnDoublePointsChange(value)) },
                     value = state.doublePointsState,
                     enabled = state.calculatePointsState,
-                    name = "Double Points",
-                    extraInfo = if (!state.calculatePointsState) "Enable 'Calculate Points' to enable setting" else ""
+                    name = "Double Calculated Points",
+                    extraInfo = if (!state.calculatePointsState) "Enable 'Calculate Points' to enable setting" else "",
+                    dialog = {
+                        Dialog(
+                            onDismissRequest = { it() },
+                            properties = DialogProperties(
+                                dismissOnBackPress = true,
+                                dismissOnClickOutside = true,
+                                usePlatformDefaultWidth = true,
+                            )
+                        ) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = MaterialTheme.spacing.medium),
+                                shape = MaterialTheme.shapes.medium
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.Start,
+                                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small)
+                                ) {
+                                    Text(text = "This is a description")
+                                    Row{
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        TextButton(onClick = { it() }) {
+                                            Text(text = "Close")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    showExtraInformation = true
                 )
-                SwitchText(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
-                    onValueChange = { value -> onEvent(SettingsEvent.OnEnableSwipeToDeleteChange(value)) },
-                    value = state.enableSwipeToDelete,
-                    name = "swipe deletion"
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)//, vertical = MaterialTheme.spacing.extraSmall)
+                ) {
+                    Text(text = "Clear Data from the Device", style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.weight(1f))
+                    TextButton(colors = ButtonDefaults.textButtonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.error,
+                    ), onClick = { onEvent(SettingsEvent.OnDeleteDatabaseButtonClick) }) {
+                        Text(text = "Clear Data")
+                    }
+                }
+
+                Spacer(Modifier.height(MaterialTheme.spacing.large))
+                Text(
+                    "Backup",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.spacing.large),
+                    textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.primary
                 )
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { createBackup.launch("grader-backup-${LocalDate.now()}") }) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                HorizontalDivider(
+                    modifier = Modifier
+                        .padding(
+                            top = MaterialTheme.spacing.small,
+                            bottom = MaterialTheme.spacing.large,
+                            start = MaterialTheme.spacing.medium,
+                            end = MaterialTheme.spacing.medium
+                        )
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
+                ) {
+                    Text(text = "Create Application Backup", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(0.6f))
+                    Button(
+                        modifier = Modifier.weight(0.4f),
+                        onClick = { createBackup.launch("grader-backup-${LocalDate.now()}") }) {
                         Text(text = "Create Backup")
                     }
                 }
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { loadBackup.launch(arrayOf("application/json")) }) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
+                ) {
+                    Text(text = "Load Backup from File", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(0.6f))
+                    Button(
+                        modifier = Modifier.weight(0.4f),
+                        onClick = { loadBackup.launch(arrayOf("application/json")) }) {
                         Text(text = "Load Backup")
                     }
                 }
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.spacing.large),
-                    onClick = { createReport.launch("report-${LocalDateTime.now()}.json") }) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "Create Device Report")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
+                ) {
+                    Text(text = "Create Application Report", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(0.6f))
+                    Button(
+                        modifier = Modifier.weight(0.4f),
+                        onClick = { createReport.launch("report-${LocalDateTime.now()}.json") }) {
+                        Text(text = "Create Report")
                     }
                 }
             }
