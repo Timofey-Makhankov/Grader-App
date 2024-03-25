@@ -29,6 +29,7 @@ import java.util.UUID
 fun ExamItem(
     modifier: Modifier = Modifier,
     exam: Exam,
+    @Suppress("UNUSED_PARAMETER")
     points: Double? = null,
     onDeleteClick: () -> Unit,
     onUpdateClick: () -> Unit,

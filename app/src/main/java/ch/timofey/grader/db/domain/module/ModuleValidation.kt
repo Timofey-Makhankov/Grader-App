@@ -12,6 +12,7 @@ object ModuleValidation: Validatable<ModuleValidationFields> {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun description(description: String): ValidationResponse {
         return ValidationResponse(valid = true)
     }

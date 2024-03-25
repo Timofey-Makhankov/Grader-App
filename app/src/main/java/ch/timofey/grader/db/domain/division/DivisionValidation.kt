@@ -12,6 +12,7 @@ object DivisionValidation: Validatable<DivisionValidationFields> {
             else -> ValidationResponse(valid = true)
         }
     }
+    @Suppress("UNUSED_PARAMETER")
     fun description(description: String): ValidationResponse {
         return ValidationResponse(valid = true)
     }
