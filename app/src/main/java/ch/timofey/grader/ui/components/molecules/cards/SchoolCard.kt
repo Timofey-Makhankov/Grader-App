@@ -1,5 +1,7 @@
 package ch.timofey.grader.ui.components.molecules.cards
 
+//import io.github.serpro69.kfaker.Faker
+//import io.github.serpro69.kfaker.fakerConfig
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -9,18 +11,29 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.Checkbox
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.*
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -34,10 +47,7 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
-import ch.timofey.grader.ui.theme.gradeColors
 import ch.timofey.grader.ui.theme.spacing
-import io.github.serpro69.kfaker.Faker
-import io.github.serpro69.kfaker.fakerConfig
 import java.util.UUID
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -52,6 +62,7 @@ fun SchoolCard(
     school: School
 ) {
     val checkedState = remember { mutableStateOf(school.isSelected) }
+    val mutableInteractionSource = remember { MutableInteractionSource() }
     val expanded = remember { mutableStateOf(isOpen) }
     ElevatedCard(
         modifier = Modifier
@@ -60,7 +71,7 @@ fun SchoolCard(
                     durationMillis = 300, easing = LinearOutSlowInEasing
                 )
             )
-            .combinedClickable(interactionSource = MutableInteractionSource(),
+            .combinedClickable(interactionSource = mutableInteractionSource,
                 indication = null,
                 onClick = { expanded.value = !expanded.value },
                 onLongClick = { onLongClick() })
@@ -169,11 +180,11 @@ fun SchoolCard(
 @Preview(showBackground = false)
 @Composable
 private fun PreviewSchoolCard() {
-    val f = Faker(fakerConfig { locale = "de_CH" })
+    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         SchoolCard(school = School(
             UUID.randomUUID(),
-            f.airport.europeanUnion.large(),
+            "",//f.airport.europeanUnion.large(),
             "",//LoremIpsum(20).values.joinToString(""),
             "",
             "",
@@ -189,15 +200,15 @@ private fun PreviewSchoolCard() {
 )
 @Composable
 private fun PreviewSchoolCardDarkMode() {
-    val f = Faker(fakerConfig { locale = "de_CH" })
+    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         SchoolCard(isOpen = true, school = School(
             UUID.randomUUID(),
-            f.airport.europeanUnion.large(),
+            "",//f.airport.europeanUnion.large(),
             LoremIpsum(20).values.joinToString(""),
-            f.address.streetAddress(),
-            f.address.postcode(),
-            f.address.city(),
+            "",//f.address.streetAddress(),
+            "",//f.address.postcode(),
+            "",//f.address.city(),
             grade = 3.0
         ), onCheckBoxClick = {}, onLongClick = {}, onEditClick = {}, onDeleteClick = {})
     }

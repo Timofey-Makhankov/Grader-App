@@ -42,8 +42,8 @@ import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
-import io.github.serpro69.kfaker.Faker
-import io.github.serpro69.kfaker.fakerConfig
+//import io.github.serpro69.kfaker.Faker
+//import io.github.serpro69.kfaker.fakerConfig
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -177,11 +177,11 @@ fun ExamCard(
 @Preview(showBackground = false)
 @Composable
 private fun ExamCardPreview() {
-    val f = Faker(fakerConfig { locale = "de_CH" })
+    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ExamCard(exam = Exam(
             id = UUID.randomUUID(),
-            name = f.educator.schoolName(),
+            name = "",//f.educator.schoolName(),
             description = LoremIpsum(20).values.joinToString(""),
             grade = 1.0,
             weight = 1.0,
@@ -194,11 +194,11 @@ private fun ExamCardPreview() {
 @Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ExamCardDarkModePreview() {
-    val f = Faker(fakerConfig { locale = "de_CH" })
+    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ExamCard(exam = Exam(
             id = UUID.randomUUID(),
-            name = f.educator.schoolName(),
+            name = "",//f.educator.schoolName(),
             description = LoremIpsum(20).values.joinToString(""),
             grade = 5.9,
             weight = 1.0,
