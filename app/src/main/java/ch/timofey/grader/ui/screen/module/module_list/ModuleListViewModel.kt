@@ -1,8 +1,11 @@
 package ch.timofey.grader.ui.screen.module.module_list
 
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.db.domain.module.ModuleRepository
@@ -11,10 +14,12 @@ import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
@@ -26,6 +31,7 @@ class ModuleListViewModel @Inject constructor(
     private val repository: ModuleRepository,
     private val divisionRepository: DivisionRepository,
     private val schoolRepository: SchoolRepository,
+    private val dataStore: DataStore<AppSettings>,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val divisionId = savedStateHandle.get<String>("id").orEmpty()
@@ -37,7 +43,15 @@ class ModuleListViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStore.data.collectLatest {
+                _uiState.value = _uiState.value.copy(
+                    showPoints = it.calculatePoints,
+                    swipingEnabled = it.enableSwipeToDelete
+                )
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getAllModulesFromDivisionId(UUID.fromString(divisionId))
                 .collect { moduleList ->
                     _uiState.value =
@@ -58,7 +72,7 @@ class ModuleListViewModel @Inject constructor(
                     }
                 }
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val division = divisionRepository.getDivision(UUID.fromString(divisionId))
             division?.let {
                 val school = schoolRepository.getSchoolById(it.schoolId)
@@ -74,33 +88,33 @@ class ModuleListViewModel @Inject constructor(
     fun onEvent(event: ModuleListEvent) {
         when (event) {
             is ModuleListEvent.OnFABClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteModuleItems()
                 }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateModuleScreen.withArgs(divisionId)))
             }
 
             is ModuleListEvent.OnReturnBack -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteModuleItems()
                 }
                 sendUiEvent(UiEvent.PopBackStack)
             }
 
             is ModuleListEvent.OnDeleteItems -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteModuleItems()
                 }
                 sendUiEvent(UiEvent.Navigate(route = event.route))
             }
 
             is ModuleListEvent.OnCheckChange -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateIsSelectedModule(event.id, event.value)
                 }
             }
             is ModuleListEvent.OnDeleteButtonClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteModule(event.moduleId, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
@@ -111,7 +125,7 @@ class ModuleListViewModel @Inject constructor(
             }
 
             is ModuleListEvent.OnSwipeDelete -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteModule(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
@@ -122,7 +136,7 @@ class ModuleListViewModel @Inject constructor(
             }
 
             is ModuleListEvent.OnUndoDeleteClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteModule(event.id, false)
                 }
             }
@@ -144,7 +158,7 @@ class ModuleListViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

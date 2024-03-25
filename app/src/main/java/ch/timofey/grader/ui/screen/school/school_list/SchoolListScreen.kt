@@ -48,6 +48,7 @@ import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.SnackBarMessage
 import ch.timofey.grader.ui.utils.UiEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -66,7 +67,7 @@ fun SchoolListScreen(
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
         if (stackEntryValue != null) {
-            this.launch {
+            this.launch (Dispatchers.Main){
                 snackBarHostState.showSnackbar(stackEntryValue)
             }
         }
@@ -80,7 +81,7 @@ fun SchoolListScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
-                    scope.launch {
+                    scope.launch(Dispatchers.Main) {
                         snackBarHostState.currentSnackbarData?.dismiss()
                         val result = snackBarHostState.showSnackbar(
                             message = event.message,
@@ -106,11 +107,11 @@ fun SchoolListScreen(
             if (menuItem.onNavigate != Screen.MainScreen.route) {
                 onEvent(SchoolListEvent.OnDeleteItems(menuItem.onNavigate))
             }
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 drawerState.close()
             }
         }) {
-        Scaffold(//snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        Scaffold(
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
@@ -179,7 +180,7 @@ fun SchoolListScreen(
             topBar = {
                 AppBar(
                     onNavigationIconClick = {
-                        scope.launch {
+                        scope.launch(Dispatchers.Main) {
                             drawerState.open()
                         }
                     },
@@ -208,47 +209,53 @@ fun SchoolListScreen(
                         )
                     )
                 }
-                items(
-                    items = state.schoolList,
-                    key = { school -> school.id },
-                ) { school ->
-                    SchoolItem(school = school, onSwipe = {
-                        deletedSchoolId.value = school.id
-                        onEvent(
-                            SchoolListEvent.OnSwipeDelete(
-                                id = school.id
-                            )
-                        )
-                    }, onCheckBoxClick = {
-                        onEvent(
-                            SchoolListEvent.OnCheckChange(
-                                schoolId = school.id, value = !school.isSelected
-                            )
-                        )
-                    }, onLongClick = {
-                        onNavigate(
-                            UiEvent.Navigate(
-                                Screen.DivisionScreen.withArgs(
-                                    school.id.toString()
+                if (state.swipingEnabled != null){
+                    items(
+                        items = state.schoolList,
+                        key = { school -> school.id },
+                    ) { school ->
+                        SchoolItem(
+                            school = school,
+                            disableSwipe = !state.swipingEnabled,
+                            onSwipe = {
+                                deletedSchoolId.value = school.id
+                                onEvent(
+                                    SchoolListEvent.OnSwipeDelete(
+                                        id = school.id
+                                    )
                                 )
-                            )
-                        )
-                    }, onDeleteClick = {
-                        onEvent(
-                            SchoolListEvent.OnItemClickDelete(
-                                schoolId = school.id
-                            )
-                        )
-                    }, onUpdateClick = {
-                        onNavigate(
-                            UiEvent.Navigate(
-                                Screen.SchoolEditScreen.withArgs(
-                                    school.id.toString()
+                            }, onCheckBoxClick = {
+                                onEvent(
+                                    SchoolListEvent.OnCheckChange(
+                                        schoolId = school.id, value = !school.isSelected
+                                    )
                                 )
-                            )
-                        )
-                    })
+                            }, onLongClick = {
+                                onNavigate(
+                                    UiEvent.Navigate(
+                                        Screen.DivisionScreen.withArgs(
+                                            school.id.toString()
+                                        )
+                                    )
+                                )
+                            }, onDeleteClick = {
+                                onEvent(
+                                    SchoolListEvent.OnItemClickDelete(
+                                        schoolId = school.id
+                                    )
+                                )
+                            }, onUpdateClick = {
+                                onNavigate(
+                                    UiEvent.Navigate(
+                                        Screen.SchoolEditScreen.withArgs(
+                                            school.id.toString()
+                                        )
+                                    )
+                                )
+                            })
+                    }
                 }
+                
             }
 
         }

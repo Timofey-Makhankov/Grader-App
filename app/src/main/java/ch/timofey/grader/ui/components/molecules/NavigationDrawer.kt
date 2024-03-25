@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.MenuItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -50,7 +51,7 @@ fun NavigationDrawer(
                         modifier
                             .padding(MaterialTheme.spacing.medium)
                             .clickable {
-                                scope.launch {
+                                scope.launch(Dispatchers.Main) {
                                     drawerState.close()
                                 }
                             })

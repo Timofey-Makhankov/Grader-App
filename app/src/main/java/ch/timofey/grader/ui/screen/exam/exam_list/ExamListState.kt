@@ -7,5 +7,6 @@ data class ExamListState(
     val locationsTitles: List<String> = emptyList(),
     val averageGrade: String = "",
     val averageGradeIsZero: Boolean? = null,
-    val showPoints: Boolean = false
+    val showPoints: Boolean = false,
+    val swipingEnabled: Boolean? = null,
 )

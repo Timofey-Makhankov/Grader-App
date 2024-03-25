@@ -1,18 +1,24 @@
 package ch.timofey.grader.ui.screen.school.school_list
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.db.AppDatabase
+import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
@@ -20,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SchoolListViewModel @Inject constructor(
-    private val repository: SchoolRepository
+    private val repository: SchoolRepository,
+    private val dataStore: DataStore<AppSettings>,
 ) : ViewModel() {
 
     private val _uiEvent = Channel<UiEvent>()
@@ -30,7 +37,15 @@ class SchoolListViewModel @Inject constructor(
     val uiState: StateFlow<SchoolListState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStore.data.collectLatest {
+                _uiState.value = _uiState.value.copy(
+                    showPoints = it.calculatePoints,
+                    swipingEnabled = it.enableSwipeToDelete
+                )
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getAllSchoolFlows().collect { schoolList ->
                 _uiState.value =
                     _uiState.value.copy(schoolList = schoolList.filter { school -> !school.onDelete })
@@ -53,7 +68,7 @@ class SchoolListViewModel @Inject constructor(
         when (event) {
             is SchoolListEvent.OnCreateSchool -> {
                 Log.d("SchoolListvm-ocs", "trying to delete schools")
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.getAllSchools().filter { school -> school.onDelete }
                         .forEach { school ->
                             Log.d("inside loop ocs", "$school")
@@ -67,7 +82,7 @@ class SchoolListViewModel @Inject constructor(
             is SchoolListEvent.OnDeleteItems -> {
                 println("OnDeleteItems")
                 Log.d("SchoolListvm-odi", "trying to delete schools")
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteSchoolItems()
                     Log.d("odi", "tried to delete SChools")
                 }
@@ -75,7 +90,7 @@ class SchoolListViewModel @Inject constructor(
             }
 
             is SchoolListEvent.OnSwipeDelete -> {
-                viewModelScope.launch {
+                viewModelScope.launch (Dispatchers.IO){
                     repository.updateOnDeleteSchool(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
@@ -86,13 +101,13 @@ class SchoolListViewModel @Inject constructor(
             }
 
             is SchoolListEvent.OnCheckChange -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateIsSelectedSchool(id = event.schoolId, value = event.value)
                 }
             }
 
             is SchoolListEvent.OnItemClickDelete -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteSchool(event.schoolId, true)
                     repository.getAllSchoolFlows().collect { schoolList ->
                         _uiState.value =
@@ -107,7 +122,7 @@ class SchoolListViewModel @Inject constructor(
             }
 
             is SchoolListEvent.OnUndoDeleteClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteSchool(event.schoolId, false)
                 }
             }
@@ -129,7 +144,7 @@ class SchoolListViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

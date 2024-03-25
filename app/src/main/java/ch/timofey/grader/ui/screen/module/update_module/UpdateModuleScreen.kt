@@ -32,6 +32,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.SnackBarMessage
 import ch.timofey.grader.ui.utils.UiEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ fun UpdateModuleScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
-                    scope.launch {
+                    scope.launch (Dispatchers.Main){
                         snackBarHostState.showSnackbar(
                             message = event.message,
                             withDismissAction = event.withDismissAction,

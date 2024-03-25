@@ -7,6 +7,7 @@ import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.exam.ExamValidation
 import ch.timofey.grader.ui.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +35,7 @@ class UpdateExamViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getExamById(UUID.fromString(examId))?.also { exam ->
                 _uiState.value = _uiState.value.copy(
                     currentExam = exam,
@@ -45,11 +46,12 @@ class UpdateExamViewModel @Inject constructor(
                     dateTaken = exam.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
                 )
             } ?: run {
-                sendUiEvents(
+                /*sendUiEvents(
                     UiEvent.PopBackStack, UiEvent.ShowSnackBar(
                         message = "Module was unable to be found", withDismissAction = true
                     )
-                )
+                )*/
+                sendUiEvent(UiEvent.PopBackStack)
             }
         }
     }
@@ -106,7 +108,7 @@ class UpdateExamViewModel @Inject constructor(
                         weight = _uiState.value.weight.toDouble(),
                         date = LocalDate.parse(_uiState.value.dateTaken, DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
                     )
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         repository.updateExam(updatedExam)
                         sendUiEvent(UiEvent.PopBackStack)
                         sendUiEvent(UiEvent.ShowSnackBar("Exam was successfully updated"))
@@ -123,14 +125,14 @@ class UpdateExamViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }
 
     private fun sendUiEvents(vararg events: UiEvent) {
         for (event in events) {
-            viewModelScope.launch {
+            viewModelScope.launch (Dispatchers.Main){
                 _uiEvent.send(event)
             }
         }

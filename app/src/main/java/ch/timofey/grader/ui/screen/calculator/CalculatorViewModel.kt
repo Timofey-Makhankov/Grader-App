@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -85,7 +86,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

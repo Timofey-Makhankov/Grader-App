@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.AppSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class MainViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MainState())
     val uiState: StateFlow<MainState> = _uiState
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             dataStore.data.collect{ appSettings ->
                 _uiState.value = _uiState.value.copy(theme = appSettings.theme)
             }

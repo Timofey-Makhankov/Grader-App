@@ -9,6 +9,7 @@ import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.db.domain.division.DivisionValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +32,7 @@ class UpdateDivisionViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getDivision(UUID.fromString(divisionId)).apply {
                 this?.let { division ->
                     _uiState.value = _uiState.value.copy(
@@ -90,24 +91,18 @@ class UpdateDivisionViewModel @Inject constructor(
                         schoolYear = _uiState.value.year.toInt()
                     )
 
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         repository.updateDivision(updatedDivision)
                     }
                     sendUiEvent(UiEvent.PopBackStack)
-                    Toast.makeText(GraderApp.getContext(), "Division Updated", Toast.LENGTH_SHORT)
-                        .show()
                 } else {
-                    Toast.makeText(
-                        GraderApp.getContext(),
-                        "Division was unable to be Updated",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    sendUiEvent(UiEvent.ShowSnackBar("Division was unable to be Updated",true))
                 }
             }
         }
     }
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

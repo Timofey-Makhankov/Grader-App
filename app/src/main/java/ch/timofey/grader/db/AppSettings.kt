@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 data class AppSettings(
     val theme: AppTheme = AppTheme.DEVICE_THEME,
     val calculatePoints: Boolean = false,
-    val doublePoints: Boolean = false
+    val doublePoints: Boolean = false,
+    val enableSwipeToDelete: Boolean = true,
 )
 enum class AppTheme(val title: String) {
     DARK_MODE("Dark Mode"),

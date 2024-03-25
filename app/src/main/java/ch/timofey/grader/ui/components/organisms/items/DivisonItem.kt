@@ -28,39 +28,11 @@ fun DivisionItem(
     onDeleteClick: () -> Unit,
     onUpdateClick: () -> Unit,
     onLongClick: () -> Unit,
+    disableSwipe: Boolean = false,
     division: Division
 ) {
     val currentItem by rememberUpdatedState(division)
-    val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
-        when (dismissValue) {
-            SwipeToDismissBoxValue.EndToStart -> {
-                onSwipe(currentItem)
-            }
-            else -> Unit
-        }
-        true
-    }, positionalThreshold = { value -> (value / 8) })
-    SwipeToDismissBox(
-        modifier = Modifier,
-        enableDismissFromEndToStart = true,
-        state = dismissState,
-        backgroundContent = {
-            val isVisible = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart
-            AnimatedVisibility(
-                visible = isVisible, enter = fadeIn(
-                    animationSpec = TweenSpec(
-                        durationMillis = 400
-                    )
-                ), exit = fadeOut(
-                    animationSpec = TweenSpec(
-                        durationMillis = 400
-                    )
-                )
-            ) {
-                DismissDeleteBackground(dismissState)
-            }
-        }
-    ){
+    val card: @Composable () -> Unit = {
         DivisionCard(
             modifier = Modifier.padding(MaterialTheme.spacing.small).then(modifier),
             division = division,
@@ -70,4 +42,42 @@ fun DivisionItem(
             onDeleteClick = onDeleteClick
         )
     }
+    if (!disableSwipe) {
+        val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
+            when (dismissValue) {
+                SwipeToDismissBoxValue.EndToStart -> {
+                    onSwipe(currentItem)
+                }
+                else -> Unit
+            }
+            true
+        }, positionalThreshold = { value -> (value / 8) })
+        SwipeToDismissBox(
+            modifier = Modifier,
+            enableDismissFromEndToStart = true,
+            enableDismissFromStartToEnd = false,
+            state = dismissState,
+            backgroundContent = {
+                val isVisible = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart
+                AnimatedVisibility(
+                    visible = isVisible, enter = fadeIn(
+                        animationSpec = TweenSpec(
+                            durationMillis = 400
+                        )
+                    ), exit = fadeOut(
+                        animationSpec = TweenSpec(
+                            durationMillis = 400
+                        )
+                    )
+                ) {
+                    DismissDeleteBackground(dismissState)
+                }
+            }
+        ){
+            card()
+        }
+    } else {
+        card()
+    }
+
 }

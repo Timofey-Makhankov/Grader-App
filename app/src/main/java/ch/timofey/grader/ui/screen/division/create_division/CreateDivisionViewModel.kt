@@ -10,6 +10,7 @@ import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.db.domain.division.DivisionValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -74,25 +75,19 @@ class CreateDivisionViewModel @Inject constructor(
                         schoolId = UUID.fromString(id),
 
                         )
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         repository.saveDivision(newDivision)
                     }
                     sendUiEvent(UiEvent.PopBackStack)
-                    //Toast.makeText(GraderApp.getContext(), "Division Created", Toast.LENGTH_SHORT)
-                    //   .show()
                 } else {
-                    Toast.makeText(
-                        GraderApp.getContext(),
-                        "Division was unable to be created",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    sendUiEvent((UiEvent.ShowSnackBar("Division was unable to be created", true)))
                 }
             }
         }
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

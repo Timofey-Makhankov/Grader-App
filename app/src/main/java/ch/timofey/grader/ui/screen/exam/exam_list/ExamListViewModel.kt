@@ -1,8 +1,10 @@
 package ch.timofey.grader.ui.screen.exam.exam_list
 
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.exam.ExamRepository
@@ -12,9 +14,11 @@ import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.utils.UiEvent
 import ch.timofey.grader.ui.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
@@ -27,6 +31,7 @@ class ExamListViewModel @Inject constructor(
     private val moduleRepository: ModuleRepository,
     private val divisionRepository: DivisionRepository,
     private val schoolRepository: SchoolRepository,
+    private val dataStore: DataStore<AppSettings>,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val moduleId = savedStateHandle.get<String>("id").orEmpty()
@@ -38,7 +43,15 @@ class ExamListViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStore.data.collectLatest {
+                _uiState.value = _uiState.value.copy(
+                    showPoints = it.calculatePoints,
+                    swipingEnabled = it.enableSwipeToDelete
+                )
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getAllExamsFromModuleId(UUID.fromString(moduleId)).collect { examList ->
                 println(examList)
                 println(moduleId)
@@ -58,7 +71,7 @@ class ExamListViewModel @Inject constructor(
                 }
             }
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             moduleRepository.getModuleById(UUID.fromString(moduleId))?.let { module ->
                 divisionRepository.getDivision(module.divisionId)?.let { division ->
                     schoolRepository.getSchoolById(division.schoolId)?.let { school ->
@@ -76,34 +89,34 @@ class ExamListViewModel @Inject constructor(
     fun onEvent(event: ExamListEvent) {
         when (event) {
             is ExamListEvent.OnBackButtonClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteExamItems()
                 }
                 sendUiEvent(UiEvent.PopBackStack)
             }
 
             is ExamListEvent.OnFABClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteExamItems()
                 }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateExamScreen.withArgs(moduleId)))
             }
 
             is ExamListEvent.OnDeleteItems -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     deleteExamItems()
                 }
                 sendUiEvent(UiEvent.Navigate(event.route))
             }
 
             is ExamListEvent.OnCheckChange -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateIsSelectedExam(event.id, event.value)
                 }
             }
 
             is ExamListEvent.OnDeleteButtonClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDelete(event.examId, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
@@ -114,7 +127,7 @@ class ExamListViewModel @Inject constructor(
             }
 
             is ExamListEvent.OnSwipeDelete -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDelete(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
@@ -125,7 +138,7 @@ class ExamListViewModel @Inject constructor(
             }
 
             is ExamListEvent.OnUndoDeleteClick -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDelete(event.id, false)
                 }
             }
@@ -133,7 +146,7 @@ class ExamListViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
         }
     }

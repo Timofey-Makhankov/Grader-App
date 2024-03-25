@@ -46,6 +46,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.UiEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -65,7 +66,7 @@ fun DivisionListScreen(
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
         if (stackEntryValue != null) {
-            this.launch {
+            this.launch(Dispatchers.Main) {
                 snackBarHostState.showSnackbar(stackEntryValue)
             }
         }
@@ -83,7 +84,7 @@ fun DivisionListScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
-                    scope.launch {
+                    scope.launch(Dispatchers.Main) {
                         val result = snackBarHostState.showSnackbar(
                             message = event.message,
                             actionLabel = event.action,
@@ -104,11 +105,11 @@ fun DivisionListScreen(
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
             onEvent(DivisionListEvent.OnDeleteItems(menuItem.onNavigate))
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 drawerState.close()
             }
         }) {
-        Scaffold(//snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        Scaffold(
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {
@@ -204,39 +205,45 @@ fun DivisionListScreen(
                         )
                     }
                 }
-                items(items = state.divisionList, key = { division -> division.id }) { division ->
-                    DivisionItem(division = division,
-                        onSwipe = { divisionItem ->
-                            deletedDivisionId.value = divisionItem.id
-                            onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
-                        },
-                        onCheckBoxClick = {
-                            onEvent(
-                                DivisionListEvent.OnCheckChange(
-                                    id = division.id, value = !division.isSelected
-                                )
-                            )
-                        },
-                        onLongClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.ModuleScreen.withArgs(
-                                        division.id.toString()
+                if (state.swipingEnabled != null) {
+                    items(
+                        items = state.divisionList,
+                        key = { division -> division.id }) { division ->
+                        DivisionItem(division = division,
+                            disableSwipe = !state.swipingEnabled,
+                            onSwipe = { divisionItem ->
+                                deletedDivisionId.value = divisionItem.id
+                                onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
+                            },
+                            onCheckBoxClick = {
+                                onEvent(
+                                    DivisionListEvent.OnCheckChange(
+                                        id = division.id, value = !division.isSelected
                                     )
                                 )
-                            )
-                        },
-                        onDeleteClick = { DivisionListEvent.OnDeleteIconClick(division.id) },
-                        onUpdateClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.DivisionEditScreen.withArgs(
-                                        division.id.toString()
+                            },
+                            onLongClick = {
+                                onNavigate(
+                                    UiEvent.Navigate(
+                                        Screen.ModuleScreen.withArgs(
+                                            division.id.toString()
+                                        )
                                     )
                                 )
-                            )
-                        })
+                            },
+                            onDeleteClick = { DivisionListEvent.OnDeleteIconClick(division.id) },
+                            onUpdateClick = {
+                                onNavigate(
+                                    UiEvent.Navigate(
+                                        Screen.DivisionEditScreen.withArgs(
+                                            division.id.toString()
+                                        )
+                                    )
+                                )
+                            })
+                    }
                 }
+
             }
         }
     }

@@ -17,7 +17,7 @@ interface DivisionDao {
      * @param division entity
      * @see Division
      */
-    @Insert(entity = Division::class)
+    @Insert(entity = Division::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun save(division: Division)
 
     /**
