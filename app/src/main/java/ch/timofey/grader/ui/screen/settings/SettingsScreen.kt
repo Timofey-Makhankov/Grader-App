@@ -82,6 +82,7 @@ fun SettingsScreen(
     state: SettingsState,
     onEvent: (SettingsEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
+    snackBarHostState: SnackbarHostState,
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -91,7 +92,6 @@ fun SettingsScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
             if (uri == null) return@rememberLauncherForActivityResult
             val reportData = Json.encodeToString(DeviceInfo.serializer(), DeviceInfo())
-            Log.d("CREATE-REPORT", reportData)
             context.contentResolver.openOutputStream(uri)?.use { file: OutputStream ->
                 file.bufferedWriter().use { it.write(reportData) }
             }
@@ -100,18 +100,15 @@ fun SettingsScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
             if (uri == null) return@rememberLauncherForActivityResult
             context.contentResolver.openInputStream(uri)?.use { file: InputStream ->
-                //Log.d("chosen file", file.bufferedReader().use { it.readText() })
                 onEvent(SettingsEvent.OnLoadBackupFile(file))
             }
         }
     val createBackup =
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
             if (uri == null) return@rememberLauncherForActivityResult
-            //val reportData = Json.encodeToString(DeviceInfo.serializer(), DeviceInfo())
-            //Log.d("CREATE-REPORT", reportData)
+            Log.d("SettingsScreen", uri.pathSegments[1])
             context.contentResolver.openOutputStream(uri)?.use { file: OutputStream ->
-                //file.bufferedWriter().use { it.write(reportData) }
-                onEvent(SettingsEvent.OnCreateBackupFile(file))
+                onEvent(SettingsEvent.OnCreateBackupFile(file, uri.pathSegments[1].split(":")[1]))
             }
         }
     LaunchedEffect(key1 = true) {
@@ -119,6 +116,18 @@ fun SettingsScreen(
             when (event) {
                 is UiEvent.Navigate -> {
                     onNavigate(event)
+                }
+
+                is UiEvent.ShowSnackBar -> {
+                    scope.launch(Dispatchers.Main) {
+                        snackBarHostState.currentSnackbarData?.dismiss()
+                        snackBarHostState.showSnackbar(
+                            message = event.message,
+                            actionLabel = event.action,
+                            withDismissAction = event.withDismissAction,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
                 }
 
                 else -> Unit
@@ -147,6 +156,7 @@ fun SettingsScreen(
         }) {
             Column(
                 modifier = Modifier
+                    .verticalScroll(state = rememberScrollState())
                     .padding(it)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -219,34 +229,10 @@ fun SettingsScreen(
                     value = state.enableSwipeToDelete,
                     name = "Enable Swipe Right for Deletion",
                     dialog = {
-                        Dialog(
-                            onDismissRequest = { it() },
-                            properties = DialogProperties(
-                                dismissOnBackPress = true,
-                                dismissOnClickOutside = true,
-                                usePlatformDefaultWidth = true,
-                            )
-                        ) {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = MaterialTheme.spacing.medium),
-                                shape = MaterialTheme.shapes.medium
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.Start,
-                                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small)
-                                ) {
-                                    Text(text = "This is a description")
-                                    Row{
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        TextButton(onClick = { it() }) {
-                                            Text(text = "Close")
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        InformationDialog(
+                            onDismiss = { it() },
+                            text = "Enable Left Swipe to Delete a given on all List Screens. Upon deletion, it will show you a Snack bar of the deleted Item and can be undone"
+                        )
                     },
                     showExtraInformation = true
                 )
@@ -276,34 +262,10 @@ fun SettingsScreen(
                     value = state.calculatePointsState,
                     name = "Calculate Points from Grade",
                     dialog = {
-                        Dialog(
-                            onDismissRequest = { it() },
-                            properties = DialogProperties(
-                                dismissOnBackPress = true,
-                                dismissOnClickOutside = true,
-                                usePlatformDefaultWidth = true,
-                            )
-                        ) {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = MaterialTheme.spacing.medium),
-                                shape = MaterialTheme.shapes.medium
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.Start,
-                                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small)
-                                ) {
-                                    Text(text = "This is a description")
-                                    Row{
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        TextButton(onClick = { it() }) {
-                                            Text(text = "Close")
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        InformationDialog(
+                            onDismiss = { it() },
+                            text = "This is a description"
+                        )
                     },
                     showExtraInformation = true
                 )
@@ -315,42 +277,45 @@ fun SettingsScreen(
                     name = "Double Calculated Points",
                     extraInfo = if (!state.calculatePointsState) "Enable 'Calculate Points' to enable setting" else "",
                     dialog = {
-                        Dialog(
-                            onDismissRequest = { it() },
-                            properties = DialogProperties(
-                                dismissOnBackPress = true,
-                                dismissOnClickOutside = true,
-                                usePlatformDefaultWidth = true,
-                            )
-                        ) {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = MaterialTheme.spacing.medium),
-                                shape = MaterialTheme.shapes.medium
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.Start,
-                                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small)
-                                ) {
-                                    Text(text = "This is a description")
-                                    Row{
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        TextButton(onClick = { it() }) {
-                                            Text(text = "Close")
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        InformationDialog(
+                            onDismiss = { it() },
+                            text = "This is a description"
+                        )
                     },
                     showExtraInformation = true
                 )
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = MaterialTheme.spacing.medium,
+                            vertical = MaterialTheme.spacing.medium
+                        )
+                        .fillMaxWidth(),
+                    value = state.minimumGrade,
+                    singleLine = true,
+                    isError = !state.validMinimumGrade,
+                    label = {
+                        Text(text = "Minimum Grade for Calculating Points")
+                    },
+                    supportingText = {
+                        if (!state.validMinimumGrade) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = state.errorMessageMinimumGrade,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    onValueChange = { value -> onEvent(SettingsEvent.OnMinimumGradeChange(value))})
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)//, vertical = MaterialTheme.spacing.extraSmall)
                 ) {
-                    Text(text = "Clear Data from the Device", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = "Clear Data from the Device",
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(colors = ButtonDefaults.textButtonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -359,7 +324,6 @@ fun SettingsScreen(
                         Text(text = "Clear Data")
                     }
                 }
-
                 Spacer(Modifier.height(MaterialTheme.spacing.large))
                 Text(
                     "Backup",
@@ -384,7 +348,11 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
-                    Text(text = "Create Application Backup", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(0.6f))
+                    Text(
+                        text = "Create Application Backup",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(0.6f)
+                    )
                     Button(
                         modifier = Modifier.weight(0.4f),
                         onClick = { createBackup.launch("grader-backup-${LocalDate.now()}") }) {
@@ -395,7 +363,11 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
-                    Text(text = "Load Backup from File", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(0.6f))
+                    Text(
+                        text = "Load Backup from File",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(0.6f)
+                    )
                     Button(
                         modifier = Modifier.weight(0.4f),
                         onClick = { loadBackup.launch(arrayOf("application/json")) }) {
@@ -406,7 +378,11 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
-                    Text(text = "Create Application Report", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(0.6f))
+                    Text(
+                        text = "Create Application Report",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(0.6f)
+                    )
                     Button(
                         modifier = Modifier.weight(0.4f),
                         onClick = { createReport.launch("report-${LocalDateTime.now()}.json") }) {
@@ -422,11 +398,14 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenPreview() {
     GraderTheme {
-        SettingsScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+        SettingsScreen(
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             state = SettingsState(appTheme = AppTheme.DEVICE_THEME, calculatePointsState = true),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onNavigate = {})
+            onNavigate = {},
+            snackBarHostState = SnackbarHostState()
+        )
     }
 }
 
@@ -434,10 +413,13 @@ private fun SettingsScreenPreview() {
 @Composable
 private fun SettingsScreenDarkModePreview() {
     GraderTheme {
-        SettingsScreen(drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+        SettingsScreen(
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             state = SettingsState(appTheme = AppTheme.LIGHT_MODE),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onNavigate = {})
+            onNavigate = {},
+            snackBarHostState = SnackbarHostState()
+        )
     }
 }
