@@ -101,6 +101,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
+                snackBarHostState = snackBarHostState,
                 onNavigate = {
                     navController.navigate(it.route)
                 })

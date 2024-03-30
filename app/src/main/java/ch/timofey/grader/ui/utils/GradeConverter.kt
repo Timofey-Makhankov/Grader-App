@@ -35,7 +35,7 @@ fun roundToPointFive(num: Double): Double {
 }
 
 fun calculatePointsFromGrade(grade: Double, minimumGrade: Double): Double {
-    return minimumGrade - grade;
+    return grade - minimumGrade;
 }
 
 fun calculateDoublePointsFromGrade(grade: Double, minimumGrade: Double): Double {

@@ -45,8 +45,8 @@ object AppModule {
     fun provideTodoDatabase(app: Application): AppDatabase {
         return Room.databaseBuilder(
             app, AppDatabase::class.java, "grader_database"
-        ).allowMainThreadQueries()
-            .build() // TODO I have to look into the allowMainThreadQueries function
+        ).allowMainThreadQueries() // Only Required, when Writing Room DB Data to a file
+            .build()
     }
 
     @Provides
@@ -59,6 +59,7 @@ object AppModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
     }
+
     @Provides
     @Singleton
     fun provideDivisionRepository(db: AppDatabase): DivisionRepository {

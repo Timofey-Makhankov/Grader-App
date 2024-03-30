@@ -1,7 +1,6 @@
 package ch.timofey.grader.ui.screen.settings
 
 import android.app.Application
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +13,7 @@ import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.validation.Validate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -49,7 +49,8 @@ class SettingsViewModel @Inject constructor(
                     appTheme = it.theme,
                     calculatePointsState = it.calculatePoints,
                     doublePointsState = it.doublePoints,
-                    enableSwipeToDelete = it.enableSwipeToDelete
+                    enableSwipeToDelete = it.enableSwipeToDelete,
+                    minimumGrade = it.minimumGrade.toString()
                 )
             }
         }
@@ -60,14 +61,23 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvent.OnThemeChange -> {
                 _uiState.value = _uiState.value.copy(appTheme = event.theme)
                 viewModelScope.launch(Dispatchers.IO) {
-                    updateDataStore()
+                    dataStore.updateData {
+                        it.copy(
+                            theme = _uiState.value.appTheme
+                        )
+                    }
                 }
             }
 
             is SettingsEvent.OnDeleteDatabaseButtonClick -> {
-                //Log.d("OnDeleteDatabaseButtonClick", "Clearing Database")
-                viewModelScope.launch (Dispatchers.IO){
+                viewModelScope.launch(Dispatchers.IO) {
                     database.clearAllTables()
+                    sendUiEvent(
+                        UiEvent.ShowSnackBar(
+                            "Data has been cleared from the Application Database",
+                            true
+                        )
+                    )
                 }
             }
 
@@ -77,26 +87,35 @@ class SettingsViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(doublePointsState = false)
                 }
                 viewModelScope.launch(Dispatchers.IO) {
-                    updateDataStore()
+                    dataStore.updateData {
+                        it.copy(
+                            calculatePoints = _uiState.value.calculatePointsState,
+                            doublePoints = false
+                        )
+                    }
                 }
             }
 
             is SettingsEvent.OnDoublePointsChange -> {
                 _uiState.value = _uiState.value.copy(doublePointsState = event.value)
                 viewModelScope.launch(Dispatchers.IO) {
-                    updateDataStore()
+                    dataStore.updateData {
+                        it.copy(
+                            doublePoints = _uiState.value.doublePointsState
+                        )
+                    }
                 }
             }
 
             is SettingsEvent.OnLoadBackupFile -> {
                 val data = event.file.bufferedReader().use { it.readText() }
                 val result = manager.readBackup(data)
-                Log.d("SettingsViewModel-OnLoadBackupFile", result.toString())
-                viewModelScope.launch (Dispatchers.IO){
+                viewModelScope.launch(Dispatchers.IO) {
                     result.schools.forEach { schoolRepository.saveSchool(it) }
                     result.divisions.forEach { divisionRepository.saveDivision(it) }
                     result.modules.forEach { moduleRepository.saveModule(it) }
                     result.exams.forEach { examRepository.saveExam(it) }
+                    sendUiEvent(UiEvent.ShowSnackBar("Backup File was successfully Loaded", true))
                 }
             }
 
@@ -110,12 +129,55 @@ class SettingsViewModel @Inject constructor(
                 val result = manager.createBackup(backup)
 
                 event.file.bufferedWriter().use { it.write(result) }
+
+                sendUiEvent(
+                    UiEvent.ShowSnackBar(
+                        "Backup File was created in:\n${event.fileLocation}",
+                        true
+                    )
+                )
             }
 
             is SettingsEvent.OnEnableSwipeToDeleteChange -> {
                 _uiState.value = _uiState.value.copy(enableSwipeToDelete = event.value)
-                viewModelScope.launch (Dispatchers.IO){
-                    updateDataStore()
+                viewModelScope.launch(Dispatchers.IO) {
+                    dataStore.updateData {
+                        it.copy(
+                            enableSwipeToDelete = _uiState.value.enableSwipeToDelete
+                        )
+                    }
+                }
+            }
+
+            is SettingsEvent.OnMinimumGradeChange -> {
+                if (event.grade != "") {
+                    if (Validate.isDouble(event.grade)) {
+                        _uiState.value = _uiState.value.copy(minimumGrade = event.grade)
+                        viewModelScope.launch(Dispatchers.IO) {
+                            dataStore.updateData {
+                                it.copy(
+                                    minimumGrade = _uiState.value.minimumGrade.toDouble(),
+                                )
+                            }
+                        }
+                        _uiState.value = _uiState.value.copy(
+                            minimumGrade = event.grade,
+                            validMinimumGrade = true,
+                            errorMessageMinimumGrade = ""
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            minimumGrade = event.grade,
+                            validMinimumGrade = false,
+                            errorMessageMinimumGrade = "Grade is not a Number"
+                        )
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        minimumGrade = event.grade,
+                        validMinimumGrade = false,
+                        errorMessageMinimumGrade = "Enter a Valid Grade"
+                    )
                 }
             }
         }
@@ -124,17 +186,6 @@ class SettingsViewModel @Inject constructor(
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
-        }
-    }
-
-    private suspend fun updateDataStore() {
-        dataStore.updateData {
-            it.copy(
-                theme = _uiState.value.appTheme,
-                calculatePoints = _uiState.value.calculatePointsState,
-                doublePoints = _uiState.value.doublePointsState,
-                enableSwipeToDelete = _uiState.value.enableSwipeToDelete
-            )
         }
     }
 }

@@ -6,5 +6,8 @@ data class SettingsState(
     val calculatePointsState: Boolean = false,
     val doublePointsState: Boolean = false,
     val appTheme: AppTheme = AppTheme.DEVICE_THEME,
-    val enableSwipeToDelete: Boolean = true
+    val enableSwipeToDelete: Boolean = false,
+    val minimumGrade: String = "4.0",
+    val validMinimumGrade: Boolean = true,
+    val errorMessageMinimumGrade: String = "",
 )

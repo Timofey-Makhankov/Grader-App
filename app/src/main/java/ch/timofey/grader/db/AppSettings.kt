@@ -7,7 +7,8 @@ data class AppSettings(
     val theme: AppTheme = AppTheme.DEVICE_THEME,
     val calculatePoints: Boolean = false,
     val doublePoints: Boolean = false,
-    val enableSwipeToDelete: Boolean = true,
+    val enableSwipeToDelete: Boolean = false,
+    val minimumGrade: Double = 4.0,
 )
 enum class AppTheme(val title: String) {
     DARK_MODE("Dark Mode"),

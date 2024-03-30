@@ -42,16 +42,19 @@ import ch.timofey.grader.ui.components.atom.FloatingActionButton
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.organisms.AppBar
+import ch.timofey.grader.ui.components.organisms.BottomAppBar
 import ch.timofey.grader.ui.components.organisms.items.SchoolItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.ui.utils.NavigationDrawerItems
 import ch.timofey.grader.ui.utils.SnackBarMessage
 import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.ui.utils.calculatePointsFromGrade
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import java.math.RoundingMode
 import java.util.UUID
 
 @Composable
@@ -60,8 +63,7 @@ fun SchoolListScreen(
     state: SchoolListState,
     onEvent: (SchoolListEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
-    onNavigate: (UiEvent.Navigate) -> Unit,
-    snackBarHostState: SnackbarHostState,
+    onNavigate: (UiEvent.Navigate) -> Unit, snackBarHostState: SnackbarHostState,
     stackEntryValue: SnackbarVisuals?
 ) {
     val scope = rememberCoroutineScope()
@@ -167,7 +169,16 @@ fun SchoolListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        ch.timofey.grader.ui.components.organisms.BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(
+                            text = "Average Grade: ${state.averageGrade}",
+                            subText = if (state.minimumGrade != null && state.showPoints == true) {
+                                "Points: ${
+                                    calculatePointsFromGrade(
+                                        state.averageGrade.toDouble(),
+                                        state.minimumGrade.toDouble()
+                                    ).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                                }"
+                            } else null,
                             floatingActionButton = {
                                 FloatingActionButton(
                                     onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },

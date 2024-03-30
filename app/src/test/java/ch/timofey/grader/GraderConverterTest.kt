@@ -1,5 +1,6 @@
 package ch.timofey.grader
 
+import ch.timofey.grader.ui.utils.calculatePointsFromGrade
 import ch.timofey.grader.ui.utils.exception.UnevenListDistributionException
 import ch.timofey.grader.ui.utils.getAverage
 import ch.timofey.grader.ui.utils.roundToPointFive
@@ -76,4 +77,24 @@ class GraderConverterTest {
     }
 
     // Points calculation
+
+    @Test
+    fun returnPositivePointsValue() {
+        assertEquals(1.0, calculatePointsFromGrade(5.0, 4.0), 0.001)
+    }
+
+    @Test
+    fun returnNegativePointsValue() {
+        assertEquals(-1.0, calculatePointsFromGrade(3.0, 4.0), 0.001)
+    }
+
+    @Test
+    fun returnZeroPointsValue() {
+        assertEquals(0.0, calculatePointsFromGrade(4.0, 4.0), 0.001)
+    }
+
+    @Test
+    fun returnHalfPositivePointsValue() {
+        assertEquals(0.5, calculatePointsFromGrade(4.5, 4.0), 0.001)
+    }
 }
