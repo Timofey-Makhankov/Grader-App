@@ -9,7 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -45,8 +45,6 @@ import ch.timofey.grader.ui.utils.SnackBarMessage
 import ch.timofey.grader.ui.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +63,7 @@ fun UpdateExamScreen(
                 is UiEvent.PopBackStack -> {
                     onPopBackStack(SnackBarMessage("Exam was updated", withDismissAction = true))
                 }
+
                 else -> Unit
             }
         }
@@ -72,7 +71,7 @@ fun UpdateExamScreen(
     Scaffold(topBar = {
         AppBar(
             onNavigationIconClick = { onEvent(UpdateExamEvent.OnBackButtonPress) },
-            actionIcon = Icons.Default.ArrowBack,
+            actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
             actionContentDescription = "Go back to previous Screen"
         )
     }) {

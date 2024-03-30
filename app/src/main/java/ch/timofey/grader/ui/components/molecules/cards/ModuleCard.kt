@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -46,8 +45,8 @@ import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
-import io.github.serpro69.kfaker.Faker
-import io.github.serpro69.kfaker.fakerConfig
+//import io.github.serpro69.kfaker.Faker
+//import io.github.serpro69.kfaker.fakerConfig
 import java.util.UUID
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -62,6 +61,7 @@ fun ModuleCard(
     isOpen: Boolean = false,
 ) {
     val checkedState = remember { mutableStateOf(module.isSelected) }
+    val mutableInteractionSource = remember { MutableInteractionSource() }
     val expanded = remember { mutableStateOf(isOpen) }
     Card(
         modifier = Modifier
@@ -70,7 +70,7 @@ fun ModuleCard(
                     durationMillis = 300, easing = LinearOutSlowInEasing
                 )
             )
-            .combinedClickable(interactionSource = MutableInteractionSource(),
+            .combinedClickable(interactionSource = mutableInteractionSource,
                 indication = null,
                 onClick = { expanded.value = !expanded.value },
                 onLongClick = { onLongClick() })
@@ -181,11 +181,11 @@ fun ModuleCard(
 @Preview(showBackground = false)
 @Composable
 private fun ModuleCardPreview() {
-    val f = Faker(fakerConfig { locale = "de_CH" })
+    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ModuleCard(module = Module(
             id = UUID.randomUUID(),
-            name = f.science.branch.formalBasic(),
+            name = "",//f.science.branch.formalBasic(),
             description = LoremIpsum().values.joinToString(""),
             isSelected = false,
             divisionId = UUID.randomUUID(),
@@ -199,17 +199,17 @@ private fun ModuleCardPreview() {
 @Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ModuleCardDarkModePreview() {
-    val f = Faker(fakerConfig { locale = "de_CH" })
+    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         Column {
             ModuleCard(module = Module(
                 id = UUID.randomUUID(),
-                name = f.science.branch.formalApplied(),
+                name = "",//f.science.branch.formalApplied(),
                 description = LoremIpsum().values.joinToString(""),
                 isSelected = true,
                 divisionId = UUID.randomUUID(),
-                teacherFirstname = f.name.firstName(),
-                teacherLastname = f.name.lastName(),
+                teacherFirstname = "",//f.name.firstName(),
+                teacherLastname = "",//f.name.lastName(),
                 grade = 3.9
             ),
                 isOpen = true,
@@ -219,12 +219,12 @@ private fun ModuleCardDarkModePreview() {
                 onEditClick = {})
             ModuleCard(module = Module(
                 id = UUID.randomUUID(),
-                name = f.science.branch.formalApplied(),
+                name = "",//f.science.branch.formalApplied(),
                 description = "",
                 isSelected = true,
                 divisionId = UUID.randomUUID(),
-                teacherFirstname = f.name.firstName(),
-                teacherLastname = f.name.lastName(),
+                teacherFirstname = "",//f.name.firstName(),
+                teacherLastname = "",//f.name.lastName(),
                 grade = 3.9
             ),
                 isOpen = true,

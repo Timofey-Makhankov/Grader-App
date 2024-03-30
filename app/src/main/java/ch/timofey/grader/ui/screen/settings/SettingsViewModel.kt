@@ -127,7 +127,6 @@ class SettingsViewModel @Inject constructor(
 
                 val backup = BackupData(schools, divisions, modules, exams)
                 val result = manager.createBackup(backup)
-
                 event.file.bufferedWriter().use { it.write(result) }
 
                 sendUiEvent(

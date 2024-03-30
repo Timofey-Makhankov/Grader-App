@@ -47,6 +47,7 @@ fun DivisionCard(
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
     val checkedState = remember { mutableStateOf(division.isSelected) }
+    val mutableInteractionSource = remember { MutableInteractionSource() }
     val expanded = remember { mutableStateOf(isOpen) }
     Card(
         modifier = Modifier
@@ -56,7 +57,7 @@ fun DivisionCard(
                 )
             )
             .combinedClickable(
-                interactionSource = MutableInteractionSource(),
+                interactionSource = mutableInteractionSource,
                 indication = null,
                 onClick = { expanded.value = !expanded.value },
                 onLongClick = { onLongClick() },
