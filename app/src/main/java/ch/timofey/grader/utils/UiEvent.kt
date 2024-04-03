@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.utils
+package ch.timofey.grader.utils
 
 sealed class UiEvent {
     data object PopBackStack : UiEvent()

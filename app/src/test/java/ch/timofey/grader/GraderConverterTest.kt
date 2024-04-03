@@ -1,9 +1,9 @@
 package ch.timofey.grader
 
-import ch.timofey.grader.ui.utils.calculatePointsFromGrade
-import ch.timofey.grader.ui.utils.exception.UnevenListDistributionException
-import ch.timofey.grader.ui.utils.getAverage
-import ch.timofey.grader.ui.utils.roundToPointFive
+import ch.timofey.grader.utils.calculatePointsFromGrade
+import ch.timofey.grader.utils.exception.UnevenListDistributionException
+import ch.timofey.grader.utils.getAverage
+import ch.timofey.grader.utils.roundToPointFive
 import org.junit.Test
 import org.junit.Assert.*
 

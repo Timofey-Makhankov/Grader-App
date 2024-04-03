@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.school.SchoolRepository
-import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.db.domain.school.SchoolValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

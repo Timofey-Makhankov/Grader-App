@@ -2,40 +2,41 @@ package ch.timofey.grader
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                Color.TRANSPARENT, Color.TRANSPARENT
-            ),
-            navigationBarStyle = SystemBarStyle.light(
-                Color.TRANSPARENT, Color.TRANSPARENT
-            )
-        )
-
-        super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
             val bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
             view.updatePadding(bottom = bottom)
             insets
         }
-
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto( lightScrim = Color.TRANSPARENT, darkScrim = Color.TRANSPARENT ),
+        )
         setContent {
             MainEntry()
+        }
+        super.onCreate(savedInstanceState)
+        if (AppCompatDelegate.getApplicationLocales().isEmpty){
+            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags("en")
+            AppCompatDelegate.setApplicationLocales(appLocale)
         }
     }
 }

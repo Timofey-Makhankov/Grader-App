@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.utils
+package ch.timofey.grader.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

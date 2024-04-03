@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.utils
+package ch.timofey.grader.utils
 
 import android.os.Parcel
 import android.os.Parcelable

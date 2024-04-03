@@ -1,7 +1,5 @@
 package ch.timofey.grader.ui.components.molecules.cards
 
-//import io.github.serpro69.kfaker.Faker
-//import io.github.serpro69.kfaker.fakerConfig
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize

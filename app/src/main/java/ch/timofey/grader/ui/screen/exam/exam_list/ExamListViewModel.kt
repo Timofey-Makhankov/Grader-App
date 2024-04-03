@@ -11,8 +11,8 @@ import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.navigation.Screen
-import ch.timofey.grader.ui.utils.UiEvent
-import ch.timofey.grader.ui.utils.getAverage
+import ch.timofey.grader.utils.UiEvent
+import ch.timofey.grader.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

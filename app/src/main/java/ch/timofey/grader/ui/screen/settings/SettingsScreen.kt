@@ -5,6 +5,8 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,49 +25,42 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.navigation.Screen
+import ch.timofey.grader.ui.components.atom.DropDownMenu
 import ch.timofey.grader.ui.components.molecules.InformationDialog
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.molecules.SwitchText
 import ch.timofey.grader.ui.components.organisms.AppBar
-import ch.timofey.grader.ui.screen.school.school_list.SchoolListEvent
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.ui.utils.DeviceInfo
-import ch.timofey.grader.ui.utils.NavigationDrawerItems
-import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.utils.AppLanguage
+import ch.timofey.grader.utils.DeviceInfo
+import ch.timofey.grader.utils.NavigationDrawerItems
+import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -75,7 +71,6 @@ import java.io.OutputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     drawerState: DrawerState,
@@ -86,7 +81,7 @@ fun SettingsScreen(
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val expanded = remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val createReport =
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
@@ -146,14 +141,21 @@ fun SettingsScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(topBar = {
-            AppBar(
-                onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
-                actionIcon = Icons.Default.Menu,
-                actionContentDescription = "Toggle Drawer",
-                appBarTitle = "Settings"
-            )
-        }) {
+        Scaffold(
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                focusManager.clearFocus()
+            },
+            topBar = {
+                AppBar(
+                    onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
+                    actionIcon = Icons.Default.Menu,
+                    actionContentDescription = "Toggle Drawer",
+                    appBarTitle = "Settings"
+                )
+            }) {
             Column(
                 modifier = Modifier
                     .verticalScroll(state = rememberScrollState())
@@ -180,42 +182,29 @@ fun SettingsScreen(
                             end = MaterialTheme.spacing.medium
                         )
                 )
-                ExposedDropdownMenuBox(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.spacing.medium),
-                    expanded = expanded.value,
-                    onExpandedChange = { expanded.value = !expanded.value }) {
-                    OutlinedTextField(
-                        value = state.appTheme.title,
-                        onValueChange = { },
-                        label = {
-                            Text(
-                                text = "App Theme"
-                            )
-                        },
-                        readOnly = true,
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
-                        },
-                        colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                        modifier = Modifier
-                            .menuAnchor()
-                            .fillMaxWidth()
-                    )
-                    ExposedDropdownMenu(
-                        expanded = expanded.value,
-                        onDismissRequest = { expanded.value = false },
-
-                        ) {
-                        AppTheme.entries.filter { value -> value != state.appTheme }
-                            .forEach { theme ->
-                                DropdownMenuItem(text = { Text(text = theme.title) }, onClick = {
-                                    onEvent(SettingsEvent.OnThemeChange(theme))
-                                    expanded.value = false
+                DropDownMenu(value = state.language.title, title = "language") { afterSelection ->
+                    AppLanguage.entries.filter { value -> value.title != state.language.title }
+                        .forEach { appLanguage ->
+                            DropdownMenuItem(
+                                text = { Text(text = appLanguage.title) }, onClick = {
+                                    onEvent(SettingsEvent.OnLanguageChange(appLanguage))
+                                    afterSelection()
                                 })
-                            }
-                    }
+                        }
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                DropDownMenu(
+                    value = state.appTheme.title,
+                    title = "App Theme"
+                ) { afterSelection ->
+                    AppTheme.entries.filter { value -> value != state.appTheme }
+                        .forEach { theme ->
+                            DropdownMenuItem(
+                                text = { Text(text = theme.title) }, onClick = {
+                                    onEvent(SettingsEvent.OnThemeChange(theme))
+                                    afterSelection()
+                                })
+                        }
                 }
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
@@ -306,8 +295,16 @@ fun SettingsScreen(
                             )
                         }
                     },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    onValueChange = { value -> onEvent(SettingsEvent.OnMinimumGradeChange(value))})
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Decimal
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                        }
+                    ),
+                    onValueChange = { value -> onEvent(SettingsEvent.OnMinimumGradeChange(value)) })
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)//, vertical = MaterialTheme.spacing.extraSmall)

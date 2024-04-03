@@ -1,6 +1,7 @@
 package ch.timofey.grader.ui.screen.school.school_list
 
 import android.content.res.Configuration
+import android.content.res.Resources
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -33,8 +34,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ch.timofey.grader.R
 import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.navigation.Screen
@@ -46,10 +49,10 @@ import ch.timofey.grader.ui.components.organisms.BottomAppBar
 import ch.timofey.grader.ui.components.organisms.items.SchoolItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.ui.utils.NavigationDrawerItems
-import ch.timofey.grader.ui.utils.SnackBarMessage
-import ch.timofey.grader.ui.utils.UiEvent
-import ch.timofey.grader.ui.utils.calculatePointsFromGrade
+import ch.timofey.grader.utils.NavigationDrawerItems
+import ch.timofey.grader.utils.SnackBarMessage
+import ch.timofey.grader.utils.UiEvent
+import ch.timofey.grader.utils.calculatePointsFromGrade
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -197,7 +200,7 @@ fun SchoolListScreen(
                     },
                     actionIcon = Icons.Default.Menu,
                     actionContentDescription = "Toggle Drawer",
-                    appBarTitle = "Schools",
+                    appBarTitle = stringResource(R.string.school_screen_title),
                     locationIndicator = true,
                     pageIndex = 0
                 )

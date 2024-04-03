@@ -7,9 +7,9 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import androidx.room.Room
 import ch.timofey.grader.GraderApp
+import ch.timofey.grader.db.AppDatabase
 import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.AppSettingsSerializer
-import ch.timofey.grader.db.AppDatabase
 import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.division.DivisionRepositoryImpl
 import ch.timofey.grader.db.domain.exam.ExamRepository

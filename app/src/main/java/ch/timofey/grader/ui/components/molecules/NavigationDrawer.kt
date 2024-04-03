@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.ui.utils.MenuItem
+import ch.timofey.grader.utils.MenuItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

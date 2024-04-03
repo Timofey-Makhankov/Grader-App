@@ -45,8 +45,6 @@ import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
-//import io.github.serpro69.kfaker.Faker
-//import io.github.serpro69.kfaker.fakerConfig
 import java.util.UUID
 
 @OptIn(ExperimentalFoundationApi::class)

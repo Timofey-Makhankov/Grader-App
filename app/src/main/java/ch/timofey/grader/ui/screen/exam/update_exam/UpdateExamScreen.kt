@@ -41,8 +41,8 @@ import ch.timofey.grader.ui.components.atom.icons.CalendarToday
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.ui.utils.SnackBarMessage
-import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.utils.SnackBarMessage
+import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

@@ -1,6 +1,6 @@
-package ch.timofey.grader.ui.utils
+package ch.timofey.grader.utils
 
-import ch.timofey.grader.ui.utils.exception.UnevenListDistributionException
+import ch.timofey.grader.utils.exception.UnevenListDistributionException
 import kotlin.math.round
 
 fun getAverage(grades: List<Double>, weights: List<Double>): Double {

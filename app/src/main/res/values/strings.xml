@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Grader</string>
-    <string name="title_activity_second">SecondActivity</string>
+    <string name="app_name" translatable="false">Grader</string>
+    <string name="school_screen_title">Schools</string>
 </resources>

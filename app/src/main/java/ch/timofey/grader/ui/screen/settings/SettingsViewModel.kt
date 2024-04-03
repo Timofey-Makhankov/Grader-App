@@ -1,6 +1,7 @@
 package ch.timofey.grader.ui.screen.settings
 
 import android.app.Application
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +13,10 @@ import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.school.SchoolRepository
-import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.utils.AppLanguage
+import ch.timofey.grader.utils.UiEvent
+import ch.timofey.grader.utils.getApplicationLanguage
+import ch.timofey.grader.utils.setApplicationLanguage
 import ch.timofey.grader.validation.Validate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +40,7 @@ class SettingsViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     private val manager: BackupManager = BackupManager()
 
+
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState
 
@@ -44,13 +49,17 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            val languageSetting = getApplicationLanguage()
+            val result = AppLanguage.getFromTag(languageSetting)
+            Log.d("SettingsViewModel", languageSetting)
             dataStore.data.collectLatest {
                 _uiState.value = _uiState.value.copy(
                     appTheme = it.theme,
                     calculatePointsState = it.calculatePoints,
                     doublePointsState = it.doublePoints,
                     enableSwipeToDelete = it.enableSwipeToDelete,
-                    minimumGrade = it.minimumGrade.toString()
+                    minimumGrade = it.minimumGrade.toString(),
+                    language = result!!
                 )
             }
         }
@@ -179,6 +188,11 @@ class SettingsViewModel @Inject constructor(
                         errorMessageMinimumGrade = "Enter a Valid Grade"
                     )
                 }
+            }
+
+            is SettingsEvent.OnLanguageChange -> {
+                _uiState.value = _uiState.value.copy(language = event.language)
+                setApplicationLanguage(event.language.tag)
             }
         }
     }

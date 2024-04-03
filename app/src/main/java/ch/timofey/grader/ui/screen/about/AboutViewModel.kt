@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.GraderApp
-import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

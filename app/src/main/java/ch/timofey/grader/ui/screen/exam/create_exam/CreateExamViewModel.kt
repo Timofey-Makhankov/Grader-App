@@ -8,7 +8,7 @@ import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.exam.ExamValidation
-import ch.timofey.grader.ui.utils.UiEvent
+import ch.timofey.grader.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
