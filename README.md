@@ -6,13 +6,13 @@ This Application is designed to Easily Track Your Grades in School and Calculate
 
 This Features are _Still in Progress_. **Not FINAL**
 
-- [ ] Save Grades for each subject
+- [X] Save Grades for each subject
 - [X] Get the average of the given subject Grade
-- [ ] Export the Data in either a JSON or CSV Format
+- [\] Export the Data in either a JSON or CSV Format (JSON is complete)
 - [ ] rounding to full or .5 grade
 - [ ] easily manage grades
 
-## Database Schema
+## Database Schema (***NOT UP TO DATE***)
 
 ```mermaid
 ---
