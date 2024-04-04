@@ -58,6 +58,7 @@ import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.utils.AppLanguage
+import ch.timofey.grader.utils.DateFormatting
 import ch.timofey.grader.utils.DeviceInfo
 import ch.timofey.grader.utils.NavigationDrawerItems
 import ch.timofey.grader.utils.UiEvent
@@ -182,17 +183,6 @@ fun SettingsScreen(
                             end = MaterialTheme.spacing.medium
                         )
                 )
-                DropDownMenu(value = state.language.title, title = "language") { afterSelection ->
-                    AppLanguage.entries.filter { value -> value.title != state.language.title }
-                        .forEach { appLanguage ->
-                            DropdownMenuItem(
-                                text = { Text(text = appLanguage.title) }, onClick = {
-                                    onEvent(SettingsEvent.OnLanguageChange(appLanguage))
-                                    afterSelection()
-                                })
-                        }
-                }
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
                     value = state.appTheme.title,
                     title = "App Theme"
@@ -206,21 +196,37 @@ fun SettingsScreen(
                                 })
                         }
                 }
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                DropDownMenu(value = state.language.title, title = "language") { afterSelection ->
+                    AppLanguage.entries.filter { value -> value.title != state.language.title }
+                        .forEach { appLanguage ->
+                            DropdownMenuItem(
+                                text = { Text(text = appLanguage.title) }, onClick = {
+                                    onEvent(SettingsEvent.OnLanguageChange(appLanguage))
+                                    afterSelection()
+                                })
+                        }
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                DropDownMenu(value = state.dateFormat.title, title = "Date Format") { afterSelection ->
+                    DateFormatting.entries.filter { value -> value.locale != state.dateFormat.locale }
+                        .forEach { format ->
+                            DropdownMenuItem(
+                                text = { Text(text = format.title) }, onClick = {
+                                    onEvent(SettingsEvent.OnDateFormatChange(format))
+                                    afterSelection()
+                                })
+                        }
+                }
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
-                    onValueChange = { value ->
-                        onEvent(
-                            SettingsEvent.OnEnableSwipeToDeleteChange(
-                                value
-                            )
-                        )
-                    },
-                    value = state.enableSwipeToDelete,
-                    name = "Enable Swipe Right for Deletion",
+                    onValueChange = { value -> onEvent(SettingsEvent.OnShowNavigationIconsChange(value)) },
+                    value = state.showNavigationIcons,
+                    name = "Show Navigation Icons",
                     dialog = {
                         InformationDialog(
                             onDismiss = { it() },
-                            text = "Enable Left Swipe to Delete a given on all List Screens. Upon deletion, it will show you a Snack bar of the deleted Item and can be undone"
+                            text = "This is a description"
                         )
                     },
                     showExtraInformation = true
@@ -277,7 +283,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .padding(
                             horizontal = MaterialTheme.spacing.medium,
-                            vertical = MaterialTheme.spacing.medium
+                            vertical = MaterialTheme.spacing.small
                         )
                         .fillMaxWidth(),
                     value = state.minimumGrade,
@@ -305,6 +311,25 @@ fun SettingsScreen(
                         }
                     ),
                     onValueChange = { value -> onEvent(SettingsEvent.OnMinimumGradeChange(value)) })
+                SwitchText(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                    onValueChange = { value ->
+                        onEvent(
+                            SettingsEvent.OnEnableSwipeToDeleteChange(
+                                value
+                            )
+                        )
+                    },
+                    value = state.enableSwipeToDelete,
+                    name = "Enable Swipe Right for Deletion",
+                    dialog = {
+                        InformationDialog(
+                            onDismiss = { it() },
+                            text = "Enable Left Swipe to Delete a given on all List Screens. Upon deletion, it will show you a Snack bar of the deleted Item and can be undone"
+                        )
+                    },
+                    showExtraInformation = true
+                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)//, vertical = MaterialTheme.spacing.extraSmall)
@@ -391,28 +416,16 @@ fun SettingsScreen(
     }
 }
 
-@Preview
+@Preview(name = "Light Mode")
+@Preview(name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
+)
 @Composable
 private fun SettingsScreenPreview() {
     GraderTheme {
         SettingsScreen(
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             state = SettingsState(appTheme = AppTheme.DEVICE_THEME, calculatePointsState = true),
-            onEvent = {},
-            uiEvent = emptyFlow(),
-            onNavigate = {},
-            snackBarHostState = SnackbarHostState()
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun SettingsScreenDarkModePreview() {
-    GraderTheme {
-        SettingsScreen(
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-            state = SettingsState(appTheme = AppTheme.LIGHT_MODE),
             onEvent = {},
             uiEvent = emptyFlow(),
             onNavigate = {},

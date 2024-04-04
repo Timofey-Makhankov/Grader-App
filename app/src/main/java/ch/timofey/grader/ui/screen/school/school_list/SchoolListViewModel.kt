@@ -42,7 +42,8 @@ class SchoolListViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(
                     showPoints = it.calculatePoints,
                     swipingEnabled = it.enableSwipeToDelete,
-                    minimumGrade = it.minimumGrade
+                    minimumGrade = it.minimumGrade,
+                    showNavigationIcons = it.showNavigationIcons
                 )
             }
         }

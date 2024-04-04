@@ -1,13 +1,16 @@
 package ch.timofey.grader.db
 
+import ch.timofey.grader.utils.DateFormatting
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppSettings(
     val theme: AppTheme = AppTheme.DEVICE_THEME,
+    val dateFormatter: DateFormatting = DateFormatting.DEFAULT,
     val calculatePoints: Boolean = false,
     val doublePoints: Boolean = false,
     val enableSwipeToDelete: Boolean = false,
+    val showNavigationIcons: Boolean = false,
     val minimumGrade: Double = 4.0,
 )
 enum class AppTheme(val title: String) {

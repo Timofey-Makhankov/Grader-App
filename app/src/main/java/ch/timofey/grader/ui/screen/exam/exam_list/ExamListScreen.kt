@@ -113,7 +113,7 @@ fun ExamListScreen(
                     actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
                     actionContentDescription = "Go Back to previous Screen",
                     appBarTitle = "Exams",
-                    locationIndicator = true,
+                    locationIndicator = state.showNavigationIcons?: false,
                     pageIndex = 3
                 )
             },

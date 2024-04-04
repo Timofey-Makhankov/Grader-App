@@ -47,7 +47,8 @@ class ModuleListViewModel @Inject constructor(
             dataStore.data.collectLatest {
                 _uiState.value = _uiState.value.copy(
                     showPoints = it.calculatePoints,
-                    swipingEnabled = it.enableSwipeToDelete
+                    swipingEnabled = it.enableSwipeToDelete,
+                    showNavigationIcons = it.showNavigationIcons
                 )
             }
         }

@@ -1,7 +1,6 @@
 package ch.timofey.grader.ui.screen.school.school_list
 
 import android.content.res.Configuration
-import android.content.res.Resources
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -201,7 +200,7 @@ fun SchoolListScreen(
                     actionIcon = Icons.Default.Menu,
                     actionContentDescription = "Toggle Drawer",
                     appBarTitle = stringResource(R.string.school_screen_title),
-                    locationIndicator = true,
+                    locationIndicator = state.showNavigationIcons?: false,
                     pageIndex = 0
                 )
             }) {
@@ -321,7 +320,8 @@ private fun PreviewMainScreen() {
                         city = "Zürich",
                         grade = 0.0
                     )
-                )
+                ),
+                showNavigationIcons = true,
             ),
             uiEvent = emptyFlow(),
             onNavigate = {},

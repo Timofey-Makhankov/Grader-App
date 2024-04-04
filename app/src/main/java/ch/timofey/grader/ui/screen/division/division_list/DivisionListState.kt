@@ -9,4 +9,5 @@ data class DivisionListState(
     val averageGradeIsZero: Boolean? = null,
     val swipingEnabled: Boolean? = null,
     val showPoints: Boolean? = null,
+    val showNavigationIcons: Boolean? = null
 )

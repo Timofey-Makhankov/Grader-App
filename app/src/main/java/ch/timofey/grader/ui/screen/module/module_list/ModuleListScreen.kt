@@ -190,7 +190,7 @@ fun ModuleListScreen(
                     actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
                     actionContentDescription = "Go Back to previous Screen",
                     appBarTitle = "Modules",
-                    locationIndicator = true,
+                    locationIndicator = state.showNavigationIcons?: false,
                     pageIndex = 2
                 )
             }) {

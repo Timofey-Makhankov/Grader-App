@@ -59,6 +59,8 @@ class SettingsViewModel @Inject constructor(
                     doublePointsState = it.doublePoints,
                     enableSwipeToDelete = it.enableSwipeToDelete,
                     minimumGrade = it.minimumGrade.toString(),
+                    dateFormat = it.dateFormatter,
+                    showNavigationIcons = it.showNavigationIcons,
                     language = result!!
                 )
             }
@@ -193,6 +195,28 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvent.OnLanguageChange -> {
                 _uiState.value = _uiState.value.copy(language = event.language)
                 setApplicationLanguage(event.language.tag)
+            }
+
+            is SettingsEvent.OnShowNavigationIconsChange -> {
+                _uiState.value = _uiState.value.copy(showNavigationIcons = event.value)
+                viewModelScope.launch(Dispatchers.IO) {
+                    dataStore.updateData {
+                        it.copy(
+                            showNavigationIcons = _uiState.value.showNavigationIcons
+                        )
+                    }
+                }
+            }
+
+            is SettingsEvent.OnDateFormatChange -> {
+                _uiState.value = _uiState.value.copy(dateFormat = event.format)
+                viewModelScope.launch(Dispatchers.IO) {
+                    dataStore.updateData {
+                        it.copy(
+                            dateFormatter = _uiState.value.dateFormat
+                        )
+                    }
+                }
             }
         }
     }

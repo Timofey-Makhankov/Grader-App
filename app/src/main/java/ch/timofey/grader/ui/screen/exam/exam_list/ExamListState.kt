@@ -9,4 +9,5 @@ data class ExamListState(
     val averageGradeIsZero: Boolean? = null,
     val showPoints: Boolean = false,
     val swipingEnabled: Boolean? = null,
+    val showNavigationIcons: Boolean? = null,
 )

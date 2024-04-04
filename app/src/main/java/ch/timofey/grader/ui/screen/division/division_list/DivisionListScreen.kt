@@ -181,7 +181,7 @@ fun DivisionListScreen(
                     actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
                     actionContentDescription = "Go Back to previous Screen",
                     appBarTitle = "Divisions",
-                    locationIndicator = true,
+                    locationIndicator = state.showNavigationIcons?: false,
                     pageIndex = 1
                 )
             }) {

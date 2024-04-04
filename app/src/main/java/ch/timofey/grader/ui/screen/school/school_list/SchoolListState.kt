@@ -5,6 +5,7 @@ import ch.timofey.grader.db.domain.school.School
 data class SchoolListState(
     val schoolList: List<School> = emptyList(),
     val averageGrade: String = "",
+    val showNavigationIcons: Boolean? = null,
     val averageGradeIsZero: Boolean? = null,
     val swipingEnabled: Boolean? = null,
     val showPoints: Boolean? = null,

@@ -99,13 +99,13 @@ dependencies {
 
     // Android Testing
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
-    androidTestImplementation platform("androidx.compose:compose-bom:2024.03.00")
+    androidTestImplementation platform("androidx.compose:compose-bom:2024.04.00")
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
 
-    implementation platform("androidx.compose:compose-bom:2024.03.00")
+    implementation platform("androidx.compose:compose-bom:2024.04.00")
 
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
