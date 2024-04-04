@@ -1,10 +1,9 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.exam.ExamValidation
@@ -25,7 +24,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateExamViewModel @Inject constructor (
+class CreateExamViewModel @Inject constructor(
     private val repository: ExamRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val moduleId = savedStateHandle.get<String>("id").orEmpty()
@@ -79,7 +78,10 @@ class CreateExamViewModel @Inject constructor (
             is CreateExamEvent.OnSetDate -> {
                 _uiState.value = _uiState.value.copy(
                     dateTaken = Instant.ofEpochMilli(event.date).atZone(ZoneId.systemDefault())
-                        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                        .format(
+                            DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+                                .withLocale(AppCompatDelegate.getApplicationLocales().get(0)!!)
+                        )
                 )
             }
 
@@ -93,7 +95,12 @@ class CreateExamViewModel @Inject constructor (
                                 description = _uiState.value.description,
                                 grade = _uiState.value.grade.toDouble(),
                                 weight = _uiState.value.weight.toDouble(),
-                                date = LocalDate.parse(_uiState.value.dateTaken, DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
+                                date = LocalDate.parse(
+                                    _uiState.value.dateTaken,
+                                    DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(
+                                        AppCompatDelegate.getApplicationLocales().get(0)!!
+                                    )
+                                ),
                                 moduleId = UUID.fromString(moduleId)
                             )
                         )

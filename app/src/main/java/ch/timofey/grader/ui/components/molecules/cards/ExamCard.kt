@@ -1,6 +1,7 @@
 package ch.timofey.grader.ui.components.molecules.cards
 
 import android.content.res.Configuration
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -47,6 +48,7 @@ import ch.timofey.grader.ui.theme.spacing
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.Locale
 import java.util.UUID
 
 @Composable
@@ -117,8 +119,8 @@ fun ExamCard(
                     text = "Exam taken: ${
                         exam.date.format(
                             DateTimeFormatter.ofLocalizedDate(
-                                FormatStyle.SHORT
-                            )
+                                FormatStyle.MEDIUM
+                            ).withLocale(AppCompatDelegate.getApplicationLocales().get(0).let { Locale.ENGLISH })
                         )
                     }"
                 )
