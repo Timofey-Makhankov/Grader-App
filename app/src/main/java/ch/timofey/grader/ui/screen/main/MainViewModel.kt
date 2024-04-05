@@ -1,9 +1,10 @@
-package ch.timofey.grader
+package ch.timofey.grader.ui.screen.main
 
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.AppSettings
+import ch.timofey.grader.ui.screen.main.MainState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

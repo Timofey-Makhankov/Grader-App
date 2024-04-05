@@ -1,4 +1,4 @@
-package ch.timofey.grader
+package ch.timofey.grader.ui.screen.main
 
 import ch.timofey.grader.db.AppTheme
 

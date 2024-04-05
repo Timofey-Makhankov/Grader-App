@@ -1,4 +1,4 @@
-package ch.timofey.grader.utils
+package ch.timofey.grader.type
 
 import kotlinx.serialization.Required
 import kotlinx.serialization.Serializable

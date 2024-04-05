@@ -48,8 +48,8 @@ import ch.timofey.grader.ui.components.organisms.BottomAppBar
 import ch.timofey.grader.ui.components.organisms.items.SchoolItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.utils.NavigationDrawerItems
-import ch.timofey.grader.utils.SnackBarMessage
+import ch.timofey.grader.navigation.NavigationDrawerItems
+import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.utils.calculatePointsFromGrade
 import kotlinx.coroutines.Dispatchers

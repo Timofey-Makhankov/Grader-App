@@ -1,4 +1,4 @@
-package ch.timofey.grader.utils
+package ch.timofey.grader.type
 
 enum class AppLanguage(val tag: String, val title: String){
     ENGLISH("en", "English"),

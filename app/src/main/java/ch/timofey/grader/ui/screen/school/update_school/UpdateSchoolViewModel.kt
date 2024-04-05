@@ -1,10 +1,8 @@
 package ch.timofey.grader.ui.screen.school.update_school
 
-import android.widget.Toast
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.db.domain.school.SchoolValidation

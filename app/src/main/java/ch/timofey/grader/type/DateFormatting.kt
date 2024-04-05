@@ -1,4 +1,4 @@
-package ch.timofey.grader.utils
+package ch.timofey.grader.type
 
 enum class DateFormatting(val locale: String, val title: String) {
     DEFAULT("default", "Follow System"),

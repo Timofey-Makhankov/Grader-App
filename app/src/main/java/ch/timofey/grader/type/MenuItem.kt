@@ -1,4 +1,4 @@
-package ch.timofey.grader.utils
+package ch.timofey.grader.type
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

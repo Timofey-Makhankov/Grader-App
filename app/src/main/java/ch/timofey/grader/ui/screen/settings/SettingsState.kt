@@ -1,8 +1,8 @@
 package ch.timofey.grader.ui.screen.settings
 
 import ch.timofey.grader.db.AppTheme
-import ch.timofey.grader.utils.AppLanguage
-import ch.timofey.grader.utils.DateFormatting
+import ch.timofey.grader.type.AppLanguage
+import ch.timofey.grader.type.DateFormatting
 
 data class SettingsState(
     val calculatePointsState: Boolean = false,

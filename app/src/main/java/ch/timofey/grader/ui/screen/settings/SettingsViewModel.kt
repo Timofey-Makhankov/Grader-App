@@ -13,7 +13,7 @@ import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.school.SchoolRepository
-import ch.timofey.grader.utils.AppLanguage
+import ch.timofey.grader.type.AppLanguage
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.utils.getApplicationLanguage
 import ch.timofey.grader.utils.setApplicationLanguage

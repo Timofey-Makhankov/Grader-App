@@ -1,4 +1,4 @@
-package ch.timofey.grader
+package ch.timofey.grader.ui.screen.main
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import ch.timofey.grader.navigation.Navigation
+import ch.timofey.grader.ui.screen.main.MainViewModel
 import ch.timofey.grader.ui.theme.GraderTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

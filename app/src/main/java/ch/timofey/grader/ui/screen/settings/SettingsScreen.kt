@@ -57,10 +57,10 @@ import ch.timofey.grader.ui.components.molecules.SwitchText
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.utils.AppLanguage
-import ch.timofey.grader.utils.DateFormatting
-import ch.timofey.grader.utils.DeviceInfo
-import ch.timofey.grader.utils.NavigationDrawerItems
+import ch.timofey.grader.type.AppLanguage
+import ch.timofey.grader.type.DateFormatting
+import ch.timofey.grader.type.DeviceInfo
+import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

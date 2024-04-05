@@ -3,11 +3,9 @@ package ch.timofey.grader.ui.screen.about
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import ch.timofey.grader.GraderApp
 import ch.timofey.grader.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

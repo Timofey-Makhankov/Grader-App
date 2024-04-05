@@ -8,7 +8,7 @@ This Features are _Still in Progress_. **Not FINAL**
 
 - [X] Save Grades for each subject
 - [X] Get the average of the given subject Grade
-- [\] Export the Data in either a JSON or CSV Format (JSON is complete)
+- [ ] Export the Data in either a JSON or CSV Format (JSON is complete)
 - [ ] rounding to full or .5 grade
 - [ ] easily manage grades
 

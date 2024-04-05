@@ -1,10 +1,10 @@
-package ch.timofey.grader.utils
+package ch.timofey.grader.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import ch.timofey.grader.navigation.Screen
+import ch.timofey.grader.type.MenuItem
 import ch.timofey.grader.ui.components.atom.icons.Calculate
 import ch.timofey.grader.ui.components.atom.icons.Help
 

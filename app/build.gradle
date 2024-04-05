@@ -30,10 +30,6 @@ android {
         }
     }
 
-    //androidResources {
-    //    generateLocaleConfig = true
-    //}
-
     sourceSets.named("androidTest") {
         // Adds exported schema location as test app assets.
         it.assets.srcDir("$projectDir/schemas")

@@ -1,6 +1,6 @@
 package ch.timofey.grader.db
 
-import ch.timofey.grader.utils.DateFormatting
+import ch.timofey.grader.type.DateFormatting
 import kotlinx.serialization.Serializable
 
 @Serializable

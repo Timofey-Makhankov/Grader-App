@@ -1,11 +1,9 @@
-package ch.timofey.grader.utils
+package ch.timofey.grader.type
 
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarVisuals
 import kotlinx.parcelize.Parcelize
-import kotlinx.serialization.Serializable
 
 @Parcelize
 data class SnackBarMessage(
