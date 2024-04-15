@@ -1,9 +1,9 @@
 package ch.timofey.grader.type
 
-enum class AppLanguage(val tag: String, val title: String){
-    ENGLISH("en", "English"),
-    GERMAN("de", "German"),
-    RUSSIAN("ru", "Russian");
+enum class AppLanguage(val tag: String){
+    ENGLISH("en"),
+    GERMAN("de"),
+    RUSSIAN("ru");
 
     companion object {
         fun getFromTag(tag: String): AppLanguage? {
@@ -17,17 +17,6 @@ enum class AppLanguage(val tag: String, val title: String){
                 "ru" -> RUSSIAN
                 else -> null
             }
-        }
-        fun getFromTitle(tag: String): AppLanguage? {
-            return when (tag){
-                "English" -> ENGLISH
-                "German" -> GERMAN
-                "Russian" -> RUSSIAN
-                else -> null
-            }
-        }
-        fun getTitles(): List<String> {
-            return AppLanguage.entries.map { value -> value.title }
         }
     }
 }

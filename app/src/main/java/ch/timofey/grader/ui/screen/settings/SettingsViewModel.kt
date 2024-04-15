@@ -23,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,10 +48,10 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val languageSetting = getApplicationLanguage()
-            val result = AppLanguage.getFromTag(languageSetting)
-            Log.d("SettingsViewModel", languageSetting)
-            dataStore.data.collectLatest {
+            dataStore.data.collect {
+                val languageSetting = getApplicationLanguage()
+                val result = AppLanguage.getFromTag(languageSetting)
+                Log.d("SettingsViewModel", languageSetting)
                 _uiState.value = _uiState.value.copy(
                     appTheme = it.theme,
                     calculatePointsState = it.calculatePoints,
@@ -217,6 +216,10 @@ class SettingsViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+
+            is SettingsEvent.OnGradeColorChange -> {
+
             }
         }
     }

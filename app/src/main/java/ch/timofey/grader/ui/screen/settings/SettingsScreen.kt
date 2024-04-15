@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.navigation.Screen
@@ -61,6 +62,9 @@ import ch.timofey.grader.type.AppLanguage
 import ch.timofey.grader.type.DateFormatting
 import ch.timofey.grader.type.DeviceInfo
 import ch.timofey.grader.navigation.NavigationDrawerItems
+import ch.timofey.grader.ui.components.atom.Circle
+import ch.timofey.grader.ui.components.atom.Triangle
+import ch.timofey.grader.ui.components.molecules.ScreenIndicator
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -71,6 +75,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.Locale
 
 @Composable
 fun SettingsScreen(
@@ -197,22 +202,27 @@ fun SettingsScreen(
                         }
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-                DropDownMenu(value = state.language.title, title = "language") { afterSelection ->
-                    AppLanguage.entries.filter { value -> value.title != state.language.title }
+                DropDownMenu(
+                    value = Locale(state.language.tag).displayLanguage,
+                    title = "language"
+                ) { afterSelection ->
+                    AppLanguage.entries.filter { value -> value != state.language }
                         .forEach { appLanguage ->
                             DropdownMenuItem(
-                                text = { Text(text = appLanguage.title) }, onClick = {
+                                text = { Text(text = Locale(appLanguage.tag).displayLanguage) }, onClick = {
                                     onEvent(SettingsEvent.OnLanguageChange(appLanguage))
                                     afterSelection()
                                 })
                         }
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-                DropDownMenu(value = state.dateFormat.title, title = "Date Format") { afterSelection ->
-                    DateFormatting.entries.filter { value -> value.locale != state.dateFormat.locale }
+                DropDownMenu(
+                    value = if (state.dateFormat != DateFormatting.DEFAULT) Locale(state.dateFormat.language, state.dateFormat.country).displayName else "Follow System",
+                    title = "Date Format") { afterSelection ->
+                    DateFormatting.entries.filter { value -> value != state.dateFormat }
                         .forEach { format ->
                             DropdownMenuItem(
-                                text = { Text(text = format.title) }, onClick = {
+                                text = { Text(text = Locale(format.language, format.country).displayName) }, onClick = {
                                     onEvent(SettingsEvent.OnDateFormatChange(format))
                                     afterSelection()
                                 })
@@ -225,9 +235,31 @@ fun SettingsScreen(
                     name = "Show Navigation Icons",
                     dialog = {
                         InformationDialog(
-                            onDismiss = { it() },
-                            text = "This is a description"
-                        )
+                            onDismiss = { it() }
+                        ) {
+                            ScreenIndicator(pages = 4, index = 2)
+                            Text(text = "These Indicators show, where you are positioned in the hierarchy.")
+                            Row {
+                                Circle(size = 24.dp, color = MaterialTheme.colorScheme.secondary, outline = true)
+                                Circle(size = 24.dp, color = MaterialTheme.colorScheme.secondary)
+                                Triangle(triangleSize = 24.dp, color = MaterialTheme.colorScheme.primary)
+                            }
+                            Text(text = "")
+                        }
+                    },
+                    showExtraInformation = true
+                )
+                SwitchText(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                    onValueChange = { value -> onEvent(SettingsEvent.OnGradeColorChange(value)) },
+                    value = state.showNavigationIcons,
+                    name = "Color Calculated Grades",
+                    dialog = {
+                        InformationDialog(
+                            onDismiss = { it() }
+                        ) {
+                            Text(text = "This is a description")
+                        }
                     },
                     showExtraInformation = true
                 )
@@ -258,9 +290,10 @@ fun SettingsScreen(
                     name = "Calculate Points from Grade",
                     dialog = {
                         InformationDialog(
-                            onDismiss = { it() },
-                            text = "This is a description"
-                        )
+                            onDismiss = { it() }
+                        ) {
+                            Text(text = "This is a description")
+                        }
                     },
                     showExtraInformation = true
                 )
@@ -273,9 +306,10 @@ fun SettingsScreen(
                     extraInfo = if (!state.calculatePointsState) "Enable 'Calculate Points' to enable setting" else "",
                     dialog = {
                         InformationDialog(
-                            onDismiss = { it() },
-                            text = "This is a description"
-                        )
+                            onDismiss = { it() }
+                        ) {
+                            Text(text = "This is a description")
+                        }
                     },
                     showExtraInformation = true
                 )
@@ -324,9 +358,10 @@ fun SettingsScreen(
                     name = "Enable Swipe Right for Deletion",
                     dialog = {
                         InformationDialog(
-                            onDismiss = { it() },
-                            text = "Enable Left Swipe to Delete a given on all List Screens. Upon deletion, it will show you a Snack bar of the deleted Item and can be undone"
-                        )
+                            onDismiss = { it() }
+                        ) {
+                            Text(text = "Enable Left Swipe to Delete a given on all List Screens. Upon deletion, it will show you a Snack bar of the deleted Item and can be undone")
+                        }
                     },
                     showExtraInformation = true
                 )

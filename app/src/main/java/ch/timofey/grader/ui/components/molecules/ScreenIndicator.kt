@@ -49,7 +49,6 @@ fun ScreenIndicator(
         Modifier
             .padding(8.dp)
             .height(16.dp)
-            .background(MaterialTheme.colorScheme.background)
             .then(modifier)
     ) {
         items(componentIndexes.toList()) {shape ->

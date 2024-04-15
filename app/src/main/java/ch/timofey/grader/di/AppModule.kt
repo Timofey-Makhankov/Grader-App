@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import androidx.room.Room
+import ch.timofey.grader.GraderApp
 import ch.timofey.grader.db.AppDatabase
 import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.AppSettingsSerializer

@@ -1,4 +1,4 @@
-package ch.timofey.grader.di
+package ch.timofey.grader
 
 import android.app.Application
 import android.content.Context

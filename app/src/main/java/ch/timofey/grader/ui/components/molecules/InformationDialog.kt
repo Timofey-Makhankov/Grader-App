@@ -21,7 +21,7 @@ import ch.timofey.grader.ui.theme.spacing
 @Composable
 fun InformationDialog(
     onDismiss: () -> Unit,
-    text: String
+    content: @Composable () -> Unit
 ) {
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -39,9 +39,14 @@ fun InformationDialog(
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
-                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small).padding(top = MaterialTheme.spacing.extraSmall)
+                modifier = Modifier
+                    .padding(horizontal = MaterialTheme.spacing.medium)
+                    .padding(
+                        top = MaterialTheme.spacing.medium,
+                        bottom = MaterialTheme.spacing.small
+                    )
             ) {
-                Text(text = text)
+                content()
                 Row{
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(onClick = { onDismiss() }) {
@@ -58,6 +63,8 @@ fun InformationDialog(
 private fun InformationDialogPreview(){
     val l = LoremIpsum(30)
     MaterialTheme {
-        InformationDialog(onDismiss = {}, text = l.values.joinToString(""))
+        InformationDialog(onDismiss = {}){
+            Text(text = l.values.joinToString(""))
+        }
     }
 }
