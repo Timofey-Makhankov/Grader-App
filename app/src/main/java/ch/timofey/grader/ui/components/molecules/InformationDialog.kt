@@ -12,6 +12,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.window.Dialog
@@ -20,6 +21,7 @@ import ch.timofey.grader.ui.theme.spacing
 
 @Composable
 fun InformationDialog(
+    title: String = "",
     onDismiss: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -46,6 +48,12 @@ fun InformationDialog(
                         bottom = MaterialTheme.spacing.small
                     )
             ) {
+                Text(
+                    text = title,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.spacing.small)
+                )
                 content()
                 Row{
                     Spacer(modifier = Modifier.weight(1f))
@@ -63,7 +71,7 @@ fun InformationDialog(
 private fun InformationDialogPreview(){
     val l = LoremIpsum(30)
     MaterialTheme {
-        InformationDialog(onDismiss = {}){
+        InformationDialog(title = "This is an Example", onDismiss = {}){
             Text(text = l.values.joinToString(""))
         }
     }

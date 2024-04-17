@@ -65,6 +65,7 @@ import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.ui.components.atom.Circle
 import ch.timofey.grader.ui.components.atom.Triangle
 import ch.timofey.grader.ui.components.molecules.ScreenIndicator
+import ch.timofey.grader.ui.components.molecules.ShowNavigationIconsInformation
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -233,20 +234,7 @@ fun SettingsScreen(
                     onValueChange = { value -> onEvent(SettingsEvent.OnShowNavigationIconsChange(value)) },
                     value = state.showNavigationIcons,
                     name = "Show Navigation Icons",
-                    dialog = {
-                        InformationDialog(
-                            onDismiss = { it() }
-                        ) {
-                            ScreenIndicator(pages = 4, index = 2)
-                            Text(text = "These Indicators show, where you are positioned in the hierarchy.")
-                            Row {
-                                Circle(size = 24.dp, color = MaterialTheme.colorScheme.secondary, outline = true)
-                                Circle(size = 24.dp, color = MaterialTheme.colorScheme.secondary)
-                                Triangle(triangleSize = 24.dp, color = MaterialTheme.colorScheme.primary)
-                            }
-                            Text(text = "")
-                        }
-                    },
+                    dialog = { InformationDialog( onDismiss = { it() } ) { ShowNavigationIconsInformation() } },
                     showExtraInformation = true
                 )
                 SwitchText(
