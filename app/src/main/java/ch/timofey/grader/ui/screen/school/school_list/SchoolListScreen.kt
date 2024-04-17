@@ -280,7 +280,7 @@ fun SchoolListScreen(
 @Composable
 private fun PreviewMainScreen() {
     GraderTheme(
-        themeSetting = AppTheme.LIGHT_MODE
+        themeSetting = AppTheme.DEVICE_THEME
     ) {
         SchoolListScreen(
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),

@@ -16,8 +16,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import ch.timofey.grader.db.AppTheme
+import ch.timofey.grader.ui.theme.scheme.DuskHorizonScheme
 import ch.timofey.grader.ui.theme.scheme.GraderColorScheme
 import ch.timofey.grader.ui.theme.scheme.PinkBlossomScheme
+import ch.timofey.grader.ui.theme.scheme.SwampScheme
 
 private val darkColorPalette = ColorSchemas.darkColorSchema
 private val lightColorPalette = ColorSchemas.lightColorSchema
@@ -29,7 +31,10 @@ fun getColorschemeFromAppSetting(theme: AppTheme): ColorScheme {
         AppTheme.GRADER_THEME_LIGHT -> GraderColorScheme.lightScheme
         AppTheme.GRADER_THEME_DARK -> GraderColorScheme.darkScheme
         AppTheme.PINK_BLOSSOM -> PinkBlossomScheme.lightScheme
-        else -> getColorScheme()
+        AppTheme.DUSK_HORIZON_LIGHT -> DuskHorizonScheme.lightScheme
+        AppTheme.DUSK_HORIZON_DARK -> DuskHorizonScheme.darkScheme
+        AppTheme.SWAMP -> SwampScheme.lightScheme
+        AppTheme.DEVICE_THEME -> getColorScheme()
     }
 }
 

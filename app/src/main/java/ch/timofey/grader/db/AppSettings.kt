@@ -19,6 +19,9 @@ enum class AppTheme(val title: String) {
     //MATERIAL_THEME("Material You"),
     GRADER_THEME_LIGHT("Grader Theme Light"),
     GRADER_THEME_DARK("Grader Theme Dark"),
-    PINK_BLOSSOM("Pink Blossom Theme"),
+    PINK_BLOSSOM("Pink Blossom"),
+    SWAMP("Swamp"),
+    DUSK_HORIZON_LIGHT("Dusk Horizon Light"),
+    DUSK_HORIZON_DARK("Dusk Horizon Dark"),
     DEVICE_THEME("Follow System")
 }
