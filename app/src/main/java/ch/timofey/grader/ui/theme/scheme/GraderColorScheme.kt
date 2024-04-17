@@ -1,4 +1,4 @@
-package ch.timofey.grader.ui.theme.schemas
+package ch.timofey.grader.ui.theme.scheme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -53,13 +53,14 @@ object GraderColorScheme {
     private val grey10 = Color(0xff282828)
 
     val darkScheme = darkColorScheme(
-        primary = green80,
-        onPrimary = green20,
-        primaryContainer = green30,
-        onPrimaryContainer = green90,
-        inversePrimary = green40,
-        secondary = red80,
-        onSecondary = red20,
+        primary = green30,
+        onPrimary = green90,
+        primaryContainer = green70,
+        onPrimaryContainer = green10,
+        inversePrimary = green50,
+
+        secondary = red30,
+        onSecondary = red90,
         secondaryContainer = red30,
         onSecondaryContainer = red90,
         tertiary = yellow80,

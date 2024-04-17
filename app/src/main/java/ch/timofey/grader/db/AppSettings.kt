@@ -14,11 +14,11 @@ data class AppSettings(
     val minimumGrade: Double = 4.0,
 )
 enum class AppTheme(val title: String) {
-    DARK_MODE("Dark Mode"),
-    LIGHT_MODE("Light Mode"),
-    MATERIAL_THEME("Material You"),
+    //DARK_MODE("Dark Mode"),
+    //LIGHT_MODE("Light Mode"),
+    //MATERIAL_THEME("Material You"),
     GRADER_THEME_LIGHT("Grader Theme Light"),
     GRADER_THEME_DARK("Grader Theme Dark"),
-    ROSE_MODE("Rose Theme"),
+    PINK_BLOSSOM("Pink Blossom Theme"),
     DEVICE_THEME("Follow System")
 }

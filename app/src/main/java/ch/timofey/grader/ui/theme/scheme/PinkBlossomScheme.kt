@@ -1,9 +1,9 @@
-package ch.timofey.grader.ui.theme.schemas
+package ch.timofey.grader.ui.theme.scheme
 
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-object RosaSchema {
+object PinkBlossomScheme {
     //val petalblush100 = Color(0xffFFFFFF)
     val petalblush90 = Color(0xffFFFCFD)
     val petalblush80 = Color(0xffFFF9FB)
@@ -60,31 +60,31 @@ object RosaSchema {
     val raspberryrose10 = Color(0xffFB6F92)
 
     val lightScheme = lightColorScheme(
-        primary = cottoncandy80,
-        onPrimary = cottoncandy20,
-        primaryContainer = cottoncandy30,
-        onPrimaryContainer = cottoncandy90,
-        inversePrimary = cottoncandy40,
+        primary = raspberryrose80,
+        onPrimary = Color.White,
+        primaryContainer = raspberryrose30,
+        onPrimaryContainer = raspberryrose10,
+        inversePrimary = raspberryrose30,
         secondary = berrybloom80,
-        onSecondary = berrybloom20,
+        onSecondary = Color.White,
         secondaryContainer = berrybloom30,
-        onSecondaryContainer = berrybloom90,
+        onSecondaryContainer = berrybloom10,
         tertiary = raspberryrose80,
-        onTertiary = raspberryrose20,
+        onTertiary = Color.White,
         tertiaryContainer = raspberryrose30,
-        onTertiaryContainer = raspberryrose90,
+        onTertiaryContainer = raspberryrose10,
         error = petalblush80,
         onError = petalblush20,
         errorContainer = petalblush30,
         onErrorContainer = petalblush90,
-        background = petalblush10,
-        onBackground = petalblush90,
-        surface = petalblush30,
-        onSurface = petalblush80,
-        inverseSurface = petalblush90,
-        inverseOnSurface = petalblush10,
-        surfaceVariant = petalblush30,
-        onSurfaceVariant = petalblush80,
-        outline = petalblush80
+        background = petalblush90,
+        onBackground = petalblush80,
+        surface = Color.White,
+        onSurface = petalblush10,
+        inverseSurface = petalblush10,
+        inverseOnSurface = petalblush90,
+        surfaceVariant = petalblush70,
+        onSurfaceVariant = petalblush20,
+        outline = petalblush30
     )
 }

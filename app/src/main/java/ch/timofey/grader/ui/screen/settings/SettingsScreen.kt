@@ -445,7 +445,9 @@ fun SettingsScreen(
 )
 @Composable
 private fun SettingsScreenPreview() {
-    GraderTheme {
+    GraderTheme(
+        themeSetting = AppTheme.PINK_BLOSSOM
+    ) {
         SettingsScreen(
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             state = SettingsState(appTheme = AppTheme.DEVICE_THEME, calculatePointsState = true),
