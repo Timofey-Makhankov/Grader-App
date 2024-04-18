@@ -19,10 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -56,13 +56,14 @@ fun SchoolCard(
     onLongClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    colorGrade: Boolean = false,
     isOpen: Boolean = false,
     school: School
 ) {
     val checkedState = remember { mutableStateOf(school.isSelected) }
     val mutableInteractionSource = remember { MutableInteractionSource() }
     val expanded = remember { mutableStateOf(isOpen) }
-    ElevatedCard(
+    Card(
         modifier = Modifier
             .animateContentSize(
                 animationSpec = tween(
@@ -119,14 +120,13 @@ fun SchoolCard(
                         ) {
                             append("Average Grade: ")
                         }
-                        withStyle(
-                            SpanStyle(
+                        if (colorGrade) {
+                            pushStyle(SpanStyle(
                                 color = getGradeColors(school.grade),
                                 fontWeight = FontWeight.Bold
-                            )
-                        ) {
-                            append("${school.grade}")
+                            ))
                         }
+                        append("${school.grade}")
                     },
                     style = MaterialTheme.typography.labelLarge,
                     textAlign = TextAlign.Start
@@ -182,14 +182,14 @@ private fun PreviewSchoolCard() {
     GraderTheme {
         SchoolCard(school = School(
             UUID.randomUUID(),
-            "",//f.airport.europeanUnion.large(),
+            "Title",//f.airport.europeanUnion.large(),
             "",//LoremIpsum(20).values.joinToString(""),
             "",
             "",
             "",
             isSelected = true,
             grade = 5.6
-        ), onCheckBoxClick = {}, onLongClick = {}, onEditClick = {}, onDeleteClick = {})
+        ), onCheckBoxClick = {}, onLongClick = {}, onEditClick = {}, onDeleteClick = {}, colorGrade = true)
     }
 }
 
@@ -202,7 +202,7 @@ private fun PreviewSchoolCardDarkMode() {
     GraderTheme {
         SchoolCard(isOpen = true, school = School(
             UUID.randomUUID(),
-            "",//f.airport.europeanUnion.large(),
+            "Title",//f.airport.europeanUnion.large(),
             LoremIpsum(20).values.joinToString(""),
             "",//f.address.streetAddress(),
             "",//f.address.postcode(),

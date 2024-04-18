@@ -33,14 +33,14 @@ fun DivisionItem(
 ) {
     val currentItem by rememberUpdatedState(division)
     val card: @Composable () -> Unit = {
-        DivisionCard(
-            modifier = Modifier.padding(MaterialTheme.spacing.small).then(modifier),
+        DivisionCard(modifier = Modifier
+            .padding(MaterialTheme.spacing.small)
+            .then(modifier),
             division = division,
             onCheckBoxClick = onCheckBoxClick,
             onLongClick = onLongClick,
             onEditClick = onUpdateClick,
-            onDeleteClick = onDeleteClick
-        )
+            onDeleteClick = onDeleteClick)
     }
     if (!disableSwipe) {
         val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
@@ -48,12 +48,12 @@ fun DivisionItem(
                 SwipeToDismissBoxValue.EndToStart -> {
                     onSwipe(currentItem)
                 }
+
                 else -> Unit
             }
             true
         }, positionalThreshold = { value -> (value / 8) })
-        SwipeToDismissBox(
-            modifier = Modifier,
+        SwipeToDismissBox(modifier = Modifier,
             enableDismissFromEndToStart = true,
             enableDismissFromStartToEnd = false,
             state = dismissState,
@@ -69,15 +69,7 @@ fun DivisionItem(
                             durationMillis = 400
                         )
                     )
-                ) {
-                    DismissDeleteBackground(dismissState)
-                }
-            }
-        ){
-            card()
-        }
-    } else {
-        card()
-    }
+                ) { DismissDeleteBackground(dismissState) } }) { card() } }
+    else { card() }
 
 }

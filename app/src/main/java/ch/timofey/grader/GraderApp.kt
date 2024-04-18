@@ -10,13 +10,11 @@ class GraderApp : Application() {
         super.onCreate()
         application = this
     }
-
     companion object {
-        private var application: Application? = null;
+        private var application: Application? = null
         private fun getApplication(): Application? {
             return application
         }
-
         fun getContext(): Context? {
             return getApplication()?.applicationContext
         }

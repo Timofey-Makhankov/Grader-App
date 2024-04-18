@@ -60,6 +60,8 @@ class SettingsViewModel @Inject constructor(
                     minimumGrade = it.minimumGrade.toString(),
                     dateFormat = it.dateFormatter,
                     showNavigationIcons = it.showNavigationIcons,
+                    colorGrades = it.colorGrades,
+                    swapNavigation = it.swapNavigation,
                     language = result!!
                 )
             }
@@ -219,7 +221,25 @@ class SettingsViewModel @Inject constructor(
             }
 
             is SettingsEvent.OnGradeColorChange -> {
+                _uiState.value = _uiState.value.copy(colorGrades = event.value)
+                viewModelScope.launch(Dispatchers.IO) {
+                    dataStore.updateData {
+                        it.copy(
+                            colorGrades = _uiState.value.colorGrades
+                        )
+                    }
+                }
+            }
 
+            is SettingsEvent.OnSwapNavigationChange -> {
+                _uiState.value = _uiState.value.copy(swapNavigation = event.value)
+                viewModelScope.launch(Dispatchers.IO) {
+                    dataStore.updateData {
+                        it.copy(
+                            swapNavigation = _uiState.value.swapNavigation
+                        )
+                    }
+                }
             }
         }
     }

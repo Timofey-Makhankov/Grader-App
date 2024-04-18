@@ -7,13 +7,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import ch.timofey.grader.ui.screen.main.MainEntry
+import ch.timofey.grader.ui.screen.main.MainScreen
+import ch.timofey.grader.utils.setApplicationLanguage
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,11 +36,10 @@ class MainActivity : AppCompatActivity() {
         )
         super.onCreate(savedInstanceState)
         setContent {
-            MainEntry()
+            MainScreen()
         }
         if (AppCompatDelegate.getApplicationLocales().isEmpty) {
-            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags("en")
-            AppCompatDelegate.setApplicationLocales(appLocale)
+            setApplicationLanguage("en")
         }
     }
 }

@@ -143,7 +143,7 @@ fun DivisionCard(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
-                                    contentDescription = "Edit the School Card"
+                                    contentDescription = "Delete the School Card"
                                 )
                             }
                         }

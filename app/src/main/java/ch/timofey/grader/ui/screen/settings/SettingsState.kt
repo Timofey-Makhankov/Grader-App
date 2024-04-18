@@ -15,5 +15,6 @@ data class SettingsState(
     val dateFormat: DateFormatting = DateFormatting.DEFAULT,
     val showNavigationIcons: Boolean = false,
     val colorGrades: Boolean = false,
+    val swapNavigation: Boolean = false,
     val errorMessageMinimumGrade: String = "",
 )

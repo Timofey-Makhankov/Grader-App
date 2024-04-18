@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.division.Division
+import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
@@ -43,7 +44,6 @@ import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.components.organisms.items.DivisionItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -180,7 +180,7 @@ fun DivisionListScreen(
                     actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
                     actionContentDescription = "Go Back to previous Screen",
                     appBarTitle = "Divisions",
-                    locationIndicator = state.showNavigationIcons?: false,
+                    locationIndicator = state.showNavigationIcons ?: false,
                     pageIndex = 1
                 )
             }) {
@@ -230,7 +230,7 @@ fun DivisionListScreen(
                                     )
                                 )
                             },
-                            onDeleteClick = { DivisionListEvent.OnDeleteIconClick(division.id) },
+                            onDeleteClick = { onEvent(DivisionListEvent.OnDeleteIconClick(division.id)) },
                             onUpdateClick = {
                                 onNavigate(
                                     UiEvent.Navigate(

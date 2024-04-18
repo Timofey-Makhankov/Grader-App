@@ -31,6 +31,7 @@ fun SchoolItem(
     onCheckBoxClick: () -> Unit,
     onLongClick: () -> Unit,
     disableSwipe: Boolean = false,
+    colorGrade: Boolean = false
 ) {
     val currentItem by rememberUpdatedState(school)
     val card: @Composable () -> Unit = {
@@ -39,6 +40,7 @@ fun SchoolItem(
                 .padding(MaterialTheme.spacing.small)
                 .then(modifier),
             school = currentItem,
+            colorGrade = colorGrade,
             onCheckBoxClick = onCheckBoxClick,
             onLongClick = onLongClick,
             onDeleteClick = onDeleteClick,

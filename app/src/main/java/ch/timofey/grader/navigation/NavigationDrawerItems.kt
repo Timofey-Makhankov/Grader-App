@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import ch.timofey.grader.type.MenuItem
 import ch.timofey.grader.ui.components.atom.icons.Calculate
-import ch.timofey.grader.ui.components.atom.icons.Help
 
 object NavigationDrawerItems {
     val list = listOf(
@@ -22,12 +21,6 @@ object NavigationDrawerItems {
             contentDescription = "Go to Custom Grade Calculator",
             icon = Icons.Calculate,
             onNavigate = Screen.CalculatorScreen.route
-        ), MenuItem(
-            id = "help",
-            title = "Help",
-            contentDescription = "Go to Help Screen",
-            icon = Icons.Help,
-            onNavigate = Screen.WalkthroughScreen.route
         ), MenuItem(
             id = "about",
             title = "About",

@@ -19,7 +19,7 @@ object ModuleValidation: Validatable<ModuleValidationFields> {
 
     fun teacherFirstName(teacherFirstName: String): ValidationResponse {
         return when {
-            teacherFirstName.isBlank() -> ValidationResponse(valid = false, message = "Teacher First Name is Required")
+            //teacherFirstName.isBlank() -> ValidationResponse(valid = false, message = "Teacher First Name is Required")
             teacherFirstName.length > 60 -> ValidationResponse(valid = false, message = "Teacher First Name cannot be over 60 characters long")
             else -> ValidationResponse(valid = true)
         }
@@ -27,7 +27,7 @@ object ModuleValidation: Validatable<ModuleValidationFields> {
 
     fun teacherLastName(teacherLastName: String): ValidationResponse {
         return when {
-            teacherLastName.isBlank() -> ValidationResponse(valid = false, message = "Teacher Last Name is Required")
+            //teacherLastName.isBlank() -> ValidationResponse(valid = false, message = "Teacher Last Name is Required")
             teacherLastName.length > 60 -> ValidationResponse(valid = false, message = "Teacher Last Name cannot be over 60 characters long")
             else -> ValidationResponse(valid = true)
         }

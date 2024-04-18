@@ -1,5 +1,6 @@
 package ch.timofey.grader.ui.screen.division.division_list
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -123,6 +124,7 @@ class DivisionListViewModel @Inject constructor(
             }
 
             is DivisionListEvent.OnDeleteIconClick -> {
+                Log.d("DivisionListViewModel", "Delete Button clicked")
                 viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteDivision(event.id, true)
                     sendUiEvent(

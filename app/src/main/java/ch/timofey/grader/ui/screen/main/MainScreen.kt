@@ -14,12 +14,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import ch.timofey.grader.navigation.Navigation
-import ch.timofey.grader.ui.screen.main.MainViewModel
 import ch.timofey.grader.ui.theme.GraderTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainEntry() {
+fun MainScreen() {
     val viewModel = hiltViewModel<MainViewModel>()
     val state by viewModel.uiState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }

@@ -5,12 +5,12 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,25 +47,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.timofey.grader.db.AppTheme
+import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
+import ch.timofey.grader.type.AppLanguage
+import ch.timofey.grader.type.DateFormatting
+import ch.timofey.grader.type.DeviceInfo
 import ch.timofey.grader.ui.components.atom.DropDownMenu
 import ch.timofey.grader.ui.components.molecules.InformationDialog
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
+import ch.timofey.grader.ui.components.molecules.ShowNavigationIconsInformation
 import ch.timofey.grader.ui.components.molecules.SwitchText
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.type.AppLanguage
-import ch.timofey.grader.type.DateFormatting
-import ch.timofey.grader.type.DeviceInfo
-import ch.timofey.grader.navigation.NavigationDrawerItems
-import ch.timofey.grader.ui.components.atom.Circle
-import ch.timofey.grader.ui.components.atom.Triangle
-import ch.timofey.grader.ui.components.molecules.ScreenIndicator
-import ch.timofey.grader.ui.components.molecules.ShowNavigationIconsInformation
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -84,6 +80,7 @@ fun SettingsScreen(
     state: SettingsState,
     onEvent: (SettingsEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
+    scrollState: ScrollState = rememberScrollState(),
     snackBarHostState: SnackbarHostState,
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
@@ -165,9 +162,9 @@ fun SettingsScreen(
             }) {
             Column(
                 modifier = Modifier
-                    .verticalScroll(state = rememberScrollState())
+                    .verticalScroll(state = scrollState)
                     .padding(it)
-                    .fillMaxSize(),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -210,7 +207,8 @@ fun SettingsScreen(
                     AppLanguage.entries.filter { value -> value != state.language }
                         .forEach { appLanguage ->
                             DropdownMenuItem(
-                                text = { Text(text = Locale(appLanguage.tag).displayLanguage) }, onClick = {
+                                text = { Text(text = Locale(appLanguage.tag).displayLanguage) },
+                                onClick = {
                                     onEvent(SettingsEvent.OnLanguageChange(appLanguage))
                                     afterSelection()
                                 })
@@ -218,12 +216,23 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
-                    value = if (state.dateFormat != DateFormatting.DEFAULT) Locale(state.dateFormat.language, state.dateFormat.country).displayName else "Follow System",
-                    title = "Date Format") { afterSelection ->
+                    value = if (state.dateFormat != DateFormatting.DEFAULT) Locale(
+                        state.dateFormat.language,
+                        state.dateFormat.country
+                    ).displayName else "Follow System",
+                    title = "Date Format"
+                ) { afterSelection ->
                     DateFormatting.entries.filter { value -> value != state.dateFormat }
                         .forEach { format ->
                             DropdownMenuItem(
-                                text = { Text(text = Locale(format.language, format.country).displayName) }, onClick = {
+                                text = {
+                                    Text(
+                                        text = Locale(
+                                            format.language,
+                                            format.country
+                                        ).displayName
+                                    )
+                                }, onClick = {
                                     onEvent(SettingsEvent.OnDateFormatChange(format))
                                     afterSelection()
                                 })
@@ -231,16 +240,32 @@ fun SettingsScreen(
                 }
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
-                    onValueChange = { value -> onEvent(SettingsEvent.OnShowNavigationIconsChange(value)) },
+                    onValueChange = { value ->
+                        onEvent(
+                            SettingsEvent.OnShowNavigationIconsChange(
+                                value
+                            )
+                        )
+                    },
                     value = state.showNavigationIcons,
                     name = "Show Navigation Icons",
-                    dialog = { InformationDialog( onDismiss = { it() } ) { ShowNavigationIconsInformation() } },
+                    dialog = { InformationDialog(onDismiss = { it() }) { ShowNavigationIconsInformation() } },
+                    showExtraInformation = true
+                )
+                SwitchText(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                    onValueChange = { value -> onEvent(SettingsEvent.OnSwapNavigationChange(value))},
+                    value = state.swapNavigation,
+                    name = "Swap Long Press Navigation",
+                    dialog = { InformationDialog(onDismiss = { it() }) {
+                        Text(text = "This is a description")
+                    } },
                     showExtraInformation = true
                 )
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                     onValueChange = { value -> onEvent(SettingsEvent.OnGradeColorChange(value)) },
-                    value = state.showNavigationIcons,
+                    value = state.colorGrades,
                     name = "Color Calculated Grades",
                     dialog = {
                         InformationDialog(
@@ -440,18 +465,21 @@ fun SettingsScreen(
 }
 
 @Preview(name = "Light Mode")
-@Preview(name = "Dark Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+
+    )
 @Composable
 private fun SettingsScreenPreview() {
     GraderTheme(
-        themeSetting = AppTheme.PINK_BLOSSOM
+        themeSetting = AppTheme.DEVICE_THEME
     ) {
         SettingsScreen(
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             state = SettingsState(appTheme = AppTheme.DEVICE_THEME, calculatePointsState = true),
             onEvent = {},
+            scrollState = ScrollState(Int.MAX_VALUE),
             uiEvent = emptyFlow(),
             onNavigate = {},
             snackBarHostState = SnackbarHostState()

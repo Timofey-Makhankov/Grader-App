@@ -17,6 +17,7 @@ sealed class SettingsEvent {
     data class OnLoadBackupFile(val file: InputStream) : SettingsEvent()
     data class OnLanguageChange(val language: AppLanguage) : SettingsEvent()
     data class OnDateFormatChange(val format: DateFormatting) : SettingsEvent()
+    data class OnSwapNavigationChange(val value: Boolean) : SettingsEvent()
     data class OnCreateBackupFile(val file: OutputStream, val fileLocation: String) : SettingsEvent()
     data object OnDeleteDatabaseButtonClick : SettingsEvent()
 }

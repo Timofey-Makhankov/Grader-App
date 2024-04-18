@@ -43,7 +43,8 @@ class SchoolListViewModel @Inject constructor(
                     showPoints = it.calculatePoints,
                     swipingEnabled = it.enableSwipeToDelete,
                     minimumGrade = it.minimumGrade,
-                    showNavigationIcons = it.showNavigationIcons
+                    showNavigationIcons = it.showNavigationIcons,
+                    colorGrades = it.colorGrades
                 )
             }
         }

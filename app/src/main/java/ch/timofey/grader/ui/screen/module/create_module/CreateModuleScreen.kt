@@ -91,9 +91,9 @@ fun CreateModuleScreen(
                 isError = !state.validTeacherFirstname,
                 label = { Text(text = buildAnnotatedString {
                     append("Teacher Firstname")
-                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
+                    /*withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
                         append("(Required)")
-                    }
+                    }*/
                 }) },
                 supportingText = {
                     if (!state.validTeacherFirstname) {
@@ -113,9 +113,9 @@ fun CreateModuleScreen(
                 isError = !state.validTeacherLastname,
                 label = { Text(text = buildAnnotatedString {
                     append("Teacher Lastname")
-                    withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
+                    /*withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
                         append("(Required)")
-                    }
+                    }*/
                 }) },
                 supportingText = {
                     if (!state.validTeacherLastname) {

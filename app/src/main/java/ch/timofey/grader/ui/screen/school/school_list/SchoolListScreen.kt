@@ -229,7 +229,8 @@ fun SchoolListScreen(
                     ) { school ->
                         SchoolItem(
                             school = school,
-                            disableSwipe = !state.swipingEnabled,
+                            colorGrade = state.colorGrades!!,
+                            disableSwipe = state.swipingEnabled,
                             onSwipe = {
                                 deletedSchoolId.value = school.id
                                 onEvent(

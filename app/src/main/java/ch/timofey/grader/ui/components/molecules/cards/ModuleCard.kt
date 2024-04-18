@@ -183,7 +183,7 @@ private fun ModuleCardPreview() {
     GraderTheme {
         ModuleCard(module = Module(
             id = UUID.randomUUID(),
-            name = "",//f.science.branch.formalBasic(),
+            name = "title",//f.science.branch.formalBasic(),
             description = LoremIpsum().values.joinToString(""),
             isSelected = false,
             divisionId = UUID.randomUUID(),
@@ -202,23 +202,8 @@ private fun ModuleCardDarkModePreview() {
         Column {
             ModuleCard(module = Module(
                 id = UUID.randomUUID(),
-                name = "",//f.science.branch.formalApplied(),
+                name = "title",//f.science.branch.formalApplied(),
                 description = LoremIpsum().values.joinToString(""),
-                isSelected = true,
-                divisionId = UUID.randomUUID(),
-                teacherFirstname = "",//f.name.firstName(),
-                teacherLastname = "",//f.name.lastName(),
-                grade = 3.9
-            ),
-                isOpen = true,
-                onCheckBoxClick = {},
-                onLongClick = {},
-                onDeleteClick = {},
-                onEditClick = {})
-            ModuleCard(module = Module(
-                id = UUID.randomUUID(),
-                name = "",//f.science.branch.formalApplied(),
-                description = "",
                 isSelected = true,
                 divisionId = UUID.randomUUID(),
                 teacherFirstname = "",//f.name.firstName(),

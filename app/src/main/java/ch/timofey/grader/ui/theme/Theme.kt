@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import ch.timofey.grader.db.AppTheme
+import ch.timofey.grader.ui.theme.scheme.ColorSchemas
 import ch.timofey.grader.ui.theme.scheme.DuskHorizonScheme
 import ch.timofey.grader.ui.theme.scheme.GraderColorScheme
 import ch.timofey.grader.ui.theme.scheme.PinkBlossomScheme
@@ -26,7 +27,6 @@ private val lightColorPalette = ColorSchemas.lightColorSchema
 
 @Composable
 fun getColorschemeFromAppSetting(theme: AppTheme): ColorScheme {
-    val useDynamicColors = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     return when (theme) {
         AppTheme.GRADER_THEME_LIGHT -> GraderColorScheme.lightScheme
         AppTheme.GRADER_THEME_DARK -> GraderColorScheme.darkScheme
