@@ -18,6 +18,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -52,7 +54,8 @@ fun CreateExamScreen(
     onEvent: (CreateExamEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onPopBackStack: (SnackbarVisuals?) -> Unit,
-    isDialogOpen: Boolean = false
+    isDialogOpen: Boolean = false,
+    snackBarHostState: SnackbarHostState
 ) {
     val openDialog = remember { mutableStateOf(isDialogOpen) }
     val datePickerState = rememberDatePickerState()
@@ -60,7 +63,19 @@ fun CreateExamScreen(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack(SnackBarMessage("New Exam was created", withDismissAction = true))
+                    onPopBackStack(null)
+                }
+
+                is UiEvent.PopBackStackAndShowSnackBar -> {
+                    onPopBackStack(event.snackbarVisuals)
+                }
+
+                is UiEvent.ShowSnackBar -> {
+                    snackBarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = event.withDismissAction,
+                        duration = SnackbarDuration.Short
+                    )
                 }
 
                 else -> Unit
@@ -238,6 +253,8 @@ private fun CreateExamScreenPreview() {
         CreateExamScreen(state = CreateExamState(),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onPopBackStack = {})
+            onPopBackStack = {},
+            snackBarHostState = remember { SnackbarHostState() }
+        )
     }
 }

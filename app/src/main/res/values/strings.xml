@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Grader</string>
     <string name="school_screen_title">Schools</string>
+    <string name="delete_data_dialog_content">Are you sure, you want to delete all the Application Data? This action is not reversible and you lose all data. Before you delete all data, you may want to backup all the Information</string>
 </resources>

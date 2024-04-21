@@ -17,4 +17,5 @@ data class SettingsState(
     val colorGrades: Boolean = false,
     val swapNavigation: Boolean = false,
     val errorMessageMinimumGrade: String = "",
+    val showDeleteDataDialog: Boolean = false
 )

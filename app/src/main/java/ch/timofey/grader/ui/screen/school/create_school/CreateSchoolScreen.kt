@@ -48,14 +48,18 @@ fun CreateSchoolScreen(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack(SnackBarMessage("New School was created", withDismissAction = true))
+                    onPopBackStack(null)
+                }
+
+                is UiEvent.PopBackStackAndShowSnackBar -> {
+                    onPopBackStack(event.snackbarVisuals)
                 }
 
                 is UiEvent.ShowSnackBar -> {
                     snackBarHostState.showSnackbar(
                         message = event.message,
                         withDismissAction = event.withDismissAction,
-                        duration = SnackbarDuration.Long
+                        duration = SnackbarDuration.Short
                     )
                 }
 
@@ -70,8 +74,7 @@ fun CreateSchoolScreen(
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
             actionContentDescription = "Go back to School Screen"
         )
-    }//, snackbarHost = { SnackbarHost(snackBarHostState) }
-    ) {
+    }) {
         Column(
             modifier = Modifier
                 .verticalScroll(state = rememberScrollState())
@@ -268,7 +271,8 @@ private fun PreviewCreateSchoolScreen() {
             onEvent = {},
             uiEvent = emptyFlow(),
             onPopBackStack = {},
-            snackBarHostState = remember { SnackbarHostState() })
+            snackBarHostState = remember { SnackbarHostState() }
+        )
     }
 }
 
@@ -282,6 +286,7 @@ private fun PreviewDarkModeCreateSchoolScreen() {
             onEvent = {},
             uiEvent = emptyFlow(),
             onPopBackStack = {},
-            snackBarHostState = remember { SnackbarHostState() })
+            snackBarHostState = remember { SnackbarHostState() }
+        )
     }
 }

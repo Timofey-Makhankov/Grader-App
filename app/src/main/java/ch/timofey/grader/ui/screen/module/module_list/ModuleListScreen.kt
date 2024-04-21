@@ -101,6 +101,7 @@ fun ModuleListScreen(
                             }
                         }
                     }
+                    else -> Unit
                 }
             }
         }
@@ -116,7 +117,7 @@ fun ModuleListScreen(
             }
         },
     ) {
-        Scaffold(//snackbarHost = { SnackbarHost(snackBarHostState) },
+        Scaffold(
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 state.averageGradeIsZero?.let {

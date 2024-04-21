@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.db.domain.school.SchoolValidation
+import ch.timofey.grader.type.SnackBarMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -114,13 +115,10 @@ class UpdateSchoolViewModel @Inject constructor(
                         zipCode = _uiState.value.zip,
                         city = _uiState.value.city
                     )
-
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateSchool(updatedSchool)
                     }
-                    sendUiEvent(UiEvent.PopBackStack)
-                    //Toast.makeText(GraderApp.getContext(), "School Updated", Toast.LENGTH_SHORT)
-                    //    .show()
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("School with name: \"${_uiState.value.name}\" has been updated")))
                 } else {
                     sendUiEvent(UiEvent.ShowSnackBar("School was unable to be Updated",true))
                 }

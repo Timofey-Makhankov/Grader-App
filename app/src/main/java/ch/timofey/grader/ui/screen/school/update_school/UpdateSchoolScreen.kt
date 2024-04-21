@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -48,7 +47,11 @@ fun UpdateSchoolScreen(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack(SnackBarMessage("School was updated", withDismissAction = true))
+                    onPopBackStack(null)
+                }
+
+                is UiEvent.PopBackStackAndShowSnackBar -> {
+                    onPopBackStack(event.snackbarVisuals)
                 }
 
                 is UiEvent.ShowSnackBar -> {

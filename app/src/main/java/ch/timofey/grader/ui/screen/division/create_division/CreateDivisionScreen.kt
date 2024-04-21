@@ -14,10 +14,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -42,12 +45,25 @@ fun CreateDivisionScreen(
     onEvent: (CreateDivisionEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onPopBackStack: (SnackbarVisuals?) -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack(SnackBarMessage("New Division was created", withDismissAction = true))
+                    onPopBackStack(null)
+                }
+
+                is UiEvent.PopBackStackAndShowSnackBar -> {
+                    onPopBackStack(event.snackbarVisuals)
+                }
+
+                is UiEvent.ShowSnackBar -> {
+                    snackBarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = event.withDismissAction,
+                        duration = SnackbarDuration.Long
+                    )
                 }
 
                 else -> Unit
@@ -164,7 +180,11 @@ private fun CreateDivisionScreenPreview() {
     GraderTheme {
         CreateDivisionScreen(state = CreateDivisionState(
             year = "333"
-        ), onEvent = {}, uiEvent = emptyFlow(), onPopBackStack = {})
+        ),
+            onEvent = {},
+            uiEvent = emptyFlow(),
+            onPopBackStack = {},
+            snackBarHostState = remember { SnackbarHostState() })
     }
 }
 
@@ -176,6 +196,10 @@ private fun CreateDivisionScreenDarkModePreview() {
     GraderTheme {
         CreateDivisionScreen(state = CreateDivisionState(
             name = "Lehrjahr 2", year = Year.of(2022).value.toString()
-        ), onEvent = {}, uiEvent = emptyFlow(), onPopBackStack = {})
+        ),
+            onEvent = {},
+            uiEvent = emptyFlow(),
+            onPopBackStack = {},
+            snackBarHostState = remember { SnackbarHostState() })
     }
 }

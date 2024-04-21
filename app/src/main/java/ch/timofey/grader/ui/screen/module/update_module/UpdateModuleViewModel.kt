@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.module.ModuleValidation
+import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -101,14 +102,10 @@ class UpdateModuleViewModel @Inject constructor(
                     )
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateModule(updatedModule)
-                        sendUiEvent(UiEvent.PopBackStack)
-                        //sendUiEvent(UiEvent.ShowSnackBar("Module was successfully updated"))
                     }
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Module with name: \"${_uiState.value.name}\" has been updated", withDismissAction = true)))
                 } else {
-                    sendUiEvent(
-                        UiEvent.ShowSnackBar(
-                            message = "Module was unable to be created", withDismissAction = true
-                        )
+                    sendUiEvent(UiEvent.ShowSnackBar(message = "Module was unable to be created", withDismissAction = true)
                     )
                 }
             }

@@ -82,8 +82,17 @@ class SettingsViewModel @Inject constructor(
             }
 
             is SettingsEvent.OnDeleteDatabaseButtonClick -> {
+                _uiState.value = _uiState.value.copy(showDeleteDataDialog = true)
+            }
+
+            is SettingsEvent.OnDismissDeleteData -> {
+                _uiState.value = _uiState.value.copy(showDeleteDataDialog = false)
+            }
+
+            is SettingsEvent.OnConfirmDeleteData -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     database.clearAllTables()
+                    _uiState.value = _uiState.value.copy(showDeleteDataDialog = false)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
                             "Data has been cleared from the Application Database",

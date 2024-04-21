@@ -6,6 +6,7 @@ import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.db.domain.school.SchoolValidation
+import ch.timofey.grader.type.SnackBarMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -80,21 +81,17 @@ class CreateSchoolViewModel @Inject constructor(
 
             is CreateSchoolEvent.OnCreateSchool -> {
                 if (SchoolValidation.validateAll(_uiState.value)) {
-                    val newSchool = School(
-                        id = UUID.randomUUID(),
-                        name = _uiState.value.name,
-                        description = _uiState.value.description,
-                        address = _uiState.value.address,
-                        zipCode = _uiState.value.zip,
-                        city = _uiState.value.city
-                    )
                     viewModelScope.launch(Dispatchers.IO) {
-                        repository.saveSchool(newSchool)
-                        //sendUiEvent(UiEvent.ShowSnackBar("Shool Created", true))
+                        repository.saveSchool(School(
+                            id = UUID.randomUUID(),
+                            name = _uiState.value.name,
+                            description = _uiState.value.description,
+                            address = _uiState.value.address,
+                            zipCode = _uiState.value.zip,
+                            city = _uiState.value.city
+                        ))
                     }
-                    sendUiEvent(UiEvent.PopBackStack)
-                //Toast.makeText(GraderApp.getContext(), "School Created", Toast.LENGTH_SHORT)
-                    //    .show()
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("School with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
                 } else {
                     sendUiEvent(UiEvent.ShowSnackBar("School was unable to be created", true))
                 }

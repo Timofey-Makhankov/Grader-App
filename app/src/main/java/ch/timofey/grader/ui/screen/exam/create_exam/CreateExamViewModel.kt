@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.exam.ExamValidation
+import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -105,7 +106,7 @@ class CreateExamViewModel @Inject constructor(
                             )
                         )
                     }
-                    sendUiEvent(UiEvent.PopBackStack)
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Exam with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
                 } else {
                     sendUiEvent(UiEvent.ShowSnackBar("Exam was unable to be created", true))
                 }

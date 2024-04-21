@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -20,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -31,12 +31,25 @@ fun CreateModuleScreen(
     onEvent: (CreateModuleEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
     onPopBackStack: (SnackbarVisuals?) -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack(SnackBarMessage("New Module was created", withDismissAction = true))
+                    onPopBackStack(null)
+                }
+
+                is UiEvent.ShowSnackBar -> {
+                    snackBarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = event.withDismissAction,
+                        duration = SnackbarDuration.Long
+                    )
+                }
+
+                is UiEvent.PopBackStackAndShowSnackBar -> {
+                    onPopBackStack(event.snackbarVisuals)
                 }
 
                 else -> Unit
@@ -91,9 +104,6 @@ fun CreateModuleScreen(
                 isError = !state.validTeacherFirstname,
                 label = { Text(text = buildAnnotatedString {
                     append("Teacher Firstname")
-                    /*withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
-                    }*/
                 }) },
                 supportingText = {
                     if (!state.validTeacherFirstname) {
@@ -113,9 +123,6 @@ fun CreateModuleScreen(
                 isError = !state.validTeacherLastname,
                 label = { Text(text = buildAnnotatedString {
                     append("Teacher Lastname")
-                    /*withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
-                    }*/
                 }) },
                 supportingText = {
                     if (!state.validTeacherLastname) {
@@ -151,7 +158,9 @@ private fun CreateModuleScreenPreview() {
         CreateModuleScreen(state = CreateModuleState(),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onPopBackStack = {})
+            onPopBackStack = {},
+            snackBarHostState = remember { SnackbarHostState() }
+        )
     }
 }
 
@@ -162,6 +171,8 @@ private fun CreateModuleScreenDarkModePreview() {
         CreateModuleScreen(state = CreateModuleState(),
             onEvent = {},
             uiEvent = emptyFlow(),
-            onPopBackStack = {})
+            onPopBackStack = {},
+            snackBarHostState = remember { SnackbarHostState() }
+        )
     }
 }

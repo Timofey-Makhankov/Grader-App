@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.db.domain.division.DivisionValidation
+import ch.timofey.grader.type.SnackBarMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -88,11 +89,10 @@ class UpdateDivisionViewModel @Inject constructor(
                         description = _uiState.value.description,
                         schoolYear = _uiState.value.year.toInt()
                     )
-
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateDivision(updatedDivision)
                     }
-                    sendUiEvent(UiEvent.PopBackStack)
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Division with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
                 } else {
                     sendUiEvent(UiEvent.ShowSnackBar("Division was unable to be Updated",true))
                 }

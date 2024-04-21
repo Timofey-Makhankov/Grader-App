@@ -1,6 +1,5 @@
 package ch.timofey.grader.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -12,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -60,18 +60,16 @@ fun Navigation(
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(500)) }) {
         composable(route = Screen.MainScreen.route) { navBackStackEntry ->
-            val stackEntry =
-                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<SchoolListViewModel>()
             val state by viewModel.uiState.collectAsState()
+            val stackEntry =
+                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             SchoolListScreen(
                 drawerState = drawerState,
                 onEvent = viewModel::onEvent,
                 state = state,
                 uiEvent = viewModel.uiEvent,
-                onNavigate = {
-                    navController.navigate(it.route)
-                },
+                onNavigate = { navController.navigate(it.route) },
                 snackBarHostState = snackBarHostState,
                 stackEntryValue = stackEntry
             )
@@ -83,14 +81,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data ->
-                    if (data != null) {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("show-snackBar", data)
-                    }
-                    navController.popBackStackSafe()
-                },
+                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -132,8 +123,7 @@ fun Navigation(
                 navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<DivisionListViewModel>()
             val state by viewModel.uiState.collectAsState()
-            DivisionListScreen(
-                state = state,
+            DivisionListScreen(state = state,
                 onEvent = viewModel::onEvent,
                 onNavigate = {
                     navController.navigate(it.route)
@@ -157,17 +147,13 @@ fun Navigation(
         ) {
             val viewModel = hiltViewModel<CreateDivisionViewModel>()
             val state by viewModel.uiState.collectAsState()
-            CreateDivisionScreen(state = state,
+            CreateDivisionScreen(
+                state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data ->
-                    if (data != null) {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("show-snackBar", data)
-                    }
-                    navController.popBackStackSafe()
-                })
+                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                snackBarHostState = snackBarHostState
+            )
         }
         composable(
             route = Screen.ModuleScreen.route + "/{id}", arguments = listOf(navArgument("id") {
@@ -201,17 +187,13 @@ fun Navigation(
         ) {
             val viewModel = hiltViewModel<CreateModuleViewModel>()
             val state by viewModel.uiState.collectAsState()
-            CreateModuleScreen(state = state,
+            CreateModuleScreen(
+                state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data ->
-                    if (data != null) {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("show-snackBar", data)
-                    }
-                    navController.popBackStackSafe()
-                })
+                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                snackBarHostState = snackBarHostState
+            )
         }
         composable(
             route = Screen.ExamScreen.route + "/{id}", arguments = listOf(navArgument("id") {
@@ -244,17 +226,13 @@ fun Navigation(
         ) {
             val viewModel = hiltViewModel<CreateExamViewModel>()
             val state by viewModel.uiState.collectAsState()
-            CreateExamScreen(state = state,
+            CreateExamScreen(
+                state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data ->
-                    if (data != null) {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("show-snackBar", data)
-                    }
-                    navController.popBackStackSafe()
-                })
+                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                snackBarHostState = snackBarHostState
+            )
         }
         composable(
             route = Screen.SchoolEditScreen.route + "/{id}", arguments = listOf(navArgument("id") {
@@ -269,14 +247,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data ->
-                    if (data != null) {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("show-snackBar", data)
-                    }
-                    navController.popBackStackSafe()
-                },
+                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -294,14 +265,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data ->
-                    if (data != null) {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("show-snackBar", data)
-                    }
-                    navController.popBackStackSafe()
-                },
+                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -318,14 +282,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data ->
-                    if (data != null) {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("show-snackBar", data)
-                    }
-                    navController.popBackStackSafe()
-                },
+                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -340,24 +297,27 @@ fun Navigation(
         ) {
             val viewModel = hiltViewModel<UpdateExamViewModel>()
             val state by viewModel.uiState.collectAsState()
-            UpdateExamScreen(state = state,
+            UpdateExamScreen(
+                state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data ->
-                    if (data != null) {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("show-snackBar", data)
-                    }
-                    navController.popBackStackSafe()
-                })
+                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                snackBarHostState = snackBarHostState
+            )
         }
     }
 }
 
-@SuppressLint("RestrictedApi")
-private fun NavController.popBackStackSafe(): Boolean = if (currentBackStack.value.size <= 2) {
-    false
-} else {
-    popBackStack()
+private fun showSnackBarUponPopBackStack(navController: NavController, data: SnackbarVisuals?) {
+    if (data != null) {
+        navController.previousBackStackEntry?.savedStateHandle?.set("show-snackBar", data)
+    }
+    navController.popBackStackSafe()
 }
+
+private fun NavController.popBackStackSafe(): Boolean =
+    if (this.currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
+        popBackStack()
+    } else {
+        false
+    }

@@ -1,11 +1,9 @@
 package ch.timofey.grader.ui.screen.school.school_list
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ch.timofey.grader.db.AppDatabase
 import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
@@ -70,7 +68,7 @@ class SchoolListViewModel @Inject constructor(
     fun onEvent(event: SchoolListEvent) {
         when (event) {
             is SchoolListEvent.OnCreateSchool -> {
-                Log.d("SchoolListvm-ocs", "trying to delete schools")
+                //Log.d("SchoolListvm-ocs", "trying to delete schools")
                 viewModelScope.launch(Dispatchers.IO) {
                     repository.getAllSchools().filter { school -> school.onDelete }
                         .forEach { school ->
@@ -78,16 +76,16 @@ class SchoolListViewModel @Inject constructor(
                             repository.deleteSchool(school.id)
                         }
                 }
-                Log.d("ocs", "tried to delete Schools")
+                //Log.d("ocs", "tried to delete Schools")
                 sendUiEvent(UiEvent.Navigate(Screen.CreateSchoolScreen.route))
             }
 
             is SchoolListEvent.OnDeleteItems -> {
                 println("OnDeleteItems")
-                Log.d("SchoolListvm-odi", "trying to delete schools")
+                //Log.d("SchoolListvm-odi", "trying to delete schools")
                 viewModelScope.launch(Dispatchers.IO) {
                     deleteSchoolItems()
-                    Log.d("odi", "tried to delete SChools")
+                    //Log.d("odi", "tried to delete SChools")
                 }
                 sendUiEvent(UiEvent.Navigate(event.route))
             }

@@ -41,6 +41,7 @@ import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.organisms.AppBar
+import ch.timofey.grader.ui.components.organisms.BottomAppBar
 import ch.timofey.grader.ui.components.organisms.items.DivisionItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -96,6 +97,7 @@ fun DivisionListScreen(
                         }
                     }
                 }
+                else -> Unit
             }
         }
     }
@@ -164,7 +166,7 @@ fun DivisionListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        ch.timofey.grader.ui.components.organisms.BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
                             floatingActionButton = {
                                 ch.timofey.grader.ui.components.atom.FloatingActionButton(
                                     onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
@@ -204,12 +206,11 @@ fun DivisionListScreen(
                         )
                     }
                 }
-                if (state.swipingEnabled != null) {
                     items(
                         items = state.divisionList,
                         key = { division -> division.id }) { division ->
                         DivisionItem(division = division,
-                            disableSwipe = !state.swipingEnabled,
+                            disableSwipe = state.swipingEnabled ?: true,
                             onSwipe = { divisionItem ->
                                 deletedDivisionId.value = divisionItem.id
                                 onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
@@ -241,7 +242,7 @@ fun DivisionListScreen(
                                 )
                             })
                     }
-                }
+
 
             }
         }
@@ -321,7 +322,8 @@ private fun DivisionListScreenDarkModePreview() {
                         schoolId = UUID.randomUUID(),
                         grade = 0.0
                     )
-                ), locationTitles = listOf("Given School Name", "Divisions")
+                ), locationTitles = listOf("Given School Name", "Divisions"),
+                showNavigationIcons = true
             ),
             onEvent = {},
             uiEvent = emptyFlow(),

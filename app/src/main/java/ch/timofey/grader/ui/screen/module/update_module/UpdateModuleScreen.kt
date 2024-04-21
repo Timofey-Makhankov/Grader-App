@@ -47,7 +47,11 @@ fun UpdateModuleScreen(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack(SnackBarMessage("Module was updated", withDismissAction = true))
+                    onPopBackStack(null)
+                }
+
+                is UiEvent.PopBackStackAndShowSnackBar -> {
+                    onPopBackStack(event.snackbarVisuals)
                 }
 
                 is UiEvent.ShowSnackBar -> {
@@ -71,9 +75,7 @@ fun UpdateModuleScreen(
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
             actionContentDescription = "Go back to Module Screen"
         )
-    }, //snackbarHost = { SnackbarHost(snackBarHostState) {
-       // Snackbar(snackbarData = it) } }
-        ) {
+    }) {
         Column(
             modifier = Modifier
                 .verticalScroll(state = rememberScrollState())

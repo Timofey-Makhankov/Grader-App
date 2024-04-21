@@ -65,13 +65,14 @@ fun SchoolListScreen(
     state: SchoolListState,
     onEvent: (SchoolListEvent) -> Unit,
     uiEvent: Flow<UiEvent>,
-    onNavigate: (UiEvent.Navigate) -> Unit, snackBarHostState: SnackbarHostState,
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    snackBarHostState: SnackbarHostState,
     stackEntryValue: SnackbarVisuals?
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
         if (stackEntryValue != null) {
-            this.launch (Dispatchers.Main){
+            this.launch(Dispatchers.Main) {
                 snackBarHostState.showSnackbar(stackEntryValue)
             }
         }
@@ -107,7 +108,6 @@ fun SchoolListScreen(
         currentScreen = Screen.MainScreen,
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
-            println("Clicked on ${menuItem.title}")
             if (menuItem.onNavigate != Screen.MainScreen.route) {
                 onEvent(SchoolListEvent.OnDeleteItems(menuItem.onNavigate))
             }
@@ -115,95 +115,89 @@ fun SchoolListScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(
-            floatingActionButtonPosition = FabPosition.End,
-            floatingActionButton = {
-                state.averageGradeIsZero?.let {
-                    AnimatedVisibility(visible = it, enter = slideInHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            delayMillis = 100,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            delayMillis = 100,
-                            easing = FastOutSlowInEasing
-                        )
-                    ), exit = slideOutHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 100, easing = FastOutSlowInEasing
-                        )
-                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 100, easing = FastOutSlowInEasing
-                        )
-                    )) {
-                        FloatingActionButton(
-                            modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
-                            onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
-                            contentDescription = "Create a new School",
-                        )
-                    }
+        Scaffold(floatingActionButtonPosition = FabPosition.End, floatingActionButton = {
+            state.averageGradeIsZero?.let {
+                AnimatedVisibility(visible = it, enter = slideInHorizontally(
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        delayMillis = 100,
+                        easing = FastOutSlowInEasing
+                    )
+                ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        delayMillis = 100,
+                        easing = FastOutSlowInEasing
+                    )
+                ), exit = slideOutHorizontally(
+                    animationSpec = tween(
+                        durationMillis = 100, easing = FastOutSlowInEasing
+                    )
+                ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100, easing = FastOutSlowInEasing
+                    )
+                )) {
+                    FloatingActionButton(
+                        modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
+                        onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
+                        contentDescription = "Create a new School",
+                    )
                 }
-            },
-            bottomBar = {
-                state.averageGradeIsZero?.let {
-                    AnimatedVisibility(visible = !it, enter = slideInHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            delayMillis = 100,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            delayMillis = 100,
-                            easing = FastOutSlowInEasing
-                        )
-                    ), exit = slideOutHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 100, easing = FastOutSlowInEasing
-                        )
-                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 100, easing = FastOutSlowInEasing
-                        )
-                    )) {
-                        BottomAppBar(
-                            text = "Average Grade: ${state.averageGrade}",
-                            subText = if (state.minimumGrade != null && state.showPoints == true) {
-                                "Points: ${
-                                    calculatePointsFromGrade(
-                                        state.averageGrade.toDouble(),
-                                        state.minimumGrade.toDouble()
-                                    ).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
-                                }"
-                            } else null,
-                            floatingActionButton = {
-                                FloatingActionButton(
-                                    onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
-                                    contentDescription = "Create a new Exam Card"
-                                )
-                            })
-                    }
+            }
+        }, bottomBar = {
+            state.averageGradeIsZero?.let {
+                AnimatedVisibility(visible = !it, enter = slideInHorizontally(
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        delayMillis = 100,
+                        easing = FastOutSlowInEasing
+                    )
+                ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        delayMillis = 100,
+                        easing = FastOutSlowInEasing
+                    )
+                ), exit = slideOutHorizontally(
+                    animationSpec = tween(
+                        durationMillis = 100, easing = FastOutSlowInEasing
+                    )
+                ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100, easing = FastOutSlowInEasing
+                    )
+                )) {
+                    BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        subText = if (state.minimumGrade != null && state.showPoints == true) {
+                            "Points: ${
+                                calculatePointsFromGrade(
+                                    state.averageGrade.toDouble(), state.minimumGrade.toDouble()
+                                ).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                            }"
+                        } else null,
+                        floatingActionButton = {
+                            FloatingActionButton(
+                                onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
+                                contentDescription = "Create a new Exam Card"
+                            )
+                        })
                 }
-            },
-            topBar = {
-                AppBar(
-                    onNavigationIconClick = {
-                        scope.launch(Dispatchers.Main) {
-                            drawerState.open()
-                        }
-                    },
-                    actionIcon = Icons.Default.Menu,
-                    actionContentDescription = "Toggle Drawer",
-                    appBarTitle = stringResource(R.string.school_screen_title),
-                    locationIndicator = state.showNavigationIcons?: false,
-                    pageIndex = 0
-                )
-            }) {
+            }
+        }, topBar = {
+            AppBar(
+                onNavigationIconClick = {
+                    scope.launch(Dispatchers.Main) {
+                        drawerState.open()
+                    }
+                },
+                actionIcon = Icons.Default.Menu,
+                actionContentDescription = "Toggle Drawer",
+                appBarTitle = stringResource(R.string.school_screen_title),
+                locationIndicator = state.showNavigationIcons ?: false,
+                pageIndex = 0
+            )
+        }) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -222,54 +216,55 @@ fun SchoolListScreen(
                         )
                     )
                 }
-                if (state.swipingEnabled != null){
-                    items(
-                        items = state.schoolList,
-                        key = { school -> school.id },
-                    ) { school ->
-                        SchoolItem(
-                            school = school,
-                            colorGrade = state.colorGrades!!,
-                            disableSwipe = state.swipingEnabled,
-                            onSwipe = {
-                                deletedSchoolId.value = school.id
-                                onEvent(
-                                    SchoolListEvent.OnSwipeDelete(
-                                        id = school.id
+                items(
+                    items = state.schoolList,
+                    key = { school -> school.id },
+                ) { school ->
+                    SchoolItem(school = school,
+                        colorGrade = state.colorGrades!!,
+                        disableSwipe = state.swipingEnabled ?: true,
+                        onSwipe = {
+                            deletedSchoolId.value = school.id
+                            onEvent(
+                                SchoolListEvent.OnSwipeDelete(
+                                    id = school.id
+                                )
+                            )
+                        },
+                        onCheckBoxClick = {
+                            onEvent(
+                                SchoolListEvent.OnCheckChange(
+                                    schoolId = school.id, value = !school.isSelected
+                                )
+                            )
+                        },
+                        onLongClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.DivisionScreen.withArgs(
+                                        school.id.toString()
                                     )
                                 )
-                            }, onCheckBoxClick = {
-                                onEvent(
-                                    SchoolListEvent.OnCheckChange(
-                                        schoolId = school.id, value = !school.isSelected
+                            )
+                        },
+                        onDeleteClick = {
+                            onEvent(
+                                SchoolListEvent.OnItemClickDelete(
+                                    schoolId = school.id
+                                )
+                            )
+                        },
+                        onUpdateClick = {
+                            onNavigate(
+                                UiEvent.Navigate(
+                                    Screen.SchoolEditScreen.withArgs(
+                                        school.id.toString()
                                     )
                                 )
-                            }, onLongClick = {
-                                onNavigate(
-                                    UiEvent.Navigate(
-                                        Screen.DivisionScreen.withArgs(
-                                            school.id.toString()
-                                        )
-                                    )
-                                )
-                            }, onDeleteClick = {
-                                onEvent(
-                                    SchoolListEvent.OnItemClickDelete(
-                                        schoolId = school.id
-                                    )
-                                )
-                            }, onUpdateClick = {
-                                onNavigate(
-                                    UiEvent.Navigate(
-                                        Screen.SchoolEditScreen.withArgs(
-                                            school.id.toString()
-                                        )
-                                    )
-                                )
-                            })
-                    }
+                            )
+                        })
                 }
-                
+
             }
 
         }
@@ -277,7 +272,12 @@ fun SchoolListScreen(
 }
 
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    //device = Devices.PIXEL_TABLET,
+    //showSystemUi = true
+)
 @Composable
 private fun PreviewMainScreen() {
     GraderTheme(
@@ -321,8 +321,8 @@ private fun PreviewMainScreen() {
                         city = "Zürich",
                         grade = 0.0
                     )
-                ),
-                showNavigationIcons = true,
+                ), showNavigationIcons = true,
+                colorGrades = true
             ),
             uiEvent = emptyFlow(),
             onNavigate = {},
@@ -335,7 +335,6 @@ private fun PreviewMainScreen() {
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
     showBackground = true,
-    showSystemUi = false
 )
 @Composable
 private fun PreviewMainScreenDarkMode() {

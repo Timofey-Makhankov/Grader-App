@@ -1,3 +1,4 @@
 <resources>
     <string name="school_screen_title">Schulen</string>
+    <string name="delete_data_dialog_content">Sind sie sicher, dass sie alle Daten von der Application löschen wollen? Diese Aktion is nicht rückgänging und alle Daten werden verloren. Bevor sie die Daten löschen, sie könnten die Daten als Backup speichern</string>
 </resources>

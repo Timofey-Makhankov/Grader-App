@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.module.ModuleValidation
+import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -85,7 +86,7 @@ class CreateModuleViewModel @Inject constructor(
                             )
                         )
                     }
-                    sendUiEvent(UiEvent.PopBackStack)
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Module with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
                 } else {
                     sendUiEvent(UiEvent.ShowSnackBar("Module was unable to be created", true))
                 }

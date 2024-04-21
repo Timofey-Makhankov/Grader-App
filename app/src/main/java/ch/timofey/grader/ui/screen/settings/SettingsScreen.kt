@@ -19,13 +19,16 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -36,18 +39,22 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
+import ch.timofey.grader.R
 import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
@@ -64,6 +71,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -73,6 +81,7 @@ import java.io.OutputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun SettingsScreen(
@@ -84,6 +93,7 @@ fun SettingsScreen(
     snackBarHostState: SnackbarHostState,
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
+    //val openDeleteDataDialog = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
@@ -145,21 +155,18 @@ fun SettingsScreen(
                 drawerState.close()
             }
         }) {
-        Scaffold(
-            modifier = Modifier.clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                focusManager.clearFocus()
-            },
-            topBar = {
-                AppBar(
-                    onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
-                    actionIcon = Icons.Default.Menu,
-                    actionContentDescription = "Toggle Drawer",
-                    appBarTitle = "Settings"
-                )
-            }) {
+        Scaffold(modifier = Modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() }, indication = null
+        ) {
+            focusManager.clearFocus()
+        }, topBar = {
+            AppBar(
+                onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
+                actionIcon = Icons.Default.Menu,
+                actionContentDescription = "Toggle Drawer",
+                appBarTitle = "Settings"
+            )
+        }) {
             Column(
                 modifier = Modifier
                     .verticalScroll(state = scrollState)
@@ -178,36 +185,30 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 HorizontalDivider(
-                    modifier = Modifier
-                        .padding(
-                            top = MaterialTheme.spacing.small,
-                            bottom = MaterialTheme.spacing.large,
-                            start = MaterialTheme.spacing.medium,
-                            end = MaterialTheme.spacing.medium
-                        )
+                    modifier = Modifier.padding(
+                        top = MaterialTheme.spacing.small,
+                        bottom = MaterialTheme.spacing.large,
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium
+                    )
                 )
                 DropDownMenu(
-                    value = state.appTheme.title,
-                    title = "App Theme"
+                    value = state.appTheme.title, title = "App Theme"
                 ) { afterSelection ->
-                    AppTheme.entries.filter { value -> value != state.appTheme }
-                        .forEach { theme ->
-                            DropdownMenuItem(
-                                text = { Text(text = theme.title) }, onClick = {
-                                    onEvent(SettingsEvent.OnThemeChange(theme))
-                                    afterSelection()
-                                })
-                        }
+                    AppTheme.entries.filter { value -> value != state.appTheme }.forEach { theme ->
+                        DropdownMenuItem(text = { Text(text = theme.title) }, onClick = {
+                            onEvent(SettingsEvent.OnThemeChange(theme))
+                            afterSelection()
+                        })
+                    }
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
-                    value = Locale(state.language.tag).displayLanguage,
-                    title = "language"
+                    value = Locale(state.language.tag).displayLanguage, title = "language"
                 ) { afterSelection ->
                     AppLanguage.entries.filter { value -> value != state.language }
                         .forEach { appLanguage ->
-                            DropdownMenuItem(
-                                text = { Text(text = Locale(appLanguage.tag).displayLanguage) },
+                            DropdownMenuItem(text = { Text(text = Locale(appLanguage.tag).displayLanguage) },
                                 onClick = {
                                     onEvent(SettingsEvent.OnLanguageChange(appLanguage))
                                     afterSelection()
@@ -217,25 +218,21 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
                     value = if (state.dateFormat != DateFormatting.DEFAULT) Locale(
-                        state.dateFormat.language,
-                        state.dateFormat.country
-                    ).displayName else "Follow System",
-                    title = "Date Format"
+                        state.dateFormat.language, state.dateFormat.country
+                    ).displayName else "Follow System", title = "Date Format"
                 ) { afterSelection ->
                     DateFormatting.entries.filter { value -> value != state.dateFormat }
                         .forEach { format ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = Locale(
-                                            format.language,
-                                            format.country
-                                        ).displayName
-                                    )
-                                }, onClick = {
-                                    onEvent(SettingsEvent.OnDateFormatChange(format))
-                                    afterSelection()
-                                })
+                            DropdownMenuItem(text = {
+                                Text(
+                                    text = Locale(
+                                        format.language, format.country
+                                    ).displayName
+                                )
+                            }, onClick = {
+                                onEvent(SettingsEvent.OnDateFormatChange(format))
+                                afterSelection()
+                            })
                         }
                 }
                 SwitchText(
@@ -254,12 +251,14 @@ fun SettingsScreen(
                 )
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
-                    onValueChange = { value -> onEvent(SettingsEvent.OnSwapNavigationChange(value))},
+                    onValueChange = { value -> onEvent(SettingsEvent.OnSwapNavigationChange(value)) },
                     value = state.swapNavigation,
                     name = "Swap Long Press Navigation",
-                    dialog = { InformationDialog(onDismiss = { it() }) {
-                        Text(text = "This is a description")
-                    } },
+                    dialog = {
+                        InformationDialog(onDismiss = { it() }) {
+                            Text(text = "This is a description")
+                        }
+                    },
                     showExtraInformation = true
                 )
                 SwitchText(
@@ -268,9 +267,7 @@ fun SettingsScreen(
                     value = state.colorGrades,
                     name = "Color Calculated Grades",
                     dialog = {
-                        InformationDialog(
-                            onDismiss = { it() }
-                        ) {
+                        InformationDialog(onDismiss = { it() }) {
                             Text(text = "This is a description")
                         }
                     },
@@ -288,13 +285,12 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 HorizontalDivider(
-                    modifier = Modifier
-                        .padding(
-                            top = MaterialTheme.spacing.small,
-                            bottom = MaterialTheme.spacing.large,
-                            start = MaterialTheme.spacing.medium,
-                            end = MaterialTheme.spacing.medium
-                        )
+                    modifier = Modifier.padding(
+                        top = MaterialTheme.spacing.small,
+                        bottom = MaterialTheme.spacing.large,
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium
+                    )
                 )
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
@@ -302,9 +298,7 @@ fun SettingsScreen(
                     value = state.calculatePointsState,
                     name = "Calculate Points from Grade",
                     dialog = {
-                        InformationDialog(
-                            onDismiss = { it() }
-                        ) {
+                        InformationDialog(onDismiss = { it() }) {
                             Text(text = "This is a description")
                         }
                     },
@@ -318,21 +312,18 @@ fun SettingsScreen(
                     name = "Double Calculated Points",
                     extraInfo = if (!state.calculatePointsState) "Enable 'Calculate Points' to enable setting" else "",
                     dialog = {
-                        InformationDialog(
-                            onDismiss = { it() }
-                        ) {
+                        InformationDialog(onDismiss = { it() }) {
                             Text(text = "This is a description")
                         }
                     },
                     showExtraInformation = true
                 )
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = MaterialTheme.spacing.medium,
-                            vertical = MaterialTheme.spacing.small
-                        )
-                        .fillMaxWidth(),
+                OutlinedTextField(modifier = Modifier
+                    .padding(
+                        horizontal = MaterialTheme.spacing.medium,
+                        vertical = MaterialTheme.spacing.small
+                    )
+                    .fillMaxWidth(),
                     value = state.minimumGrade,
                     singleLine = true,
                     isError = !state.validMinimumGrade,
@@ -349,14 +340,11 @@ fun SettingsScreen(
                         }
                     },
                     keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Decimal
+                        imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal
                     ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                        }
-                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    }),
                     onValueChange = { value -> onEvent(SettingsEvent.OnMinimumGradeChange(value)) })
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
@@ -370,9 +358,7 @@ fun SettingsScreen(
                     value = state.enableSwipeToDelete,
                     name = "Enable Swipe Right for Deletion",
                     dialog = {
-                        InformationDialog(
-                            onDismiss = { it() }
-                        ) {
+                        InformationDialog(onDismiss = { it() }) {
                             Text(text = "Enable Left Swipe to Delete a given on all List Screens. Upon deletion, it will show you a Snack bar of the deleted Item and can be undone")
                         }
                     },
@@ -406,13 +392,12 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 HorizontalDivider(
-                    modifier = Modifier
-                        .padding(
-                            top = MaterialTheme.spacing.small,
-                            bottom = MaterialTheme.spacing.large,
-                            start = MaterialTheme.spacing.medium,
-                            end = MaterialTheme.spacing.medium
-                        )
+                    modifier = Modifier.padding(
+                        top = MaterialTheme.spacing.small,
+                        bottom = MaterialTheme.spacing.large,
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium
+                    )
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -423,8 +408,7 @@ fun SettingsScreen(
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(0.6f)
                     )
-                    Button(
-                        modifier = Modifier.weight(0.4f),
+                    Button(modifier = Modifier.weight(0.4f),
                         onClick = { createBackup.launch("grader-backup-${LocalDate.now()}") }) {
                         Text(text = "Create Backup")
                     }
@@ -438,8 +422,7 @@ fun SettingsScreen(
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(0.6f)
                     )
-                    Button(
-                        modifier = Modifier.weight(0.4f),
+                    Button(modifier = Modifier.weight(0.4f),
                         onClick = { loadBackup.launch(arrayOf("application/json")) }) {
                         Text(text = "Load Backup")
                     }
@@ -453,10 +436,36 @@ fun SettingsScreen(
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(0.6f)
                     )
-                    Button(
-                        modifier = Modifier.weight(0.4f),
+                    Button(modifier = Modifier.weight(0.4f),
                         onClick = { createReport.launch("report-${LocalDateTime.now()}.json") }) {
                         Text(text = "Create Report")
+                    }
+                }
+                if (state.showDeleteDataDialog) {
+                    val buttonDisabled = remember { mutableStateOf(true) }
+                    AlertDialog(
+                        onDismissRequest = { onEvent(SettingsEvent.OnDismissDeleteData) },
+                        confirmButton = {
+                            TextButton(onClick = { onEvent(SettingsEvent.OnConfirmDeleteData) }, enabled = !buttonDisabled.value) {
+                                Text(text = "Confirm")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { onEvent(SettingsEvent.OnDismissDeleteData) }) {
+                                Text(text = "Cancel")
+                            }
+                        },
+                        title = { Text(text = "Delete Application Data") },
+                        icon = { Icon( imageVector = Icons.Default.DeleteForever, contentDescription = "Delete Application Data") },
+                        text = { Text(text = stringResource(R.string.delete_data_dialog_content)) },
+                        properties = DialogProperties(
+                            dismissOnBackPress = true,
+                            dismissOnClickOutside = true
+                        ),
+                    )
+                    LaunchedEffect(Unit) {
+                        delay(5.seconds)
+                        buttonDisabled.value = false
                     }
                 }
             }

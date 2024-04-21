@@ -93,6 +93,8 @@ fun ExamListScreen(
                         }
                     }
                 }
+
+                else -> Unit
             }
         }
     }

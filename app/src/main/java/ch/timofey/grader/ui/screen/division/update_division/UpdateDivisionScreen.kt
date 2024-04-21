@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
@@ -47,7 +48,19 @@ fun UpdateDivisionScreen(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack(SnackBarMessage("Division was updated", withDismissAction = true))
+                    onPopBackStack(null)
+                }
+
+                is UiEvent.PopBackStackAndShowSnackBar -> {
+                    onPopBackStack(event.snackbarVisuals)
+                }
+
+                is UiEvent.ShowSnackBar -> {
+                    snackBarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = event.withDismissAction,
+                        duration = SnackbarDuration.Long
+                    )
                 }
 
                 else -> Unit
@@ -60,9 +73,7 @@ fun UpdateDivisionScreen(
             onNavigationIconClick = { onEvent(UpdateDivisionEvent.OnBackButtonClick) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
             actionContentDescription = "Go back to Division Screen"
-        )},
-        //snackbarHost = { SnackbarHost(snackBarHostState) }
-    ) {
+        )}) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier

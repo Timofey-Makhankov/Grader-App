@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.exam.ExamValidation
+import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -46,12 +47,7 @@ class UpdateExamViewModel @Inject constructor(
                     dateTaken = exam.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
                 )
             } ?: run {
-                /*sendUiEvents(
-                    UiEvent.PopBackStack, UiEvent.ShowSnackBar(
-                        message = "Module was unable to be found", withDismissAction = true
-                    )
-                )*/
-                sendUiEvent(UiEvent.PopBackStack)
+                sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Exam was unable to be found", withDismissAction = true)))
             }
         }
     }
@@ -110,9 +106,8 @@ class UpdateExamViewModel @Inject constructor(
                     )
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateExam(updatedExam)
-                        sendUiEvent(UiEvent.PopBackStack)
-                        sendUiEvent(UiEvent.ShowSnackBar("Exam was successfully updated"))
                     }
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Exam with name: \"${_uiState.value.name}\" has been updated", withDismissAction = true)))
                 } else {
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
@@ -123,18 +118,9 @@ class UpdateExamViewModel @Inject constructor(
             }
         }
     }
-
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)
-        }
-    }
-
-    private fun sendUiEvents(vararg events: UiEvent) {
-        for (event in events) {
-            viewModelScope.launch (Dispatchers.Main){
-                _uiEvent.send(event)
-            }
         }
     }
 }
