@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import ch.timofey.grader.db.domain.division.Division
 import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
@@ -61,14 +62,17 @@ fun DivisionListScreen(
     onPopBackStack: () -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
     snackBarHostState: SnackbarHostState,
-    stackEntryValue: SnackbarVisuals?
+    savedStateHandle: SavedStateHandle
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
-        if (stackEntryValue != null) {
+        val stackEntry =
+            savedStateHandle.get<SnackbarVisuals>("show-snackBar")
+        if (stackEntry != null) {
             this.launch(Dispatchers.Main) {
-                snackBarHostState.showSnackbar(stackEntryValue)
+                snackBarHostState.showSnackbar(stackEntry)
             }
+            savedStateHandle["show-snackBar"] = null
         }
     }
     val deletedDivisionId = remember { mutableStateOf<UUID?>(null) }
@@ -287,7 +291,7 @@ private fun DivisionListScreenPreview() {
             onPopBackStack = {},
             onNavigate = {},
             snackBarHostState = SnackbarHostState(),
-            stackEntryValue = null
+            savedStateHandle = SavedStateHandle()
         )
     }
 }
@@ -330,7 +334,7 @@ private fun DivisionListScreenDarkModePreview() {
             onPopBackStack = {},
             onNavigate = {},
             snackBarHostState = SnackbarHostState(),
-            stackEntryValue = null
+            savedStateHandle = SavedStateHandle()
         )
     }
 }

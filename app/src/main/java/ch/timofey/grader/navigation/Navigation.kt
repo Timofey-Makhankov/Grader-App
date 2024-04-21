@@ -62,8 +62,6 @@ fun Navigation(
         composable(route = Screen.MainScreen.route) { navBackStackEntry ->
             val viewModel = hiltViewModel<SchoolListViewModel>()
             val state by viewModel.uiState.collectAsState()
-            val stackEntry =
-                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             SchoolListScreen(
                 drawerState = drawerState,
                 onEvent = viewModel::onEvent,
@@ -71,7 +69,7 @@ fun Navigation(
                 uiEvent = viewModel.uiEvent,
                 onNavigate = { navController.navigate(it.route) },
                 snackBarHostState = snackBarHostState,
-                stackEntryValue = stackEntry
+                savedStateHandle = navBackStackEntry.savedStateHandle
             )
         }
         composable(route = Screen.CreateSchoolScreen.route) {
@@ -119,8 +117,6 @@ fun Navigation(
                 nullable = false
             })
         ) { navBackStackEntry ->
-            val stackEntry =
-                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<DivisionListViewModel>()
             val state by viewModel.uiState.collectAsState()
             DivisionListScreen(state = state,
@@ -134,7 +130,7 @@ fun Navigation(
                 drawerState = drawerState,
                 uiEvent = viewModel.uiEvent,
                 snackBarHostState = snackBarHostState,
-                stackEntryValue = stackEntry
+                savedStateHandle = navBackStackEntry.savedStateHandle
             )
         }
         composable(
@@ -162,8 +158,6 @@ fun Navigation(
                 nullable = false
             })
         ) { navBackStackEntry ->
-            val stackEntry =
-                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<ModuleListViewModel>()
             val state by viewModel.uiState.collectAsState()
             ModuleListScreen(
@@ -174,7 +168,7 @@ fun Navigation(
                 drawerState = drawerState,
                 onPopBackStack = { navController.popBackStackSafe() },
                 snackBarHostState = snackBarHostState,
-                stackEntryValue = stackEntry
+                savedStateHandle = navBackStackEntry.savedStateHandle
             )
         }
         composable(
@@ -202,8 +196,6 @@ fun Navigation(
                 nullable = false
             })
         ) { navBackStackEntry ->
-            val stackEntry =
-                navBackStackEntry.savedStateHandle.get<SnackbarVisuals>("show-snackBar")
             val viewModel = hiltViewModel<ExamListViewModel>()
             val state by viewModel.uiState.collectAsState()
             ExamListScreen(
@@ -214,7 +206,7 @@ fun Navigation(
                 onPopBackStack = { navController.popBackStackSafe() },
                 onNavigate = { navController.navigate(it.route) },
                 snackBarHostState = snackBarHostState,
-                stackEntryValue = stackEntry
+                savedStateHandle = navBackStackEntry.savedStateHandle
             )
         }
         composable(

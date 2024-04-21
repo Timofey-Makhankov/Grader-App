@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
@@ -61,14 +62,17 @@ fun ModuleListScreen(
     uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit,
     snackBarHostState: SnackbarHostState,
-    stackEntryValue: SnackbarVisuals?
+    savedStateHandle: SavedStateHandle
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
-        if (stackEntryValue != null) {
+        val stackEntry =
+            savedStateHandle.get<SnackbarVisuals>("show-snackBar")
+        if (stackEntry != null) {
             this.launch(Dispatchers.Main) {
-                snackBarHostState.showSnackbar(stackEntryValue)
+                snackBarHostState.showSnackbar(stackEntry)
             }
+            savedStateHandle["show-snackBar"] = null
         }
     }
     val deletedModuleId = remember { mutableStateOf<UUID?>(value = null) }
@@ -289,7 +293,7 @@ private fun ModuleListScreenPreview() {
             onPopBackStack = {},
             onNavigate = {},
             snackBarHostState = SnackbarHostState(),
-            stackEntryValue =  null
+            savedStateHandle = SavedStateHandle()
         )
     }
 }
@@ -333,7 +337,7 @@ private fun ModuleListScreenDarkModePreview() {
             onPopBackStack = {},
             onNavigate = {},
             snackBarHostState = SnackbarHostState(),
-            stackEntryValue = null
+            savedStateHandle = SavedStateHandle()
         )
     }
 }

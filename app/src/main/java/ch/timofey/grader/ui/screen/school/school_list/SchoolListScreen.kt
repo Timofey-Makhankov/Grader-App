@@ -36,9 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import ch.timofey.grader.R
 import ch.timofey.grader.db.AppTheme
 import ch.timofey.grader.db.domain.school.School
+import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.atom.FloatingActionButton
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
@@ -48,8 +50,6 @@ import ch.timofey.grader.ui.components.organisms.BottomAppBar
 import ch.timofey.grader.ui.components.organisms.items.SchoolItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.navigation.NavigationDrawerItems
-import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.utils.calculatePointsFromGrade
 import kotlinx.coroutines.Dispatchers
@@ -67,14 +67,17 @@ fun SchoolListScreen(
     uiEvent: Flow<UiEvent>,
     onNavigate: (UiEvent.Navigate) -> Unit,
     snackBarHostState: SnackbarHostState,
-    stackEntryValue: SnackbarVisuals?
+    savedStateHandle: SavedStateHandle
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
-        if (stackEntryValue != null) {
+        val stackEntry =
+            savedStateHandle.get<SnackbarVisuals>("show-snackBar")
+        if (stackEntry != null) {
             this.launch(Dispatchers.Main) {
-                snackBarHostState.showSnackbar(stackEntryValue)
+                snackBarHostState.showSnackbar(stackEntry)
             }
+            savedStateHandle["show-snackBar"] = null
         }
     }
     val deletedSchoolId = remember { mutableStateOf<UUID?>(value = null) }
@@ -327,7 +330,7 @@ private fun PreviewMainScreen() {
             uiEvent = emptyFlow(),
             onNavigate = {},
             snackBarHostState = SnackbarHostState(),
-            stackEntryValue = SnackBarMessage("")
+            savedStateHandle = SavedStateHandle()
         )
     }
 }
@@ -346,7 +349,7 @@ private fun PreviewMainScreenDarkMode() {
             uiEvent = emptyFlow(),
             onNavigate = {},
             snackBarHostState = SnackbarHostState(),
-            stackEntryValue = SnackBarMessage("")
+            savedStateHandle = SavedStateHandle()
         )
     }
 }

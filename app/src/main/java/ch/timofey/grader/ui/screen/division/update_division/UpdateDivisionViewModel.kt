@@ -92,7 +92,7 @@ class UpdateDivisionViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateDivision(updatedDivision)
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Division with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Division with name: \"${_uiState.value.name}\" has been updated", withDismissAction = true)))
                 } else {
                     sendUiEvent(UiEvent.ShowSnackBar("Division was unable to be Updated",true))
                 }
