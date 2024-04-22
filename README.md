@@ -2,6 +2,8 @@
 
 This Application is designed to Easily Track Your Grades in School and Calculate the Average And Overall Grades of given Grades.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y5X6KL1)
+
 ## Features
 
 This Features are _Still in Progress_. **Not FINAL**

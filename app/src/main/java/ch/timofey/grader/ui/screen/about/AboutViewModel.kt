@@ -47,6 +47,12 @@ class AboutViewModel @Inject constructor(application: Application) : AndroidView
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity( getApplication(), intent, null)
             }
+
+            is AboutEvent.OnButtonDonateClick -> {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-fi.com/timofeymakhankov"))
+                browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity( getApplication() ,browserIntent, null);
+            }
         }
     }
 

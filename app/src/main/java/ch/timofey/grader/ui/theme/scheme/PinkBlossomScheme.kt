@@ -60,31 +60,37 @@ object PinkBlossomScheme {
     val raspberryrose10 = Color(0xffFB6F92)
 
     val lightScheme = lightColorScheme(
-        primary = raspberryrose80,
-        onPrimary = Color.White,
-        primaryContainer = raspberryrose30,
-        onPrimaryContainer = raspberryrose10,
-        inversePrimary = raspberryrose30,
-        secondary = berrybloom80,
-        onSecondary = Color.White,
-        secondaryContainer = berrybloom30,
-        onSecondaryContainer = berrybloom10,
-        tertiary = raspberryrose80,
-        onTertiary = Color.White,
-        tertiaryContainer = raspberryrose30,
-        onTertiaryContainer = raspberryrose10,
-        error = petalblush80,
-        onError = petalblush20,
-        errorContainer = petalblush30,
-        onErrorContainer = petalblush90,
+        primary = berrybloom20,
+        onPrimary = berrybloom90,
+        primaryContainer = Color.Black,
+        onPrimaryContainer = Color.Black,
+        inversePrimary = Color.Black,
+
+        secondary = rosyglow10,
+        onSecondary = Color.Black,
+        secondaryContainer = cottoncandy10,
+        onSecondaryContainer = cottoncandy90,
+
+        tertiary = Color.Blue,
+        onTertiary = Color.Blue,
+        tertiaryContainer = Color.Blue,
+        onTertiaryContainer = Color.Blue,
+
+        error = Color.White,
+        onError = Color.Blue,
+        errorContainer = raspberryrose10,
+        onErrorContainer = Color.Blue,
+
         background = petalblush90,
-        onBackground = petalblush80,
-        surface = Color.White,
-        onSurface = petalblush10,
-        inverseSurface = petalblush10,
-        inverseOnSurface = petalblush90,
-        surfaceVariant = petalblush70,
-        onSurfaceVariant = petalblush20,
-        outline = petalblush30
+        onBackground = berrybloom10,
+
+        surface = Color.Blue,
+        onSurface = berrybloom40,
+        inverseSurface = Color.Blue,
+        inverseOnSurface = Color.Blue,
+        surfaceVariant = petalblush10,
+        onSurfaceVariant = raspberryrose10,
+
+        outline = berrybloom20
     )
 }

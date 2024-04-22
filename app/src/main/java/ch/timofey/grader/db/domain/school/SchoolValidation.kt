@@ -15,13 +15,14 @@ object SchoolValidation: Validatable<SchoolValidationFields> {
         }
     }
 
-
+    @Suppress("UNUSED_PARAMETER")
     fun address(address: String): ValidationResponse {
-        return if (address.isNotBlank()) {
+        /*return if (address.isNotBlank()) {
             ValidationResponse(valid = true)
         } else {
             ValidationResponse(valid = false, message = "Address is Required")
-        }
+        }*/
+        return ValidationResponse(true)
     }
 
 
@@ -30,21 +31,23 @@ object SchoolValidation: Validatable<SchoolValidationFields> {
         return ValidationResponse(valid = true)
     }
 
-
+    @Suppress("UNUSED_PARAMETER")
     fun zip(zip: String): ValidationResponse {
-        return if (zip.isNotBlank()) {
+        /*return if (zip.isNotBlank()) {
             ValidationResponse(valid = true)
         } else {
             ValidationResponse(valid = false, message = "Zip Code is Required")
-        }
+        }*/
+        return ValidationResponse(true)
     }
-
+    @Suppress("UNUSED_PARAMETER")
     fun city(city: String): ValidationResponse {
-        return if (city.isNotBlank()) {
+        /*return if (city.isNotBlank()) {
             ValidationResponse(valid = true)
         } else {
             ValidationResponse(valid = false, message = "City is Required")
-        }
+        }*/
+        return ValidationResponse(true)
     }
 
     override fun validateAll(fields: SchoolValidationFields): Boolean {

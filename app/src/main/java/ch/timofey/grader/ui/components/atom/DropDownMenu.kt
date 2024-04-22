@@ -20,6 +20,7 @@ import ch.timofey.grader.ui.theme.spacing
 fun DropDownMenu(
     value: String,
     title: String,
+    enable: Boolean = true,
     items: @Composable (afterSelection: () -> Unit) -> Unit
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -28,6 +29,7 @@ fun DropDownMenu(
         expanded = expanded.value,
         onExpandedChange = { expanded.value = !expanded.value }) {
         OutlinedTextField(
+            enabled = enable,
             value = value,
             onValueChange = {},
             label = { Text(text = title) },

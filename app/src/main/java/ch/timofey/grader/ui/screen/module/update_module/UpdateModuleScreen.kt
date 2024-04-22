@@ -112,7 +112,7 @@ fun UpdateModuleScreen(
                 onValueChange = { teacherFirstname ->
                     onEvent(UpdateModuleEvent.OnTeacherFirstNameChange(teacherFirstname))
                 },
-                label = { InputFieldLabel(message = "Teacher Surname", required = true) },
+                label = { InputFieldLabel(message = "Teacher Surname", required = false) },
                 isError = !state.validTeacherFirstName,
                 supportingText = {
                     if (!state.validTeacherFirstName) {
@@ -131,7 +131,7 @@ fun UpdateModuleScreen(
                 onValueChange = { teacherLastName ->
                     onEvent(UpdateModuleEvent.OnTeacherLastNameChange(teacherLastName))
                 },
-                label = { InputFieldLabel(message = "Teacher Lastname", required = true) },
+                label = { InputFieldLabel(message = "Teacher Lastname", required = false) },
                 isError = !state.validTeacherLastName,
                 supportingText = {
                     if (!state.validTeacherLastName) {

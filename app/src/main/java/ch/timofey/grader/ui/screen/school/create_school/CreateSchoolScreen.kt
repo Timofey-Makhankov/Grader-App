@@ -121,13 +121,13 @@ fun CreateSchoolScreen(
                 .fillMaxWidth(), value = state.address, label = {
                 Text(text = buildAnnotatedString {
                     append("Address ")
-                    withStyle(
+                    /*withStyle(
                         style = SpanStyle(
                             fontStyle = FontStyle.Italic, fontSize = 8.sp
                         )
                     ) {
                         append("(Required)")
-                    }
+                    }*/
                 })
             }, isError = !state.validAddress, supportingText = {
                 if (!state.validAddress) {
@@ -149,13 +149,13 @@ fun CreateSchoolScreen(
                 label = {
                     Text(text = buildAnnotatedString {
                         append("Zip ")
-                        withStyle(
+                        /*withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
                             )
                         ) {
                             append("(Required)")
-                        }
+                        }*/
                     })
                 },
                 isError = !state.validZip,
@@ -184,7 +184,7 @@ fun CreateSchoolScreen(
                 label = {
                     Text(text = buildAnnotatedString {
                         append("City ")
-                        if (state.city.isBlank()) {
+                        /*if (state.city.isBlank()) {
                             withStyle(
                                 SpanStyle(
                                     fontStyle = FontStyle.Italic, fontSize = 8.sp
@@ -192,7 +192,7 @@ fun CreateSchoolScreen(
                             ) {
                                 append("(Required)")
                             }
-                        }
+                        }*/
                     })
                 },
                 isError = !state.validCity,

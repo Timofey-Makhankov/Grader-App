@@ -29,21 +29,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.atom.GradeInputField
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.utils.UiEvent
+import ch.timofey.grader.utils.calculatePointsFromGrade
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalStdlibApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalculatorScreen(
     state: CalculatorState,
@@ -85,7 +91,7 @@ fun CalculatorScreen(
                         Text(
                             modifier = Modifier.padding(
                                 start = MaterialTheme.spacing.small,
-                                bottom = MaterialTheme.spacing.small
+                                //bottom = MaterialTheme.spacing.small
                             ),
                             style = MaterialTheme.typography.titleLarge,
                             text = "Calculated Result: "
@@ -94,10 +100,31 @@ fun CalculatorScreen(
                         Text(
                             modifier = Modifier.padding(end = MaterialTheme.spacing.small),
                             style = MaterialTheme.typography.titleLarge,
+                            text = buildAnnotatedString {
+                                if (state.showColoredGrade){
+                                    pushStyle(SpanStyle(
+                                        color = getGradeColors(grade = state.calculatedGrade)
+                                    ))
+                                }
+                                withStyle(SpanStyle(
+                                    fontStyle = FontStyle.Italic,
+                                    fontWeight = FontWeight.Bold
+                                )){
+                                    append(String.format(
+                                        "%.2f", state.calculatedGrade
+                                    ))
+                                }
+                            }
+                        )
+                    }
+                    if (state.calculatePoints && state.calculatedGrade > 0) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = MaterialTheme.spacing.medium),
+                            textAlign = TextAlign.End,
                             fontStyle = FontStyle.Italic,
-                            text = String.format(
-                                "%.2f", state.calculatedGrade
-                            )
+                            text = "Points: ${calculatePointsFromGrade(state.calculatedGrade, state.minimumGrade)}"
                         )
                     }
                 }
@@ -179,7 +206,7 @@ fun CalculatorScreen(
 private fun CalculatorScreenPreview() {
     GraderTheme {
         CalculatorScreen(state = CalculatorState(
-            grades = listOf("", "", ""), weights = listOf("1.0", "1.0", "1.0")
+            grades = listOf("", "", ""), weights = listOf("1.0", "1.0", "1.0"), calculatePoints = true, calculatedGrade = 3.5
         ),
             onEvent = {},
             onNavigate = {},

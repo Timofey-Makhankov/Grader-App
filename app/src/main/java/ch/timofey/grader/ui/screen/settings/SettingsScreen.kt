@@ -1,6 +1,5 @@
 package ch.timofey.grader.ui.screen.settings
 
-import android.content.res.Configuration
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -51,7 +50,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import ch.timofey.grader.R
@@ -217,6 +218,7 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
+                    enable = false,
                     value = if (state.dateFormat != DateFormatting.DEFAULT) Locale(
                         state.dateFormat.language, state.dateFormat.country
                     ).displayName else "Follow System", title = "Date Format"
@@ -259,6 +261,7 @@ fun SettingsScreen(
                             Text(text = "This is a description")
                         }
                     },
+                    enabled = false,
                     showExtraInformation = true
                 )
                 SwitchText(
@@ -271,6 +274,7 @@ fun SettingsScreen(
                             Text(text = "This is a description")
                         }
                     },
+                    enabled = false,
                     showExtraInformation = true
                 )
                 Spacer(Modifier.height(MaterialTheme.spacing.large))
@@ -472,15 +476,14 @@ fun SettingsScreen(
         }
     }
 }
-
-@Preview(name = "Light Mode")
-@Preview(
-    name = "Dark Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-
-    )
+private class PreviewProvider : PreviewParameterProvider<Int> {
+    override val values: Sequence<Int> = listOf(0, Int.MAX_VALUE).asSequence()
+}
+@PreviewLightDark
 @Composable
-private fun SettingsScreenPreview() {
+private fun SettingsScreenPreview(
+    @PreviewParameter(PreviewProvider::class) scrollLocation: Int
+) {
     GraderTheme(
         themeSetting = AppTheme.DEVICE_THEME
     ) {
@@ -488,7 +491,7 @@ private fun SettingsScreenPreview() {
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             state = SettingsState(appTheme = AppTheme.DEVICE_THEME, calculatePointsState = true),
             onEvent = {},
-            scrollState = ScrollState(Int.MAX_VALUE),
+            scrollState = ScrollState(scrollLocation),
             uiEvent = emptyFlow(),
             onNavigate = {},
             snackBarHostState = SnackbarHostState()

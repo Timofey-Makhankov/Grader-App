@@ -1,23 +1,25 @@
 package ch.timofey.grader.ui.screen.about
 
 import android.content.res.Configuration
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
-import androidx.compose.material3.CalendarLocale
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -29,26 +31,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import ch.timofey.grader.R
+import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
-import java.io.OutputStream
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 @Composable
 fun AboutScreen(
@@ -58,15 +59,6 @@ fun AboutScreen(
     onEvent: (AboutEvent) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    val createBackup =
-        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { uri: Uri? ->
-            if (uri == null) return@rememberLauncherForActivityResult
-            context.contentResolver.openOutputStream(uri)?.use { file: OutputStream ->
-                file.bufferedWriter().use { it.write("This file was created from the Application") }
-            }
-        }
 
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
@@ -109,9 +101,11 @@ fun AboutScreen(
                         .height(MaterialTheme.spacing.large)
                 )
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.spacing.medium),
                     textAlign = TextAlign.Center,
-                    text = "If you like the App, you can share it with others"
+                    text = "If you like the App, you can share it with others Or Donate me on Ko-Fi"
                 )
                 Button(modifier = Modifier
                     .fillMaxWidth()
@@ -120,7 +114,7 @@ fun AboutScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Source Code")
+                        Text(text = "Github Repo")
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                         Icon(
                             painter = painterResource(id = R.drawable.github_mark),
@@ -142,23 +136,24 @@ fun AboutScreen(
                         )
                     }
                 }
-
                 Button(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.spacing.extremeLarge),
-                    onClick = { /*onEvent(AboutEvent.OnButtonCreateClick)*/ createBackup.launch("from-application.txt") }) {
+                    .padding(horizontal = MaterialTheme.spacing.large).padding(horizontal = MaterialTheme.spacing.extraLarge),
+                    onClick = { onEvent(AboutEvent.OnButtonDonateClick) }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Create Document")
+                        Text(text = "Donate to Ko-Fi")
+                        Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
+                        //val vector = ImageVector.vectorResource(id = R.drawable.kofi_icon)
+                        //val painter = rememberVectorPainter(image = vector)
+                        Icon(
+                            //modifier = Modifier.size(48.dp),
+                            painter = painterResource(id = R.drawable.kofi_icon),
+                            contentDescription = "Ko-Fi Icon"
+                        )
                     }
                 }
-                Text(text = "${android.os.Build.BRAND} - ${android.os.Build.MODEL} - ${android.os.Build.DEVICE}")
-                Text(text = "${CalendarLocale.getDefault()}")
-                val formatter = DateTimeFormatter
-                    .ofLocalizedDate(FormatStyle.SHORT)
-                    .withLocale(AppCompatDelegate.getApplicationLocales().get(0)!!)
-                Text(text = LocalDate.now().format(formatter))
             }
         }
     }

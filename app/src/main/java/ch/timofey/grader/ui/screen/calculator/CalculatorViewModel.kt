@@ -1,8 +1,10 @@
 package ch.timofey.grader.ui.screen.calculator
 
 import android.util.Log
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.utils.getAverage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,12 +12,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CalculatorViewModel @Inject constructor() : ViewModel() {
+class CalculatorViewModel @Inject constructor(
+    private val dataStore: DataStore<AppSettings>,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(CalculatorState())
     val uiState: StateFlow<CalculatorState> = _uiState
 
@@ -23,6 +28,15 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStore.data.collectLatest {
+                _uiState.value = _uiState.value.copy(
+                    calculatePoints = it.calculatePoints,
+                    showColoredGrade = it.colorGrades,
+                    minimumGrade = it.minimumGrade
+                )
+            }
+        }
         _uiState.value = _uiState.value.copy(
             grades = listOf("", "", ""), weights = listOf("1.0", "1.0", "1.0")
         )
@@ -77,7 +91,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
         for (index in grades.indices) {
             combinedBinaryList.add(binaryMapGrades[index] * binaryMapWeights[index])
         }
-        Log.v("calculate Grade", "$grades | $binaryMapGrades | $combinedBinaryList")
+        //Log.v("calculate Grade", "$grades | $binaryMapGrades | $combinedBinaryList")
         return getAverage(
             grades.filterIndexed { index, _ -> combinedBinaryList[index] != 0 }
             .map { it.toDouble() },
