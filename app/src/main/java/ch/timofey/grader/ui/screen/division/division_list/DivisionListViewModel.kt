@@ -47,7 +47,9 @@ class DivisionListViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(
                     showPoints = it.calculatePoints,
                     swipingEnabled = it.enableSwipeToDelete,
-                    showNavigationIcons = it.showNavigationIcons
+                    showNavigationIcons = it.showNavigationIcons,
+                    colorGrades = it.colorGrades,
+                    swapNavigation = it.swapNavigation
                 )
             }
         }

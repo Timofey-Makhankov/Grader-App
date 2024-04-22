@@ -8,11 +8,25 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +54,9 @@ fun DivisionCard(
     modifier: Modifier = Modifier,
     division: Division,
     isOpen: Boolean = false,
+    colorGrade: Boolean = false,
     onCheckBoxClick: () -> Unit,
+    onClick: () -> Unit,
     onLongClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -48,7 +64,6 @@ fun DivisionCard(
 ) {
     val checkedState = remember { mutableStateOf(division.isSelected) }
     val mutableInteractionSource = remember { MutableInteractionSource() }
-    val expanded = remember { mutableStateOf(isOpen) }
     Card(
         modifier = Modifier
             .animateContentSize(
@@ -59,12 +74,14 @@ fun DivisionCard(
             .combinedClickable(
                 interactionSource = mutableInteractionSource,
                 indication = null,
-                onClick = { expanded.value = !expanded.value },
-                onLongClick = { onLongClick() },
+                onClick = onClick,
+                onLongClick = onLongClick,
             )
-            .then(modifier), colors = CardDefaults.cardColors(
+            .then(modifier),
+        colors = CardDefaults.cardColors(
             containerColor = containerColor,
-        ), shape = MaterialTheme.shapes.large
+        ),
+        shape = MaterialTheme.shapes.large
     ) {
         Column(
             modifier = Modifier.padding(MaterialTheme.spacing.small)
@@ -87,20 +104,22 @@ fun DivisionCard(
                     }, colors = CheckboxDefaults.colors()
                 )
             }
-            if (division.description != ""){
+            if (division.description != "") {
                 Text(
                     modifier = Modifier.padding(end = MaterialTheme.spacing.extraSmall),
                     text = division.description ?: "",
                     style = MaterialTheme.typography.bodyMedium,
-                    maxLines = if (expanded.value) 4 else 2,
+                    maxLines = if (isOpen) 4 else 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().padding(end = MaterialTheme.spacing.small)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = MaterialTheme.spacing.small)
             ) {
                 Text(
                     style = MaterialTheme.typography.labelLarge,
@@ -112,14 +131,15 @@ fun DivisionCard(
                         ) {
                             append("Average Grade: ")
                         }
-                        withStyle(
-                            SpanStyle(
-                                color = getGradeColors(division.grade),
-                                fontWeight = FontWeight.Bold
+                        if (colorGrade) {
+                            pushStyle(
+                                SpanStyle(
+                                    color = getGradeColors(grade = division.grade),
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
-                        ) {
-                            append("${division.grade}")
                         }
+                        append("${division.grade}")
                     }
                 )
                 Text(
@@ -127,27 +147,27 @@ fun DivisionCard(
                     style = MaterialTheme.typography.bodyMedium.plus(SpanStyle(fontWeight = FontWeight.Bold)),
                 )
             }
-            AnimatedVisibility(visible = expanded.value) {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
-                        Row {
-                            IconButton(
-                                onClick = onEditClick
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Create,
-                                    contentDescription = "Edit the School Card"
-                                )
-                            }
-                            IconButton(
-                                onClick = onDeleteClick
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete the School Card"
-                                )
-                            }
+            AnimatedVisibility(visible = isOpen) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
+                    Row {
+                        IconButton(
+                            onClick = onEditClick
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Create,
+                                contentDescription = "Edit the School Card"
+                            )
+                        }
+                        IconButton(
+                            onClick = onDeleteClick
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete the School Card"
+                            )
                         }
                     }
+                }
 
             }
         }
@@ -166,7 +186,13 @@ private fun DivisionCardPreview() {
             schoolId = UUID.randomUUID(),
             isSelected = false,
             grade = 0.0
-        ), onLongClick = {}, onCheckBoxClick = {}, onDeleteClick = {}, onEditClick = {})
+        ),
+            onClick = {},
+            onLongClick = {},
+            onCheckBoxClick = {},
+            onDeleteClick = {},
+            onEditClick = {}
+        )
     }
 }
 
@@ -185,10 +211,13 @@ private fun DivisionCardDarkModePreview() {
             isSelected = true,
             grade = 4.0
         ),
+            onClick = {},
             onLongClick = {},
             onCheckBoxClick = {},
             isOpen = true,
+            colorGrade = true,
             onDeleteClick = {},
-            onEditClick = {})
+            onEditClick = {}
+        )
     }
 }

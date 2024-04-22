@@ -71,8 +71,8 @@ object PinkBlossomScheme {
         secondaryContainer = cottoncandy10,
         onSecondaryContainer = cottoncandy90,
 
-        tertiary = petalblush20,
-        onTertiary = petalblush90,
+        tertiary = berrybloom20,
+        onTertiary = Color.White,
         tertiaryContainer = cottoncandy20,
         onTertiaryContainer = raspberryrose90,
 

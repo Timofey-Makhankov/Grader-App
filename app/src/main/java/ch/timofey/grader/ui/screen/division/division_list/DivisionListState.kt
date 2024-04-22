@@ -7,7 +7,9 @@ data class DivisionListState(
     val locationTitles: List<String> = emptyList(),
     val averageGrade: String = "",
     val averageGradeIsZero: Boolean? = null,
-    val swipingEnabled: Boolean? = null,
-    val showPoints: Boolean? = null,
-    val showNavigationIcons: Boolean? = null
+    val swipingEnabled: Boolean = false,
+    val showPoints: Boolean = false,
+    val showNavigationIcons: Boolean = false,
+    val swapNavigation: Boolean = false,
+    val colorGrades: Boolean = true
 )

@@ -41,9 +41,10 @@ import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
+import ch.timofey.grader.ui.components.molecules.SwipeContainer
+import ch.timofey.grader.ui.components.molecules.cards.DivisionCard
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.components.organisms.BottomAppBar
-import ch.timofey.grader.ui.components.organisms.items.DivisionItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.utils.UiEvent
@@ -101,6 +102,7 @@ fun DivisionListScreen(
                         }
                     }
                 }
+
                 else -> Unit
             }
         }
@@ -186,7 +188,7 @@ fun DivisionListScreen(
                     actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
                     actionContentDescription = "Go Back to previous Screen",
                     appBarTitle = "Divisions",
-                    locationIndicator = state.showNavigationIcons ?: false,
+                    locationIndicator = state.showNavigationIcons,
                     pageIndex = 1
                 )
             }) {
@@ -210,15 +212,23 @@ fun DivisionListScreen(
                         )
                     }
                 }
-                    items(
-                        items = state.divisionList,
-                        key = { division -> division.id }) { division ->
-                        DivisionItem(division = division,
-                            disableSwipe = state.swipingEnabled ?: true,
-                            onSwipe = { divisionItem ->
-                                deletedDivisionId.value = divisionItem.id
-                                onEvent(DivisionListEvent.OnSwipeDelete(divisionItem.id))
-                            },
+                items(
+                    items = state.divisionList,
+                    key = { division -> division.id }) { division ->
+                    val expandCard = remember { mutableStateOf(false) }
+                    SwipeContainer(
+                        modifier = Modifier.padding(MaterialTheme.spacing.small),
+                        swipeEnabled = state.swipingEnabled,
+                        onSwipe = {
+                            deletedDivisionId.value = division.id
+                            onEvent(DivisionListEvent.OnSwipeDelete(division.id))
+                        }
+                    ) {
+                        DivisionCard(
+                            modifier = Modifier.padding(MaterialTheme.spacing.small),
+                            division = division,
+                            isOpen = expandCard.value,
+                            colorGrade = state.colorGrades,
                             onCheckBoxClick = {
                                 onEvent(
                                     DivisionListEvent.OnCheckChange(
@@ -226,17 +236,33 @@ fun DivisionListScreen(
                                     )
                                 )
                             },
-                            onLongClick = {
-                                onNavigate(
-                                    UiEvent.Navigate(
-                                        Screen.ModuleScreen.withArgs(
-                                            division.id.toString()
+                            onClick = {
+                                if (state.swapNavigation) {
+                                    onNavigate(
+                                        UiEvent.Navigate(
+                                            Screen.ModuleScreen.withArgs(
+                                                division.id.toString()
+                                            )
                                         )
                                     )
-                                )
+                                } else {
+                                    expandCard.value = !expandCard.value
+                                }
+                                      },
+                            onLongClick = {
+                                if (state.swapNavigation) {
+                                    expandCard.value = !expandCard.value
+                                } else {
+                                    onNavigate(
+                                        UiEvent.Navigate(
+                                            Screen.ModuleScreen.withArgs(
+                                                division.id.toString()
+                                            )
+                                        )
+                                    )
+                                }
                             },
-                            onDeleteClick = { onEvent(DivisionListEvent.OnDeleteIconClick(division.id)) },
-                            onUpdateClick = {
+                            onEditClick = {
                                 onNavigate(
                                     UiEvent.Navigate(
                                         Screen.DivisionEditScreen.withArgs(
@@ -244,10 +270,10 @@ fun DivisionListScreen(
                                         )
                                     )
                                 )
-                            })
+                            },
+                            onDeleteClick = { onEvent(DivisionListEvent.OnDeleteIconClick(division.id)) })
                     }
-
-
+                }
             }
         }
     }
