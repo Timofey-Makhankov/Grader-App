@@ -69,7 +69,7 @@ fun DivisionItem(
                             durationMillis = 400
                         )
                     )
-                ) { DismissDeleteBackground(dismissState) } }) { card() } }
+                ) { DismissDeleteBackground(modifier, dismissState) } }) { card() } }
     else { card() }
 
 }

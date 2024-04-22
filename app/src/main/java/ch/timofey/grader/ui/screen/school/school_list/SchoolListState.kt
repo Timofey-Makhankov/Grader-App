@@ -7,8 +7,9 @@ data class SchoolListState(
     val averageGrade: String = "",
     val showNavigationIcons: Boolean? = null,
     val averageGradeIsZero: Boolean? = null,
-    val swipingEnabled: Boolean? = null,
-    val showPoints: Boolean? = null,
+    val swipingEnabled: Boolean = false,
+    val showPoints: Boolean = false,
     val minimumGrade: Double? = null,
-    val colorGrades: Boolean? = null
+    val colorGrades: Boolean = true,
+    val swapNavigation: Boolean = true
 )

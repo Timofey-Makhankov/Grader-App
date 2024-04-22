@@ -69,7 +69,10 @@ private fun PreviewBreadCrumb() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    widthDp = 500
+)
 @Composable
 private fun PreviewDarkModeBreadCrumb() {
     GraderTheme {

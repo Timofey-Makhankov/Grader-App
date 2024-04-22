@@ -42,7 +42,8 @@ class SchoolListViewModel @Inject constructor(
                     swipingEnabled = it.enableSwipeToDelete,
                     minimumGrade = it.minimumGrade,
                     showNavigationIcons = it.showNavigationIcons,
-                    colorGrades = it.colorGrades
+                    colorGrades = it.colorGrades,
+                    swapNavigation = it.swapNavigation
                 )
             }
         }
@@ -68,7 +69,6 @@ class SchoolListViewModel @Inject constructor(
     fun onEvent(event: SchoolListEvent) {
         when (event) {
             is SchoolListEvent.OnCreateSchool -> {
-                //Log.d("SchoolListvm-ocs", "trying to delete schools")
                 viewModelScope.launch(Dispatchers.IO) {
                     repository.getAllSchools().filter { school -> school.onDelete }
                         .forEach { school ->
@@ -76,16 +76,13 @@ class SchoolListViewModel @Inject constructor(
                             repository.deleteSchool(school.id)
                         }
                 }
-                //Log.d("ocs", "tried to delete Schools")
                 sendUiEvent(UiEvent.Navigate(Screen.CreateSchoolScreen.route))
             }
 
             is SchoolListEvent.OnDeleteItems -> {
                 println("OnDeleteItems")
-                //Log.d("SchoolListvm-odi", "trying to delete schools")
                 viewModelScope.launch(Dispatchers.IO) {
                     deleteSchoolItems()
-                    //Log.d("odi", "tried to delete SChools")
                 }
                 sendUiEvent(UiEvent.Navigate(event.route))
             }

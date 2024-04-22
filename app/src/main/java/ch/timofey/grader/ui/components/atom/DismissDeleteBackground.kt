@@ -22,6 +22,7 @@ import ch.timofey.grader.ui.theme.spacing
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DismissDeleteBackground(
+    modifier: Modifier = Modifier,
     dismissState: SwipeToDismissBoxState
 ){
     dismissState.dismissDirection
@@ -34,8 +35,8 @@ fun DismissDeleteBackground(
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = MaterialTheme.spacing.small)
-            .padding(end = MaterialTheme.spacing.small), shape = MaterialTheme.shapes.large
+            .then(modifier),
+        shape = MaterialTheme.shapes.large
     ) {
         Box(
             modifier = Modifier

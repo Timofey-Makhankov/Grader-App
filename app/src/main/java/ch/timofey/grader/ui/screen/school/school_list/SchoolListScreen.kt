@@ -45,9 +45,10 @@ import ch.timofey.grader.navigation.Screen
 import ch.timofey.grader.ui.components.atom.FloatingActionButton
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
+import ch.timofey.grader.ui.components.molecules.SwipeContainer
+import ch.timofey.grader.ui.components.molecules.cards.SchoolCard
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.components.organisms.BottomAppBar
-import ch.timofey.grader.ui.components.organisms.items.SchoolItem
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.utils.UiEvent
@@ -71,8 +72,7 @@ fun SchoolListScreen(
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
-        val stackEntry =
-            savedStateHandle.get<SnackbarVisuals>("show-snackBar")
+        val stackEntry = savedStateHandle.get<SnackbarVisuals>("show-snackBar")
         if (stackEntry != null) {
             this.launch(Dispatchers.Main) {
                 snackBarHostState.showSnackbar(stackEntry)
@@ -122,15 +122,11 @@ fun SchoolListScreen(
             state.averageGradeIsZero?.let {
                 AnimatedVisibility(visible = it, enter = slideInHorizontally(
                     animationSpec = tween(
-                        durationMillis = 200,
-                        delayMillis = 100,
-                        easing = FastOutSlowInEasing
+                        durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing
                     )
                 ) { fullWidth -> -fullWidth / 3 } + fadeIn(
                     animationSpec = tween(
-                        durationMillis = 200,
-                        delayMillis = 100,
-                        easing = FastOutSlowInEasing
+                        durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing
                     )
                 ), exit = slideOutHorizontally(
                     animationSpec = tween(
@@ -152,15 +148,11 @@ fun SchoolListScreen(
             state.averageGradeIsZero?.let {
                 AnimatedVisibility(visible = !it, enter = slideInHorizontally(
                     animationSpec = tween(
-                        durationMillis = 200,
-                        delayMillis = 100,
-                        easing = FastOutSlowInEasing
+                        durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing
                     )
                 ) { fullWidth -> -fullWidth / 3 } + fadeIn(
                     animationSpec = tween(
-                        durationMillis = 200,
-                        delayMillis = 100,
-                        easing = FastOutSlowInEasing
+                        durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing
                     )
                 ), exit = slideOutHorizontally(
                     animationSpec = tween(
@@ -172,7 +164,7 @@ fun SchoolListScreen(
                     )
                 )) {
                     BottomAppBar(text = "Average Grade: ${state.averageGrade}",
-                        subText = if (state.minimumGrade != null && state.showPoints == true) {
+                        subText = if (state.minimumGrade != null && state.showPoints) {
                             "Points: ${
                                 calculatePointsFromGrade(
                                     state.averageGrade.toDouble(), state.minimumGrade.toDouble()
@@ -223,9 +215,10 @@ fun SchoolListScreen(
                     items = state.schoolList,
                     key = { school -> school.id },
                 ) { school ->
-                    SchoolItem(school = school,
-                        colorGrade = state.colorGrades!!,
-                        disableSwipe = state.swipingEnabled ?: true,
+                    val expandCard = remember { mutableStateOf(false) }
+                    SwipeContainer(
+                        modifier = Modifier.padding(MaterialTheme.spacing.small),
+                        swipeEnabled = state.swipingEnabled,
                         onSwipe = {
                             deletedSchoolId.value = school.id
                             onEvent(
@@ -233,39 +226,62 @@ fun SchoolListScreen(
                                     id = school.id
                                 )
                             )
-                        },
-                        onCheckBoxClick = {
-                            onEvent(
-                                SchoolListEvent.OnCheckChange(
-                                    schoolId = school.id, value = !school.isSelected
-                                )
-                            )
-                        },
-                        onLongClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.DivisionScreen.withArgs(
-                                        school.id.toString()
+                        }) {
+                        SchoolCard(
+                            modifier = Modifier.padding(MaterialTheme.spacing.small),
+                            school = school,
+                            isOpen = expandCard.value,
+                            colorGrade = state.colorGrades,
+                            onCheckBoxClick = {
+                                onEvent(
+                                    SchoolListEvent.OnCheckChange(
+                                        schoolId = school.id, value = !school.isSelected
                                     )
                                 )
-                            )
-                        },
-                        onDeleteClick = {
-                            onEvent(
-                                SchoolListEvent.OnItemClickDelete(
-                                    schoolId = school.id
-                                )
-                            )
-                        },
-                        onUpdateClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.SchoolEditScreen.withArgs(
-                                        school.id.toString()
+                            },
+                            onClick = {
+                                if (state.swapNavigation) {
+                                    onNavigate(
+                                        UiEvent.Navigate(
+                                            Screen.DivisionScreen.withArgs(
+                                                school.id.toString()
+                                            )
+                                        )
+                                    )
+                                } else {
+                                    expandCard.value = !expandCard.value
+                                }
+                            },
+                            onLongClick = {
+                                if (state.swapNavigation) {
+                                    expandCard.value = !expandCard.value
+                                } else {
+                                    onNavigate(
+                                        UiEvent.Navigate(
+                                            Screen.DivisionScreen.withArgs(
+                                                school.id.toString()
+                                            )
+                                        )
+                                    )
+                                }
+                            },
+                            onEditClick = {
+                                onNavigate(
+                                    UiEvent.Navigate(
+                                        Screen.SchoolEditScreen.withArgs(
+                                            school.id.toString()
+                                        )
                                     )
                                 )
-                            )
-                        })
+                            },
+                            onDeleteClick = {
+                                onEvent(
+                                    SchoolListEvent.OnItemClickDelete(
+                                        schoolId = school.id
+                                    )
+                                )
+                            })
+                    }
                 }
 
             }
@@ -278,8 +294,6 @@ fun SchoolListScreen(
 @Preview(
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    //device = Devices.PIXEL_TABLET,
-    //showSystemUi = true
 )
 @Composable
 private fun PreviewMainScreen() {
@@ -324,8 +338,7 @@ private fun PreviewMainScreen() {
                         city = "Zürich",
                         grade = 0.0
                     )
-                ), showNavigationIcons = true,
-                colorGrades = true
+                ), showNavigationIcons = true, colorGrades = true, averageGradeIsZero = false
             ),
             uiEvent = emptyFlow(),
             onNavigate = {},
@@ -345,7 +358,7 @@ private fun PreviewMainScreenDarkMode() {
         SchoolListScreen(
             drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
             onEvent = {},
-            state = SchoolListState(),
+            state = SchoolListState(averageGradeIsZero = false),
             uiEvent = emptyFlow(),
             onNavigate = {},
             snackBarHostState = SnackbarHostState(),

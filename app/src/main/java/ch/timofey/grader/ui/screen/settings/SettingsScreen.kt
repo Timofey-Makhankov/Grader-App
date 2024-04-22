@@ -261,7 +261,7 @@ fun SettingsScreen(
                             Text(text = "This is a description")
                         }
                     },
-                    enabled = false,
+                    //enabled = false,
                     showExtraInformation = true
                 )
                 SwitchText(

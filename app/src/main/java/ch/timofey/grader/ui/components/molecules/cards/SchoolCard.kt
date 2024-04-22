@@ -41,7 +41,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
-import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
@@ -53,6 +52,7 @@ import java.util.UUID
 fun SchoolCard(
     modifier: Modifier = Modifier,
     onCheckBoxClick: () -> Unit,
+    onClick: () -> Unit,
     onLongClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -62,7 +62,6 @@ fun SchoolCard(
 ) {
     val checkedState = remember { mutableStateOf(school.isSelected) }
     val mutableInteractionSource = remember { MutableInteractionSource() }
-    val expanded = remember { mutableStateOf(isOpen) }
     Card(
         modifier = Modifier
             .animateContentSize(
@@ -72,13 +71,13 @@ fun SchoolCard(
             )
             .combinedClickable(interactionSource = mutableInteractionSource,
                 indication = null,
-                onClick = { expanded.value = !expanded.value },
+                onClick = { onClick() },
                 onLongClick = { onLongClick() })
-            .then(modifier), colors = CardDefaults.cardColors(
+            .then(modifier),
+        colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ), shape = MaterialTheme.shapes.large, elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
-        )
+        ),
+        shape = MaterialTheme.shapes.large
     ) {
         Column(
             modifier = Modifier.padding(MaterialTheme.spacing.small)
@@ -105,7 +104,7 @@ fun SchoolCard(
                 softWrap = true,
                 text = school.description ?: "",
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = if (expanded.value) 4 else 2,
+                maxLines = if (isOpen) 4 else 2,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
@@ -121,10 +120,12 @@ fun SchoolCard(
                             append("Average Grade: ")
                         }
                         if (colorGrade) {
-                            pushStyle(SpanStyle(
-                                color = getGradeColors(school.grade),
-                                fontWeight = FontWeight.Bold
-                            ))
+                            pushStyle(
+                                SpanStyle(
+                                    color = getGradeColors(school.grade),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
                         }
                         append("${school.grade}")
                     },
@@ -133,7 +134,7 @@ fun SchoolCard(
                 )
             }
             AnimatedVisibility(
-                visible = expanded.value, label = "Extending Button"
+                visible = isOpen, label = "Extending Button"
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -178,7 +179,6 @@ fun SchoolCard(
 @Preview(showBackground = false)
 @Composable
 private fun PreviewSchoolCard() {
-    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         SchoolCard(school = School(
             UUID.randomUUID(),
@@ -189,7 +189,14 @@ private fun PreviewSchoolCard() {
             "",
             isSelected = true,
             grade = 5.6
-        ), onCheckBoxClick = {}, onLongClick = {}, onEditClick = {}, onDeleteClick = {}, colorGrade = true)
+        ),
+            onCheckBoxClick = {},
+            onLongClick = {},
+            onEditClick = {},
+            onDeleteClick = {},
+            colorGrade = true,
+            onClick = {}
+        )
     }
 }
 
@@ -208,6 +215,12 @@ private fun PreviewSchoolCardDarkMode() {
             "",//f.address.postcode(),
             "",//f.address.city(),
             grade = 3.0
-        ), onCheckBoxClick = {}, onLongClick = {}, onEditClick = {}, onDeleteClick = {})
+        ),
+            onCheckBoxClick = {},
+            onLongClick = {},
+            onEditClick = {},
+            onDeleteClick = {},
+            onClick = {}
+        )
     }
 }
