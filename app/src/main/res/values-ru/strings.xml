@@ -1,4 +1,35 @@
 <resources>
     <string name="school_screen_title">Школы</string>
-    <string name="delete_data_dialog_content">Are you sure, you want to delete all the Application Data? This action is not reversible and you lose all data. Before you delete all data, you may want to backup all the Information</string>
+    <string name="delete_data_dialog_content">Вы уверены, что хотите удалить все данные приложения? Это действие не обратимо, и вы потеряете все данные. Прежде чем удалять все данные, вы можете создать резервную копию всей информации</string>
+    <string name="show_navigation_icons">Показать значки навигации</string>
+    <string name="delete_application_data">Удаление данных приложения</string>
+    <string name="confirm">Подтвердите</string>
+    <string name="cancel">Отмена</string>
+    <string name="create_report">Создайте отчет</string>
+    <string name="create_application_report">Создание отчета по приложению</string>
+    <string name="load_backup">Резервное копирование нагрузки</string>
+    <string name="load_backup_from_file">Загрузка резервной копии из файла</string>
+    <string name="create_backup">Создание резервной копии</string>
+    <string name="create_application_backup">Создание резервной копии приложения</string>
+    <string name="backup">Резервное копирование</string>
+    <string name="clear_data">Очистить данные</string>
+    <string name="clear_data_from_the_device">Очистка данных из устройства</string>
+    <string name="enable_swipe_right_for_deletion_desc">Проведите пальцем влево, чтобы удалить объекты. С помощью сообщения отмените действие.</string>
+    <string name="enable_swipe_right_for_deletion">Активируйте правую кнопку мыши, чтобы удалить</string>
+    <string name="min_grade_for_calc">Минимальная оценка для подсчета баллов</string>
+    <string name="extrainf_calc_double_points">Включите \"Рассчитать точки\", чтобы включить настройку</string>
+    <string name="double_calc_points">Двойной расчет очков</string>
+    <string name="calc_points_from_grade">Вычислите баллы из оценки</string>
+    <string name="data_manipulation">Манипулирование данными</string>
+    <string name="color_calculated_grades">Цвет Рассчитанные оценки</string>
+    <string name="swap_long_press_navigation">Навигация по смене длительного нажатия</string>
+    <string name="follow_system">Система следования</string>
+    <string name="date_format">Формат даты</string>
+    <string name="language">язык</string>
+    <string name="app_theme">Тема приложения</string>
+    <string name="app_styling">Стилизация приложений</string>
+    <string name="settings">Настройки</string>
+    <string name="about">О сайте</string>
+    <string name="grade_calculator">Калькулятор оценок</string>
+    <string name="home">Главная</string>
 </resources>

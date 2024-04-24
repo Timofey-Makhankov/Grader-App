@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="school_screen_title">Écoles</string>
+    <string name="delete_data_dialog_content">Êtes-vous sûr de vouloir supprimer toutes les données de l\'application ? Cette action n\'est pas réversible et vous perdrez toutes les données. Avant de supprimer toutes les données, vous pouvez sauvegarder toutes les informations.</string>
+    <string name="show_navigation_icons">Afficher les icônes de navigation</string>
+    <string name="delete_application_data">Supprimer les données de l\'application</string>
+    <string name="confirm">Confirmer</string>
+    <string name="cancel">Annuler</string>
+    <string name="create_report">Créer un rapport</string>
+    <string name="create_application_report">Créer un rapport d\'application</string>
+    <string name="load_backup">Sauvegarde de la charge</string>
+    <string name="load_backup_from_file">Charger une sauvegarde à partir d\'un fichier</string>
+    <string name="create_backup">Créer une sauvegarde</string>
+    <string name="create_application_backup">Créer une sauvegarde de l\'application</string>
+    <string name="backup">Sauvegarde</string>
+    <string name="clear_data">Effacer les données</string>
+    <string name="clear_data_from_the_device">Effacer les données de l\'appareil</string>
+    <string name="enable_swipe_right_for_deletion_desc">Balayer vers la gauche pour supprimer des objets. Appuyer sur Message pour annuler.</string>
+    <string name="enable_swipe_right_for_deletion">Activer le balayage à droite pour supprimer</string>
+    <string name="min_grade_for_calc">Note minimale pour le calcul des points</string>
+    <string name="extrainf_calc_double_points">Activer \"Calculer les points\" pour activer le réglage</string>
+    <string name="double_calc_points">Doublement des points calculés</string>
+    <string name="calc_points_from_grade">Calculer les points à partir de la note</string>
+    <string name="data_manipulation">Manipulation de données</string>
+    <string name="color_calculated_grades">Couleur Grades calculés</string>
+    <string name="swap_long_press_navigation">Permutation de la navigation par appui long</string>
+    <string name="follow_system">Suivre le système</string>
+    <string name="date_format">Format de la date</string>
+    <string name="language">language</string>
+    <string name="app_theme">Thème de l\'application</string>
+    <string name="app_styling">Stylisation de l\'application</string>
+    <string name="settings">Paramètres</string>
+    <string name="about">A propos de</string>
+    <string name="grade_calculator">Calculateur de notes</string>
+    <string name="home">Accueil</string>
+</resources>

@@ -1,4 +1,35 @@
 <resources>
     <string name="school_screen_title">Schulen</string>
-    <string name="delete_data_dialog_content">Sind sie sicher, dass sie alle Daten von der Application löschen wollen? Diese Aktion is nicht rückgänging und alle Daten werden verloren. Bevor sie die Daten löschen, sie könnten die Daten als Backup speichern</string>
+    <string name="delete_data_dialog_content">Sind sie sicher, dass sie alle Daten der Application löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden und alle Daten gehen verloren. Bevor sie die Daten löschen, können sie auch ein Backup machen.</string>
+    <string name="show_navigation_icons">Navigations-Icons anzeigen</string>
+    <string name="delete_application_data">App-Daten löschen</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="create_report">Report erstellen</string>
+    <string name="create_application_report">App Bericht erstellen</string>
+    <string name="load_backup">Sicherung laden</string>
+    <string name="load_backup_from_file">Sicherung von Datei laden</string>
+    <string name="create_backup">Sicherung erstellen</string>
+    <string name="create_application_backup">App Sicherung erstellen</string>
+    <string name="backup">Sicherung</string>
+    <string name="clear_data">Daten löschen</string>
+    <string name="clear_data_from_the_device">Daten vom Gerät löschen</string>
+    <string name="enable_swipe_right_for_deletion_desc">Wischen nach links um Objekte zu löschen. Mit Nachricht um es Rückgängig zu machen.</string>
+    <string name="enable_swipe_right_for_deletion">Aktiviere rechts Wischen um zu Löschen</string>
+    <string name="min_grade_for_calc">Mindestnote für die Berechnung der Punkte</string>
+    <string name="extrainf_calc_double_points">Aktivieren Sie \"Punkte berechnen\", um die Einstellung zu aktivieren</string>
+    <string name="double_calc_points">Doppelt berechnete Punkte</string>
+    <string name="calc_points_from_grade">Punkte aus der Note errechnen</string>
+    <string name="data_manipulation">Datenmanipulation</string>
+    <string name="color_calculated_grades">Farbe Berechnete Noten</string>
+    <string name="swap_long_press_navigation">Tauschen Langer Druck Navigation</string>
+    <string name="follow_system">System folgen</string>
+    <string name="date_format">Datum Format</string>
+    <string name="language">Sprache</string>
+    <string name="app_theme">App Farben</string>
+    <string name="app_styling">App Aussehen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="about">Über</string>
+    <string name="grade_calculator">Noten-Rechner</string>
+    <string name="home">Startseite</string>
 </resources>
