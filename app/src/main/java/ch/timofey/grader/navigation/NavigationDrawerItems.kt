@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.res.stringResource
 import ch.timofey.grader.R
 import ch.timofey.grader.type.MenuItem
 import ch.timofey.grader.ui.components.atom.icons.Calculate
