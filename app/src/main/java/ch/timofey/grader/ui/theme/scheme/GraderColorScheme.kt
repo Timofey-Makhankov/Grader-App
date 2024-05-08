@@ -24,24 +24,22 @@ object GraderColorScheme {
     val green60 = Color(0xffBFFFD8)
     val green50 = Color(0xffAEFFCF)
     private val green40 = Color(0xff9EFFC5)
-    private val green30 = Color(0xff9EFFC5)
-    private val green20 = Color(0xff8EFFBB)
-    val green10 = Color(0xff7EFFB2)
-    val green0 = Color(0xff6EFFA8)
+    private val green30 = Color(0xff8EFFBB)
+    val green20 = Color(0xff7EFFB2)
+    val green10 = Color(0xff6EFFA8)
 
     //yellow100 = Color(0xffffffff)
     private val yellow90 = Color(0xffFFFEEF)
     private val yellow80 = Color(0xffFFFEE0)
     val yellow70 = Color(0xffFFFDD0)
-    val yellow60 = Color(0xffFFFDD0)
-    val yellow50 = Color(0xffFFFDC0)
-    val yellow40 = Color(0xffFFFCB1)
-    private val yellow30 = Color(0xffFFFCA1)
-    private val yellow20 = Color(0xffFFFB91)
-    val yellow10 = Color(0xffFFFB82)
-    val yellow0 = Color(0xffFFFA72)
+    val yellow60 = Color(0xffFFFDC0)
+    val yellow50 = Color(0xffFFFCB1)
+    private val yellow40 = Color(0xffFFFCA1)
+    private val yellow30 = Color(0xffFFFB91)
+    val yellow20 = Color(0xffFFFB82)
+    val yellow10 = Color(0xffFFFA72)
 
-    val grey100 = Color(0xffFAFAF5)
+    val grey100 = Color(0xffFAFAFA)
     private val grey90 = Color(0xffE3E3E3)
     private val grey80 = Color(0xffCBCBCB)
     val grey70 = Color(0xffB4B4B4)
@@ -88,37 +86,37 @@ object GraderColorScheme {
     )
 
     val lightScheme = lightColorScheme(
-        primary = grey10,
-        onPrimary = grey90,
-        primaryContainer = Color.Blue,
-        onPrimaryContainer = Color.Blue,
-        inversePrimary = Color.Blue,
+        primary = green20,
+        onPrimary = Color.White,
+        primaryContainer = green50,
+        onPrimaryContainer = Color.Black,
+        inversePrimary = Color.Black,
 
-        secondary = grey80,
-        onSecondary = Color.Blue,
-        secondaryContainer = grey50,
-        onSecondaryContainer = grey90,
+        secondary = green20,
+        onSecondary = red10,
+        secondaryContainer = red20,
+        onSecondaryContainer = Color.White,
 
-        tertiary = yellow10,
-        onTertiary = yellow10,
-        tertiaryContainer = yellow10,
-        onTertiaryContainer = yellow10,
+        tertiary = green10,
+        onTertiary = Color.White,
+        tertiaryContainer = yellow30,
+        onTertiaryContainer = yellow90,
 
         error = Color.White,
-        onError = yellow10,
+        onError = red10,
         errorContainer = red10,
-        onErrorContainer = yellow10,
+        onErrorContainer = red90,
 
-        background = Color.White,
-        onBackground = grey40,
+        background = yellow90,
+        onBackground = red20,
 
-        surface = yellow10,
-        onSurface = grey40,
-        inverseSurface = yellow10,
-        inverseOnSurface = yellow10,
-        surfaceVariant = grey90,
-        onSurfaceVariant = grey10,
+        surface = yellow70,
+        onSurface = red20,
+        inverseSurface = Color.Blue,
+        inverseOnSurface = Color.Blue,
+        surfaceVariant = green70,
+        onSurfaceVariant = red0,
 
-        outline = grey70
+        outline = green10
     )
 }
