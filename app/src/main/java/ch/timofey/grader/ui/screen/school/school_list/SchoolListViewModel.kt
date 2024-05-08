@@ -1,6 +1,5 @@
 package ch.timofey.grader.ui.screen.school.school_list
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -70,17 +69,12 @@ class SchoolListViewModel @Inject constructor(
         when (event) {
             is SchoolListEvent.OnCreateSchool -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    repository.getAllSchools().filter { school -> school.onDelete }
-                        .forEach { school ->
-                            Log.d("inside loop ocs", "$school")
-                            repository.deleteSchool(school.id)
-                        }
+                    deleteSchoolItems()
                 }
                 sendUiEvent(UiEvent.Navigate(Screen.CreateSchoolScreen.route))
             }
 
             is SchoolListEvent.OnDeleteItems -> {
-                println("OnDeleteItems")
                 viewModelScope.launch(Dispatchers.IO) {
                     deleteSchoolItems()
                 }
@@ -92,7 +86,7 @@ class SchoolListViewModel @Inject constructor(
                     repository.updateOnDeleteSchool(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "School was deleted", true, "Undo"
+                            "School has been deleted", true, "Undo"
                         )
                     )
                 }
@@ -113,7 +107,7 @@ class SchoolListViewModel @Inject constructor(
                     }
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "School Deleted was deleted", true, "Undo"
+                            "School was deleted", true, "Undo"
                         )
                     )
                 }
@@ -135,8 +129,8 @@ class SchoolListViewModel @Inject constructor(
     }
 
     private suspend fun deleteSchoolItems() {
-        val divisionList = repository.getAllSchools()
-        divisionList.filter { school -> school.onDelete }.forEach { school ->
+        val schoolList = repository.getAllSchools()
+        schoolList.filter { school -> school.onDelete }.forEach { school ->
             repository.deleteSchool(school.id)
         }
     }

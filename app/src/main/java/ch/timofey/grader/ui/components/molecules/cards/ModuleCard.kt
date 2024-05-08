@@ -36,6 +36,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,14 +54,15 @@ fun ModuleCard(
     modifier: Modifier = Modifier,
     module: Module,
     onCheckBoxClick: () -> Unit,
+    onClick: () -> Unit,
     onLongClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    isOpen: Boolean = false,
+    colorGrade: Boolean = false,
+    isOpen: Boolean = false
 ) {
     val checkedState = remember { mutableStateOf(module.isSelected) }
     val mutableInteractionSource = remember { MutableInteractionSource() }
-    val expanded = remember { mutableStateOf(isOpen) }
     Card(
         modifier = Modifier
             .animateContentSize(
@@ -70,7 +72,7 @@ fun ModuleCard(
             )
             .combinedClickable(interactionSource = mutableInteractionSource,
                 indication = null,
-                onClick = { expanded.value = !expanded.value },
+                onClick = { onClick() },
                 onLongClick = { onLongClick() })
             .then(modifier), colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -102,13 +104,12 @@ fun ModuleCard(
                     modifier = Modifier.padding(end = MaterialTheme.spacing.extraSmall),
                     text = module.description ?: "",
                     style = MaterialTheme.typography.bodyMedium,
-                    maxLines = if (expanded.value) 4 else 2,
+                    maxLines = if (isOpen) 4 else 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            AnimatedVisibility(visible = expanded.value) {
+            AnimatedVisibility(visible = isOpen) {
                 Text(modifier = Modifier.padding(
-                    //start = MaterialTheme.spacing.small,
                     top = MaterialTheme.spacing.small
                 ), text = buildAnnotatedString {
                     withStyle(
@@ -130,6 +131,7 @@ fun ModuleCard(
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             if (module.grade != 0.0) {
                 Text(style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.Start,
                     text = buildAnnotatedString {
                         withStyle(
                             SpanStyle(
@@ -138,17 +140,18 @@ fun ModuleCard(
                         ) {
                             append("Average Grade: ")
                         }
-                        withStyle(
-                            SpanStyle(
-                                color = getGradeColors(module.grade),
-                                fontWeight = FontWeight.Bold
+                        if (colorGrade) {
+                            pushStyle(
+                                SpanStyle(
+                                    color = getGradeColors(module.grade),
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
-                        ) {
-                            append("${module.grade}")
                         }
+                        append("${module.grade}")
                     })
             }
-            AnimatedVisibility(visible = expanded.value) {
+            AnimatedVisibility(visible = isOpen, label = "Action Buttons") {
                 Box(
                     modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd
                 ) {
@@ -158,7 +161,7 @@ fun ModuleCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
-                                contentDescription = "Edit the School Card"
+                                contentDescription = "Update Module"
                             )
                         }
                         IconButton(
@@ -166,7 +169,7 @@ fun ModuleCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Edit the School Card"
+                                contentDescription = "Delete Module"
                             )
                         }
                     }
@@ -179,42 +182,46 @@ fun ModuleCard(
 @Preview(showBackground = false)
 @Composable
 private fun ModuleCardPreview() {
-    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ModuleCard(module = Module(
             id = UUID.randomUUID(),
-            name = "title",//f.science.branch.formalBasic(),
+            name = "title",
             description = LoremIpsum().values.joinToString(""),
             isSelected = false,
             divisionId = UUID.randomUUID(),
             teacherFirstname = "",
             teacherLastname = "",
             grade = 4.0
-        ), onCheckBoxClick = {}, onLongClick = {}, onDeleteClick = {}, onEditClick = {})
+        ),
+            onCheckBoxClick = {},
+            onLongClick = {},
+            onDeleteClick = {},
+            onEditClick = {},
+            onClick = {})
     }
 }
 
 @Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ModuleCardDarkModePreview() {
-    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         Column {
             ModuleCard(module = Module(
                 id = UUID.randomUUID(),
-                name = "title",//f.science.branch.formalApplied(),
+                name = "title",
                 description = LoremIpsum().values.joinToString(""),
                 isSelected = true,
                 divisionId = UUID.randomUUID(),
-                teacherFirstname = "",//f.name.firstName(),
-                teacherLastname = "",//f.name.lastName(),
+                teacherFirstname = "",
+                teacherLastname = "",
                 grade = 3.9
             ),
                 isOpen = true,
                 onCheckBoxClick = {},
                 onLongClick = {},
                 onDeleteClick = {},
-                onEditClick = {})
+                onEditClick = {},
+                onClick = {})
         }
     }
 }

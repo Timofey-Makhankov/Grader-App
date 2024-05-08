@@ -274,7 +274,6 @@ fun SettingsScreen(
                             Text(text = "This is a description")
                         }
                     },
-                    enabled = false,
                     showExtraInformation = true
                 )
                 Spacer(Modifier.height(MaterialTheme.spacing.large))
@@ -295,6 +294,18 @@ fun SettingsScreen(
                         start = MaterialTheme.spacing.medium,
                         end = MaterialTheme.spacing.medium
                     )
+                )
+                SwitchText(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
+                    onValueChange = { _ -> },
+                    value = false,
+                    enabled = false,
+                    name = "Round Grade to .5",
+                    dialog = { InformationDialog(onDismiss = { it() }) {
+                        InformationDialog(onDismiss = { it() }) {
+                        Text(text = "This is a description")
+                    } } },
+                    showExtraInformation = true
                 )
                 SwitchText(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),

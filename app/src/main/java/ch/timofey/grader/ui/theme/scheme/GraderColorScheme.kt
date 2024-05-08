@@ -51,7 +51,7 @@ object GraderColorScheme {
     private val grey10 = Color(0xff282828)
 
     val darkScheme = darkColorScheme(
-        primary = grey90,
+        primary = red10,
         onPrimary = green90,
         primaryContainer = green70,
         onPrimaryContainer = green10,
@@ -62,27 +62,27 @@ object GraderColorScheme {
         secondaryContainer = red30,
         onSecondaryContainer = red90,
 
-        tertiary = yellow10,
-        onTertiary = yellow10,
-        tertiaryContainer = yellow10,
-        onTertiaryContainer = yellow10,
+        tertiary = green10,
+        onTertiary = grey90,
+        tertiaryContainer = green90,
+        onTertiaryContainer = grey10,
 
         error = Color.White,
-        onError = yellow10,
+        onError = grey10,
         errorContainer = red10,
-        onErrorContainer = yellow10,
+        onErrorContainer = Color.White,
 
         background = grey10,
-        onBackground = Color.White,
+        onBackground = red0,
 
-        surface = yellow10,
-        onSurface = grey90,
-        inverseSurface = yellow10,
-        inverseOnSurface = yellow10,
+        surface = grey10,
+        onSurface = grey70,
+        inverseSurface = grey90,
+        inverseOnSurface = grey30,
         surfaceVariant = grey30,
-        onSurfaceVariant = grey80,
+        onSurfaceVariant = red90,
 
-        outline = grey90
+        outline = red90
     )
 
     val lightScheme = lightColorScheme(
@@ -90,7 +90,7 @@ object GraderColorScheme {
         onPrimary = Color.White,
         primaryContainer = green50,
         onPrimaryContainer = Color.Black,
-        inversePrimary = Color.Black,
+        inversePrimary = grey50,
 
         secondary = green20,
         onSecondary = red10,
@@ -112,8 +112,8 @@ object GraderColorScheme {
 
         surface = yellow70,
         onSurface = red20,
-        inverseSurface = Color.Blue,
-        inverseOnSurface = Color.Blue,
+        inverseSurface = Color.Black,
+        inverseOnSurface = red80,
         surfaceVariant = green70,
         onSurfaceVariant = red0,
 

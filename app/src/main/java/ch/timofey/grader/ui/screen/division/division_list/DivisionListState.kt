@@ -11,5 +11,6 @@ data class DivisionListState(
     val showPoints: Boolean = false,
     val showNavigationIcons: Boolean = false,
     val swapNavigation: Boolean = false,
+    val minimumGrade: Double? = null,
     val colorGrades: Boolean = true
 )

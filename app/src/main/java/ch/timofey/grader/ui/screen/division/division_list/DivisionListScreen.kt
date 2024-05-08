@@ -48,10 +48,12 @@ import ch.timofey.grader.ui.components.organisms.BottomAppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.utils.UiEvent
+import ch.timofey.grader.utils.calculatePointsFromGrade
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import java.math.RoundingMode
 import java.util.UUID
 
 @Composable
@@ -173,6 +175,13 @@ fun DivisionListScreen(
                         )
                     )) {
                         BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                            subText = if (state.minimumGrade != null && state.showPoints) {
+                                "Points: ${
+                                    calculatePointsFromGrade(
+                                        state.averageGrade.toDouble(), state.minimumGrade.toDouble()
+                                    ).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                                }"
+                            } else null,
                             floatingActionButton = {
                                 ch.timofey.grader.ui.components.atom.FloatingActionButton(
                                     onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
@@ -281,6 +290,7 @@ fun DivisionListScreen(
 
 
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DivisionListScreenPreview() {
     GraderTheme {
@@ -311,49 +321,6 @@ private fun DivisionListScreenPreview() {
                         grade = 0.0
                     )
                 ), locationTitles = listOf("Given School Name", "Divisions")
-            ),
-            onEvent = {},
-            uiEvent = emptyFlow(),
-            onPopBackStack = {},
-            onNavigate = {},
-            snackBarHostState = SnackbarHostState(),
-            savedStateHandle = SavedStateHandle()
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun DivisionListScreenDarkModePreview() {
-    GraderTheme {
-        DivisionListScreen(
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-            state = DivisionListState(
-                divisionList = listOf(
-                    Division(
-                        id = UUID.randomUUID(),
-                        name = "Semester 1",
-                        description = "Lorem Impsum",
-                        schoolYear = 2023,
-                        schoolId = UUID.randomUUID(),
-                        grade = 0.0
-                    ), Division(
-                        id = UUID.randomUUID(),
-                        name = "Semester 2",
-                        description = "Lorem Impsum",
-                        schoolYear = 2002,
-                        schoolId = UUID.randomUUID(),
-                        grade = 0.0
-                    ), Division(
-                        id = UUID.randomUUID(),
-                        name = "Semester 3",
-                        description = "Lorem Impsum",
-                        schoolYear = 2222,
-                        schoolId = UUID.randomUUID(),
-                        grade = 0.0
-                    )
-                ), locationTitles = listOf("Given School Name", "Divisions"),
-                showNavigationIcons = true
             ),
             onEvent = {},
             uiEvent = emptyFlow(),
