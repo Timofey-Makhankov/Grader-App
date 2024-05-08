@@ -12,11 +12,11 @@ At the Moment you can't install the Application through Google Play Store or F-D
 
 Manage grades through the hierarchy (Schools -> Divisions -> Modules -> Exams)
 
-![Home Screen of the application](/doc/img/Screenshot_20240508_221724_Grader.png)
+<img src="./doc/img/Screenshot_20240508_221724_Grader.png" alt="Home Screen" width="250">
 
 Calculate your Average Grade with a Grade Calculator
 
-![Calculator Screen](/doc/img/Screenshot_20240508_224000_Grader.png)
+<img src="./doc/img/Screenshot_20240508_224000_Grader.png" alt="Calculator Screen" width="250">
 
 For a Detailed look of all the Features the App has to Offer, see the [Docs](https://grader.timofey-makhankov.ch/)
 
