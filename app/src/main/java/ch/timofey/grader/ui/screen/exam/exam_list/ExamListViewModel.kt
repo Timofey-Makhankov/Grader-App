@@ -48,7 +48,9 @@ class ExamListViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(
                     showPoints = it.calculatePoints,
                     swipingEnabled = it.enableSwipeToDelete,
-                    showNavigationIcons = it.showNavigationIcons
+                    minimumGrade = it.minimumGrade,
+                    showNavigationIcons = it.showNavigationIcons,
+                    colorGrades = it.colorGrades,
                 )
             }
         }

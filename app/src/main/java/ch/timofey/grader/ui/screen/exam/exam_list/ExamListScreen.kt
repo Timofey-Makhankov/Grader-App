@@ -1,6 +1,7 @@
 package ch.timofey.grader.ui.screen.exam.exam_list
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -21,6 +22,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SnackbarVisuals
@@ -35,19 +37,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
+import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
+import ch.timofey.grader.ui.components.atom.FloatingActionButton
 import ch.timofey.grader.ui.components.molecules.BreadCrumb
 import ch.timofey.grader.ui.components.molecules.NavigationDrawer
+import ch.timofey.grader.ui.components.molecules.SwipeContainer
+import ch.timofey.grader.ui.components.molecules.cards.ExamCard
 import ch.timofey.grader.ui.components.organisms.AppBar
-import ch.timofey.grader.ui.components.organisms.items.ExamItem
+import ch.timofey.grader.ui.components.organisms.BottomAppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.utils.UiEvent
+import ch.timofey.grader.utils.calculatePointsFromGrade
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import java.math.RoundingMode
 import java.util.UUID
 
 @Composable
@@ -63,8 +70,7 @@ fun ExamListScreen(
 ) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = Unit) {
-        val stackEntry =
-            savedStateHandle.get<SnackbarVisuals>("show-snackBar")
+        val stackEntry = savedStateHandle.get<SnackbarVisuals>("show-snackBar")
         if (stackEntry != null) {
             this.launch(Dispatchers.Main) {
                 snackBarHostState.showSnackbar(stackEntry)
@@ -86,11 +92,13 @@ fun ExamListScreen(
                 }
 
                 is UiEvent.ShowSnackBar -> {
+                    snackBarHostState.currentSnackbarData?.dismiss()
                     scope.launch(Dispatchers.Main) {
                         val result = snackBarHostState.showSnackbar(
                             message = event.message,
                             actionLabel = event.action,
-                            withDismissAction = event.withDismissAction
+                            withDismissAction = event.withDismissAction,
+                            duration = SnackbarDuration.Short
                         )
                         if (result == SnackbarResult.ActionPerformed) {
                             onEvent(ExamListEvent.OnUndoDeleteClick(deletedExamId.value!!))
@@ -110,83 +118,77 @@ fun ExamListScreen(
             }
         }, currentScreen = Screen.ExamScreen
     ) {
-        Scaffold(
-            floatingActionButtonPosition = FabPosition.End,
-            topBar = {
-                AppBar(
-                    onNavigationIconClick = { onEvent(ExamListEvent.OnBackButtonClick) },
-                    actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-                    actionContentDescription = "Go Back to previous Screen",
-                    appBarTitle = "Exams",
-                    locationIndicator = state.showNavigationIcons?: false,
-                    pageIndex = 3
-                )
-            },
-            bottomBar = {
-                state.averageGradeIsZero?.let {
-                    AnimatedVisibility(visible = !it, enter = slideInHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            delayMillis = 100,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            delayMillis = 100,
-                            easing = FastOutSlowInEasing
-                        )
-                    ), exit = slideOutHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 100, easing = FastOutSlowInEasing
-                        )
-                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 100, easing = FastOutSlowInEasing
-                        )
-                    )) {
-                        ch.timofey.grader.ui.components.organisms.BottomAppBar(
-                            text = "Average Grade: ${state.averageGrade}",
-                            floatingActionButton = {
-                                ch.timofey.grader.ui.components.atom.FloatingActionButton(
-                                    onFABClick = { onEvent(ExamListEvent.OnFABClick) },
-                                    contentDescription = "Create a new Exam Card"
-                                )
-                            })
-                    }
+        Scaffold(floatingActionButtonPosition = FabPosition.End, topBar = {
+            AppBar(
+                onNavigationIconClick = { onEvent(ExamListEvent.OnBackButtonClick) },
+                actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                actionContentDescription = "Go Back to previous Screen",
+                appBarTitle = "Exams",
+                locationIndicator = state.showNavigationIcons ?: false,
+                pageIndex = 3
+            )
+        }, bottomBar = {
+            state.averageGradeIsZero?.let {
+                AnimatedVisibility(visible = !it, enter = slideInHorizontally(
+                    animationSpec = tween(
+                        durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing
+                    )
+                ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing
+                    )
+                ), exit = slideOutHorizontally(
+                    animationSpec = tween(
+                        durationMillis = 100, easing = FastOutSlowInEasing
+                    )
+                ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100, easing = FastOutSlowInEasing
+                    )
+                )) {
+                    BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        subText = if (state.minimumGrade != null && state.showPoints) {
+                            "Points: ${
+                                calculatePointsFromGrade(
+                                    state.averageGrade.toDouble(), state.minimumGrade.toDouble()
+                                ).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                            }"
+                        } else null,
+                        floatingActionButton = {
+                            FloatingActionButton(
+                                onFABClick = { onEvent(ExamListEvent.OnFABClick) },
+                                contentDescription = "Create new Exam"
+                            )
+                        })
                 }
-            },
-            floatingActionButton = {
-                state.averageGradeIsZero?.let {
-                    AnimatedVisibility(visible = it, enter = slideInHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            delayMillis = 100,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) { fullWidth -> -fullWidth / 3 } + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            delayMillis = 100,
-                            easing = FastOutSlowInEasing
-                        )
-                    ), exit = slideOutHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 100, easing = FastOutSlowInEasing
-                        )
-                    ) { fullWidth -> fullWidth / 3 } + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 100, easing = FastOutSlowInEasing
-                        )
-                    )) {
-                        ch.timofey.grader.ui.components.atom.FloatingActionButton(
-                            modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
-                            onFABClick = { onEvent(ExamListEvent.OnFABClick) },
-                            contentDescription = "Create a new Exam Card"
-                        )
-                    }
+            }
+        }, floatingActionButton = {
+            state.averageGradeIsZero?.let {
+                AnimatedVisibility(visible = it, enter = slideInHorizontally(
+                    animationSpec = tween(
+                        durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing
+                    )
+                ) { fullWidth -> -fullWidth / 3 } + fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 200, delayMillis = 100, easing = FastOutSlowInEasing
+                    )
+                ), exit = slideOutHorizontally(
+                    animationSpec = tween(
+                        durationMillis = 100, easing = FastOutSlowInEasing
+                    )
+                ) { fullWidth -> fullWidth / 3 } + fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100, easing = FastOutSlowInEasing
+                    )
+                )) {
+                    FloatingActionButton(
+                        modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
+                        onFABClick = { onEvent(ExamListEvent.OnFABClick) },
+                        contentDescription = "Create a new Exam Card"
+                    )
                 }
-            }) {
+            }
+        }) {
             LazyColumn(
                 modifier = Modifier
                     .padding(it)
@@ -207,31 +209,43 @@ fun ExamListScreen(
                         )
                     }
                 }
-                if (state.swipingEnabled != null){
-                    items(items = state.exams, key = { exam -> exam.id }) { exam ->
-                        ExamItem(exam = exam, disableSwipe = !state.swipingEnabled, onSwipe = { examItem ->
-                            deletedExamId.value = examItem.id
-                            onEvent(ExamListEvent.OnSwipeDelete(examItem.id))
-                        }, onCheckBoxClick = {
-                            onEvent(
-                                ExamListEvent.OnCheckChange(
-                                    id = exam.id, value = !exam.isSelected
-                                )
-                            )
-                        }, onDeleteClick = {
+                items(items = state.exams, key = { exam -> exam.id }) { exam ->
+                    val expandCard = remember { mutableStateOf(false) }
+                    SwipeContainer(modifier = Modifier.padding(MaterialTheme.spacing.small),
+                        swipeEnabled = state.swipingEnabled,
+                        onSwipe = {
                             deletedExamId.value = exam.id
-                            onEvent(ExamListEvent.OnDeleteButtonClick(examId = exam.id))
-                        }, onUpdateClick = {
-                            onNavigate(
-                                UiEvent.Navigate(
-                                    Screen.ExamEditScreen.withArgs(
-                                        exam.id.toString()
+                            onEvent(ExamListEvent.OnSwipeDelete(exam.id))
+                        }) {
+                        ExamCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
+                            exam = exam,
+                            isOpen = expandCard.value,
+                            onClick = {
+                                expandCard.value = !expandCard.value
+                            },
+                            onEditClick = {
+                                onNavigate(
+                                    UiEvent.Navigate(
+                                        Screen.ExamEditScreen.withArgs(
+                                            exam.id.toString()
+                                        )
                                     )
                                 )
-                            )
-                        })
+                            },
+                            onDeleteClick = {
+                                deletedExamId.value = exam.id
+                                onEvent(ExamListEvent.OnDeleteButtonClick(examId = exam.id))
+                            },
+                            onCheckBoxClick = {
+                                onEvent(
+                                    ExamListEvent.OnCheckChange(
+                                        id = exam.id, value = !exam.isSelected
+                                    )
+                                )
+                            })
                     }
                 }
+
             }
         }
 
@@ -240,6 +254,7 @@ fun ExamListScreen(
 
 
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ExamListScreenPreview() {
     GraderTheme {
@@ -248,25 +263,6 @@ private fun ExamListScreenPreview() {
                 averageGradeIsZero = true,
                 averageGrade = "",
                 locationsTitles = listOf("School item", "division item", "module item", "Exams")
-            ),
-            onEvent = {},
-            uiEvent = emptyFlow(),
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-            onPopBackStack = {},
-            onNavigate = {},
-            snackBarHostState = SnackbarHostState(),
-            savedStateHandle = SavedStateHandle()
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun ExamListScreenDarkModePreview() {
-    GraderTheme {
-        ExamListScreen(
-            state = ExamListState(
-                averageGradeIsZero = false, averageGrade = "5.6"
             ),
             onEvent = {},
             uiEvent = emptyFlow(),

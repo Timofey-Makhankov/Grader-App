@@ -49,6 +49,7 @@ class DivisionListViewModel @Inject constructor(
                     swipingEnabled = it.enableSwipeToDelete,
                     showNavigationIcons = it.showNavigationIcons,
                     colorGrades = it.colorGrades,
+                    minimumGrade = it.minimumGrade,
                     swapNavigation = it.swapNavigation
                 )
             }

@@ -51,14 +51,14 @@ import java.util.UUID
 @Composable
 fun SchoolCard(
     modifier: Modifier = Modifier,
+    school: School,
     onCheckBoxClick: () -> Unit,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     colorGrade: Boolean = false,
-    isOpen: Boolean = false,
-    school: School
+    isOpen: Boolean = false
 ) {
     val checkedState = remember { mutableStateOf(school.isSelected) }
     val mutableInteractionSource = remember { MutableInteractionSource() }
@@ -134,7 +134,7 @@ fun SchoolCard(
                 )
             }
             AnimatedVisibility(
-                visible = isOpen, label = "Extending Button"
+                visible = isOpen, label = "Action Buttons"
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -157,7 +157,7 @@ fun SchoolCard(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Create,
-                                    contentDescription = "Edit the School Card"
+                                    contentDescription = "Update School"
                                 )
                             }
                             IconButton(
@@ -165,7 +165,7 @@ fun SchoolCard(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
-                                    contentDescription = "Edit the School Card"
+                                    contentDescription = "Delete School"
                                 )
                             }
                         }

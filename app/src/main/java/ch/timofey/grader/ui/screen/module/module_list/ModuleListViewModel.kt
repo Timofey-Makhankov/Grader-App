@@ -46,7 +46,10 @@ class ModuleListViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(
                     showPoints = it.calculatePoints,
                     swipingEnabled = it.enableSwipeToDelete,
-                    showNavigationIcons = it.showNavigationIcons
+                    showNavigationIcons = it.showNavigationIcons,
+                    minimumGrade = it.minimumGrade,
+                    colorGrades = it.colorGrades,
+                    swapNavigation = it.swapNavigation
                 )
             }
         }

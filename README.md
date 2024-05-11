@@ -1,77 +1,62 @@
 # Grader - A Grade Tracker
 
-This Application is designed to Easily Track Your Grades in School and Calculate the Average And Overall Grades of given Grades.
+This Application is designed to Easily Track Your Grades in School and Calculate the Average And Overall Grades of given Grades. (Designed for Swiss School Systems ATM)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y5X6KL1)
 
+## Application Download
+
+At the Moment you can't install the Application through Google Play Store or F-Droid. But it will be available in the fututre
+
 ## Features
 
-This Features are _Still in Progress_. **Not FINAL**
+Manage grades through the hierarchy (Schools -> Divisions -> Modules -> Exams)
 
-- [X] Save Grades for each subject
-- [X] Get the average of the given subject Grade
-- [ ] Export the Data in either a JSON or CSV Format (JSON is complete)
-- [ ] rounding to full or .5 grade
-- [ ] easily manage grades
+<p align="center">
+    <img src="./doc/img/Screenshot_20240508_221724_Grader.png" alt="Home Screen" width="250">
+</p>
 
-## Database Schema (***NOT UP TO DATE***)
+Calculate your Average Grade with a Grade Calculator
 
-```mermaid
----
-title: Grader Database
----
-erDiagram
-    Exam{
-        BLOB id PK
-        BLOB modul_id FK
-        TEXT name
-        TEXT description
-        REAL grade
-        REAL weight
-        INTEGER date
-        INTEGER is_selected
-        INTEGER on_delete
-    }
+<p align="center">
+    <img src="./doc/img/Screenshot_20240508_224000_Grader.png"  alt="Calculator Screen" width="250">
+</p>
 
-    Module{
-        BLOB id PK
-        BLOB division_id FK
-        TEXT name
-        TEXT description
-        TEXT teacher_lastname
-        TEXT teacher_firstname
-        INTEGER is_selected
-        INTEGER on_delete
-        REAL grade
-    }
+For a Detailed look of all the Features the App has to Offer, see the [Docs](https://grader.timofey-makhankov.ch/)
 
-    School{
-        BLOB id PK
-        TEXT name
-        TEXT description
-        TEXT address
-        TEXT zip
-        TEXT city
-        INTEGER is_selected
-        INTEGER on_delete
-        REAL grade
-    }
+## Installation Guide for Dev
 
-    Division{
-        BLOB id PK
-        BLOB school_id FK
-        TEXT name
-        TEXT description
-        INTEGER school_year
-        INTEGER is_selected
-        INTEGER on_delete
-        REAL grade
-    }
+> It is Recommended to use an actual Android Device instead of the AVD, since it
+> is more realistic and easier to setup without extra configurations
 
-    Module}o--||Division : "Zero to Many"
-    Division}|--||School : "One to Many"
-    Exam}|--||Module : "One to Many"
-   
+### Clone Project
+
+[Link to Android Studio Download Page](https://developer.android.com/studio)
+
+This Project uses the latest Version of Android Studio. This Project Includes a multitude of dependancies:
+
+- Dagger-Hilt
+
+- Room Database
+
+- Splash Screen API
+
+- Jetpack Compose
+
+- MVVM (**M**odel **V**iew **V**iew**M**odel)
+
+- Compose Navigation
+
+- Material 3
+
+To get Started, first clone the repository
+
+```bash
+git clone https://github.com/Timofey-Makhankov/Grader-App.git
 ```
 
-in SQLlite hat es kein uuid type, muss als string oder blob speichern
+open the Project in Android Studio
+
+After cloning the Project, Open the Project in Android Studio and let Gradle install all the Dependancies. It may also require to install the necessary Java SDK and AGP (Android Gradle Plugin). Android Studio should install it, when opening the Project, otherwise start the install manually.
+
+After Gradle is finished, You can either export the Project to an APK File or Connect an Android Device with debugging support enabled and run the Project to the device

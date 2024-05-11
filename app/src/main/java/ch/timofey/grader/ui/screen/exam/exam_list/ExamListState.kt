@@ -8,6 +8,8 @@ data class ExamListState(
     val averageGrade: String = "",
     val averageGradeIsZero: Boolean? = null,
     val showPoints: Boolean = false,
-    val swipingEnabled: Boolean? = null,
+    val swipingEnabled: Boolean = false,
     val showNavigationIcons: Boolean? = null,
+    val minimumGrade: Double? = null,
+    val colorGrades: Boolean = true,
 )

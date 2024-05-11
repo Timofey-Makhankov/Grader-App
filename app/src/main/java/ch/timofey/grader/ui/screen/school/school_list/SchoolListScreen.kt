@@ -87,7 +87,6 @@ fun SchoolListScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(event)
                 }
-
                 is UiEvent.ShowSnackBar -> {
                     scope.launch(Dispatchers.Main) {
                         snackBarHostState.currentSnackbarData?.dismiss()
@@ -95,14 +94,13 @@ fun SchoolListScreen(
                             message = event.message,
                             actionLabel = event.action,
                             withDismissAction = event.withDismissAction,
-                            duration = SnackbarDuration.Long
+                            duration = SnackbarDuration.Short
                         )
                         if (result == SnackbarResult.ActionPerformed) {
                             onEvent(SchoolListEvent.OnUndoDeleteClick(deletedSchoolId.value!!))
                         }
                     }
                 }
-
                 else -> Unit
             }
         }
@@ -181,13 +179,9 @@ fun SchoolListScreen(
             }
         }, topBar = {
             AppBar(
-                onNavigationIconClick = {
-                    scope.launch(Dispatchers.Main) {
-                        drawerState.open()
-                    }
-                },
+                onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
-                actionContentDescription = "Toggle Drawer",
+                actionContentDescription = "Toggle Navigation Drawer",
                 appBarTitle = stringResource(R.string.school_screen_title),
                 locationIndicator = state.showNavigationIcons ?: false,
                 pageIndex = 0
@@ -221,11 +215,7 @@ fun SchoolListScreen(
                         swipeEnabled = state.swipingEnabled,
                         onSwipe = {
                             deletedSchoolId.value = school.id
-                            onEvent(
-                                SchoolListEvent.OnSwipeDelete(
-                                    id = school.id
-                                )
-                            )
+                            onEvent(SchoolListEvent.OnSwipeDelete(school.id))
                         }) {
                         SchoolCard(
                             modifier = Modifier.padding(MaterialTheme.spacing.small),

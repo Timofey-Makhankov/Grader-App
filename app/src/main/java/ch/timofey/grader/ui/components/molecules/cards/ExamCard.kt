@@ -43,8 +43,6 @@ import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
-//import io.github.serpro69.kfaker.Faker
-//import io.github.serpro69.kfaker.fakerConfig
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -55,13 +53,14 @@ import java.util.UUID
 fun ExamCard(
     modifier: Modifier = Modifier,
     exam: Exam,
-    isOpen: Boolean = false,
+    onClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    onCheckBoxClick: () -> Unit
+    onCheckBoxClick: () -> Unit,
+    colorGrade: Boolean = false,
+    isOpen: Boolean = false
 ) {
     val checkedState = remember { mutableStateOf(exam.isSelected) }
-    val expanded = remember { mutableStateOf(isOpen) }
     val interactionSource = remember { MutableInteractionSource() }
     Card(modifier = Modifier
         .animateContentSize(
@@ -69,9 +68,7 @@ fun ExamCard(
                 durationMillis = 300, easing = LinearOutSlowInEasing
             )
         )
-        .clickable(interactionSource = interactionSource, indication = null) {
-            expanded.value = !expanded.value
-        }
+        .clickable(interactionSource = interactionSource, indication = null) { onClick() }
         .then(modifier), colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.surfaceVariant
     ), shape = MaterialTheme.shapes.large) {
@@ -104,11 +101,11 @@ fun ExamCard(
                 modifier = Modifier.padding(end = MaterialTheme.spacing.extraSmall),
                 text = exam.description ?: "",
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = if (expanded.value) 4 else 2,
+                maxLines = if (isOpen) 4 else 2,
                 overflow = TextOverflow.Ellipsis
             )
             AnimatedVisibility(
-                visible = expanded.value
+                visible = isOpen
             ) {
                 Text(
                     modifier = Modifier
@@ -129,11 +126,11 @@ fun ExamCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = MaterialTheme.spacing.small),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(style = MaterialTheme.typography.labelLarge,
-                    text = if (exam.grade == 0.0) AnnotatedString("") else buildAnnotatedString {
+                    text = if (exam.grade == 0.0) AnnotatedString(String()) else buildAnnotatedString {
                         withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic
@@ -141,11 +138,14 @@ fun ExamCard(
                         ) {
                             append("Average Grade: ")
                         }
-                        withStyle(
-                            SpanStyle(
-                                color = getGradeColors(exam.grade), fontWeight = FontWeight.Bold
+                        if (colorGrade) {
+                            pushStyle(
+                                SpanStyle(
+                                    color = getGradeColors(exam.grade),
+                                )
                             )
-                        ) {
+                        }
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)){
                             append("${exam.grade}")
                         }
                     })
@@ -153,19 +153,19 @@ fun ExamCard(
                     style = MaterialTheme.typography.labelLarge, text = "Weight: ${exam.weight}"
                 )
             }
-            AnimatedVisibility(visible = expanded.value) {
+            AnimatedVisibility(visible = isOpen) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
                     Row {
                         IconButton(onClick = onEditClick) {
                             Icon(
                                 imageVector = Icons.Default.Create,
-                                contentDescription = "Edit the School Card"
+                                contentDescription = "Update Exam"
                             )
                         }
                         IconButton(onClick = onDeleteClick) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Edit the School Card"
+                                contentDescription = "Delete Exam"
                             )
                         }
                     }
@@ -177,35 +177,24 @@ fun ExamCard(
 }
 
 @Preview(showBackground = false)
+@Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ExamCardPreview() {
-    //val f = Faker(fakerConfig { locale = "de_CH" })
     GraderTheme {
         ExamCard(exam = Exam(
             id = UUID.randomUUID(),
-            name = "",//f.educator.schoolName(),
+            name = "",
             description = LoremIpsum(20).values.joinToString(""),
             grade = 1.0,
             weight = 1.0,
             date = LocalDate.now(),
             moduleId = UUID.randomUUID()
-        ), onCheckBoxClick = {}, onDeleteClick = {}, onEditClick = {})
-    }
-}
-
-@Preview(showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun ExamCardDarkModePreview() {
-    //val f = Faker(fakerConfig { locale = "de_CH" })
-    GraderTheme {
-        ExamCard(exam = Exam(
-            id = UUID.randomUUID(),
-            name = "",//f.educator.schoolName(),
-            description = LoremIpsum(20).values.joinToString(""),
-            grade = 5.9,
-            weight = 1.0,
-            date = LocalDate.of(2023, 6, 20),
-            moduleId = UUID.randomUUID()
-        ), onCheckBoxClick = {}, isOpen = true, onDeleteClick = {}, onEditClick = {})
+        ),
+            colorGrade = false,
+            onCheckBoxClick = {},
+            onDeleteClick = {},
+            onEditClick = {},
+            onClick = {}
+        )
     }
 }

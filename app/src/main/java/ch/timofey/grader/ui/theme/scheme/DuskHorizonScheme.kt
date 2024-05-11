@@ -126,9 +126,8 @@ object DuskHorizonScheme {
         surfaceVariant = DeepSea70,
         onSurfaceVariant = DeepSea20,
 
-        outline = DeepSea30,
-
-        )
+        outline = DeepSea30
+    )
     val darkScheme: ColorScheme = darkColorScheme(
         primary = MistyHorizon20,
         onPrimary = MistyHorizon10,
