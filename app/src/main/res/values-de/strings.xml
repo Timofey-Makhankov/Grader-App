@@ -32,4 +32,5 @@
     <string name="about">Über</string>
     <string name="grade_calculator">Noten-Rechner</string>
     <string name="home">Startseite</string>
+    <string name="go_to_home_screen">Zum Startbildschirm gehen</string>
 </resources>

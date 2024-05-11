@@ -33,4 +33,12 @@
     <string name="about">About</string>
     <string name="grade_calculator">Grade Calculator</string>
     <string name="home">Home</string>
+    <string name="go_to_home_screen">Go to Home Screen</string>
+    <string name="go_to_custom_grade_calc">Go to Custom Grade Calculator</string>
+    <string name="go_to_share_screen">Go to Share Screen</string>
+    <string name="go_to_settings_screen">Go to Settings Screen</string>
+    <string name="desc_delete">delete</string>
+    <string name="average_grade">Average Grade:</string>
+    <string name="edit_the_school_card">Edit the School Card</string>
+    <string name="delete_the_school_card">Delete the School Card</string>
 </resources>

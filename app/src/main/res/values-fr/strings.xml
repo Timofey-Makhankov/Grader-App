@@ -33,4 +33,5 @@
     <string name="about">A propos de</string>
     <string name="grade_calculator">Calculateur de notes</string>
     <string name="home">Accueil</string>
+    <string name="go_to_home_screen">Aller à l\'écran d\'accueil</string>
 </resources>

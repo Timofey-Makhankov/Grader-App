@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import ch.timofey.grader.R
 import ch.timofey.grader.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +48,7 @@ fun DismissDeleteBackground(
             Icon(
                 modifier = Modifier.padding(end = MaterialTheme.spacing.large),
                 imageVector = Icons.Default.Delete,
-                contentDescription = "delete",
+                contentDescription = R.string.desc_delete.toString(),
                 tint = MaterialTheme.colorScheme.onErrorContainer
             )
         }
