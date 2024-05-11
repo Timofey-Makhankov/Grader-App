@@ -34,4 +34,11 @@
     <string name="grade_calculator">Calculateur de notes</string>
     <string name="home">Accueil</string>
     <string name="go_to_home_screen">Aller à l\'écran d\'accueil</string>
+    <string name="go_to_custom_grade_calc">Aller au calculateur de notes personnalisé</string>
+    <string name="go_to_share_screen">Aller à l\'écran de partage</string>
+    <string name="go_to_settings_screen">Accéder à l\'écran des paramètres</string>
+    <string name="desc_delete">supprimer</string>
+    <string name="average_grade">"Note moyenne: "</string>
+    <string name="edit_the_school_card">Modifier la carte scolaire</string>
+    <string name="delete_the_school_card">Supprimer la carte scolaire</string>
 </resources>

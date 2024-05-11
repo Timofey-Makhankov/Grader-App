@@ -38,7 +38,7 @@
     <string name="go_to_share_screen">Go to Share Screen</string>
     <string name="go_to_settings_screen">Go to Settings Screen</string>
     <string name="desc_delete">delete</string>
-    <string name="average_grade">Average Grade:</string>
+    <string name="average_grade">"Average Grade: "</string>
     <string name="edit_the_school_card">Edit the School Card</string>
     <string name="delete_the_school_card">Delete the School Card</string>
 </resources>

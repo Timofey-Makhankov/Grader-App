@@ -33,4 +33,11 @@
     <string name="grade_calculator">Калькулятор оценок</string>
     <string name="home">Главная</string>
     <string name="go_to_home_screen">Перейти на главный экран</string>
+    <string name="go_to_custom_grade_calc">Перейти к калькулятору пользовательских оценок</string>
+    <string name="go_to_share_screen">Перейти к экрану общего доступа</string>
+    <string name="go_to_settings_screen">Перейдите на экран настроек</string>
+    <string name="desc_delete">удалить</string>
+    <string name="average_grade">"Note moyenne: "</string>
+    <string name="edit_the_school_card">Редактирование школьной карты</string>
+    <string name="delete_the_school_card">Удалить школьную карту</string>
 </resources>

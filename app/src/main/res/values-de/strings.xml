@@ -33,4 +33,11 @@
     <string name="grade_calculator">Noten-Rechner</string>
     <string name="home">Startseite</string>
     <string name="go_to_home_screen">Zum Startbildschirm gehen</string>
+    <string name="go_to_custom_grade_calc">Zum Rechner für benutzerdefinierte Noten gehen</string>
+    <string name="go_to_share_screen">Zum Bildschirm „Teilen“ gehen</string>
+    <string name="go_to_settings_screen">Zum Bildschirm Einstellungen gehen</string>
+    <string name="desc_delete">löschen</string>
+    <string name="average_grade">"Note moyenne: "</string>
+    <string name="edit_the_school_card">Die Schulkarte bearbeiten</string>
+    <string name="delete_the_school_card">Die Schulkarte löschen</string>
 </resources>
