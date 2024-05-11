@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
+import ch.timofey.grader.R
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
@@ -145,7 +146,7 @@ fun ModuleListScreen(
                     FloatingActionButton(
                         modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                         onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
-                        contentDescription = "Create a new Module",
+                        contentDescription = R.string.create_module.toString(),
                     )
                 }
             }
@@ -168,7 +169,7 @@ fun ModuleListScreen(
                         durationMillis = 100, easing = FastOutSlowInEasing
                     )
                 )) {
-                    BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                    BottomAppBar(text = R.string.average_grade.toString() + state.averageGrade,
                         subText = if (state.minimumGrade != null && state.showPoints) {
                             "Points: ${
                                 calculatePointsFromGrade(
@@ -179,7 +180,7 @@ fun ModuleListScreen(
                         floatingActionButton = {
                             FloatingActionButton(
                                 onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
-                                contentDescription = "Create a new Exam Card"
+                                contentDescription = R.string.create_a_new_exam_card.toString()
                             )
                         })
                 }
@@ -188,8 +189,8 @@ fun ModuleListScreen(
             AppBar(
                 onNavigationIconClick = { onEvent(ModuleListEvent.OnReturnBack) },
                 actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-                actionContentDescription = "Go Back to previous Screen",
-                appBarTitle = "Modules",
+                actionContentDescription = R.string.go_back_to_previous_screen.toString(),
+                appBarTitle = R.string.modules.toString(),
                 locationIndicator = state.showNavigationIcons ?: false,
                 pageIndex = 2
             )

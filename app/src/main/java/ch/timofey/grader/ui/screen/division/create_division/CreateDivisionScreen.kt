@@ -38,6 +38,7 @@ import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import java.time.Year
+import ch.timofey.grader.R
 
 @Composable
 fun CreateDivisionScreen(
@@ -74,7 +75,7 @@ fun CreateDivisionScreen(
         AppBar(
             onNavigationIconClick = { onEvent(CreateDivisionEvent.OnBackButtonClick) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to previous screen"
+            actionContentDescription = R.string.go_to_settings_screen.toString()
         )
     }) {
         Column(
@@ -84,7 +85,7 @@ fun CreateDivisionScreen(
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Create Division", style = MaterialTheme.typography.titleLarge
+                text = R.string.create_division.toString(), style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -94,7 +95,7 @@ fun CreateDivisionScreen(
                 value = state.name,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Division Name ")
+                        append(R.string.division_name.toString())
                         withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
@@ -124,7 +125,7 @@ fun CreateDivisionScreen(
                 value = state.year,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Division Year ")
+                        append(R.string.division_year.toString())
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
                             append("(Required)")
                         }
@@ -151,7 +152,7 @@ fun CreateDivisionScreen(
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.description,
-                label = { Text(text = "Division Description") },
+                label = { Text(text = R.string.division_description.toString()) },
                 onValueChange = { description ->
                     onEvent(
                         CreateDivisionEvent.OnDescriptionChange(
@@ -168,7 +169,7 @@ fun CreateDivisionScreen(
                 onClick = { onEvent(CreateDivisionEvent.OnCreateDivision) }
 
             ) {
-                Text(text = "Create")
+                Text(text = R.string.create.toString())
             }
         }
     }

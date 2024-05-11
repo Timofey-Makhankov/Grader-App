@@ -35,6 +35,7 @@ import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import ch.timofey.grader.R
 
 @Composable
 fun UpdateDivisionScreen(
@@ -72,7 +73,7 @@ fun UpdateDivisionScreen(
         topBar = { AppBar(
             onNavigationIconClick = { onEvent(UpdateDivisionEvent.OnBackButtonClick) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to Division Screen"
+            actionContentDescription = R.string.go_back_to_division_screen.toString()
         )}) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -82,7 +83,7 @@ fun UpdateDivisionScreen(
                 .fillMaxSize()
         ) {
             Text(
-                text = "Update Division", style = MaterialTheme.typography.titleLarge
+                text = R.string.update_divsion.toString(), style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -92,13 +93,13 @@ fun UpdateDivisionScreen(
                 value = state.name,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Division Name ")
+                        append(R.string.division_name.toString())
                         withStyle(
                             SpanStyle(
                             fontStyle = FontStyle.Italic, fontSize = 8.sp
                         )
                         ){
-                            append("(Required)")
+                            append(R.string.required.toString())
                         }
                     })
                 },
@@ -121,9 +122,9 @@ fun UpdateDivisionScreen(
                     .fillMaxWidth(),
                 value = state.year,
                 label = { Text(text = buildAnnotatedString {
-                    append("Division Year ")
+                    append(R.string.division_year.toString())
                     withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
+                        append(R.string.required.toString())
                     }
                 }) },
                 onValueChange = { year ->
@@ -147,7 +148,7 @@ fun UpdateDivisionScreen(
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.description,
-                label = { Text(text = "Division Description") },
+                label = { Text(text = R.string.division_description.toString()) },
                 onValueChange = { description ->
                     onEvent(
                         UpdateDivisionEvent.OnDescriptionChange(
@@ -164,7 +165,7 @@ fun UpdateDivisionScreen(
                 onClick = { onEvent(UpdateDivisionEvent.OnUpdateDivision) }
 
             ) {
-                Text(text = "Update")
+                Text(text = R.string.update.toString())
             }
         }
     }

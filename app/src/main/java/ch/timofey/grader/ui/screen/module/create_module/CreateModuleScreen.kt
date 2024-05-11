@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import ch.timofey.grader.R
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
@@ -60,7 +61,7 @@ fun CreateModuleScreen(
         AppBar(
             onNavigationIconClick = { onEvent(CreateModuleEvent.OnBackButtonClick) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to previous screen"
+            actionContentDescription = R.string.go_back_to_previous_screen.toString()
         )
     }) {
         Column(
@@ -70,7 +71,7 @@ fun CreateModuleScreen(
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Create Module", style = MaterialTheme.typography.titleLarge
+                text = R.string.create_module.toString(), style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(modifier = Modifier
                 .padding(top = MaterialTheme.spacing.small)
@@ -81,9 +82,9 @@ fun CreateModuleScreen(
                 minLines = 2,
                 isError = !state.validName,
                 label = { Text(text = buildAnnotatedString {
-                    append("Module Name ")
+                    append(R.string.module_name.toString())
                     withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
+                        append(R.string.required.toString())
                     }
                 }) },
                 supportingText = {
@@ -103,7 +104,7 @@ fun CreateModuleScreen(
                 minLines = 2,
                 isError = !state.validTeacherFirstname,
                 label = { Text(text = buildAnnotatedString {
-                    append("Teacher Firstname")
+                    append(R.string.teacher_firstname.toString())
                 }) },
                 supportingText = {
                     if (!state.validTeacherFirstname) {
@@ -122,7 +123,7 @@ fun CreateModuleScreen(
                 minLines = 2,
                 isError = !state.validTeacherLastname,
                 label = { Text(text = buildAnnotatedString {
-                    append("Teacher Lastname")
+                    append(R.string.teacher_lastname.toString())
                 }) },
                 supportingText = {
                     if (!state.validTeacherLastname) {
@@ -139,13 +140,13 @@ fun CreateModuleScreen(
                     .fillMaxWidth(),
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateModuleEvent.OnDescriptionChange(value)) },
-                label = { Text(text = "Module description") },
+                label = { Text(text = R.string.module_description.toString()) },
                 minLines = 6
             )
             Button(modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
                 shape = MaterialTheme.shapes.large,
                 onClick = { onEvent(CreateModuleEvent.OnCreateModuleButtonClick) }) {
-                Text(text = "Create")
+                Text(text = R.string.create.toString())
             }
         }
     }

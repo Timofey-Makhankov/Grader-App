@@ -55,6 +55,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.util.UUID
+import ch.timofey.grader.R
 
 @Composable
 fun DivisionListScreen(
@@ -146,7 +147,7 @@ fun DivisionListScreen(
                         ch.timofey.grader.ui.components.atom.FloatingActionButton(
                             modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                             onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
-                            contentDescription = "Create a new Division",
+                            contentDescription = R.string.create_a_new_division.toString(),
                         )
                     }
                 }
@@ -174,9 +175,9 @@ fun DivisionListScreen(
                             durationMillis = 100, easing = FastOutSlowInEasing
                         )
                     )) {
-                        BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                        BottomAppBar(text = R.string.average_grade.toString() + state.averageGrade,
                             subText = if (state.minimumGrade != null && state.showPoints) {
-                                "Points: ${
+                                R.string.points.toString() + " ${
                                     calculatePointsFromGrade(
                                         state.averageGrade.toDouble(), state.minimumGrade.toDouble()
                                     ).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
@@ -185,7 +186,7 @@ fun DivisionListScreen(
                             floatingActionButton = {
                                 ch.timofey.grader.ui.components.atom.FloatingActionButton(
                                     onFABClick = { onEvent(DivisionListEvent.OnCreateDivision) },
-                                    contentDescription = "Create a new Exam Card"
+                                    contentDescription = R.string.create_a_new_exam_card.toString()
                                 )
                             })
                     }
@@ -195,8 +196,8 @@ fun DivisionListScreen(
                 AppBar(
                     onNavigationIconClick = { onEvent(DivisionListEvent.OnReturnBack) },
                     actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-                    actionContentDescription = "Go Back to previous Screen",
-                    appBarTitle = "Divisions",
+                    actionContentDescription = R.string.go_back_to_previous_screen.toString(),
+                    appBarTitle = R.string.divisions.toString(),
                     locationIndicator = state.showNavigationIcons,
                     pageIndex = 1
                 )

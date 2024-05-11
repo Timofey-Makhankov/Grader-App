@@ -46,6 +46,7 @@ import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import ch.timofey.grader.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,7 +87,7 @@ fun CreateExamScreen(
         AppBar(
             onNavigationIconClick = { onEvent(CreateExamEvent.OnBackButtonPress) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to previous Screen"
+            actionContentDescription = R.string.go_back_to_previous_screen.toString()
         )
     }) {
         Column(
@@ -95,7 +96,7 @@ fun CreateExamScreen(
                 .padding(it)
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Create Exam", style = MaterialTheme.typography.titleLarge)
+            Text(text = R.string.create_exam.toString(), style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.small)
@@ -107,12 +108,12 @@ fun CreateExamScreen(
                 isError = !state.validName,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam name ")
+                        append(R.string.exam_name.toString())
                         withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
                             )
-                        ) { append("(Required)") }
+                        ) { append(R.string.required.toString()) }
                     })
                 },
                 supportingText = {
@@ -134,9 +135,9 @@ fun CreateExamScreen(
                 isError = !state.validDate,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam date ")
+                        append(R.string.exam_date.toString())
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(R.string.required.toString())
                         }
                     })
                 },
@@ -164,9 +165,9 @@ fun CreateExamScreen(
                 isError = !state.validGrade,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Grade ")
+                        append(R.string.grade.toString())
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(R.string.required.toString())
                         }
                     })
                 },
@@ -189,9 +190,9 @@ fun CreateExamScreen(
                 isError = !state.validWeight,
                 label = {
                     Text(buildAnnotatedString {
-                        append("Weight ")
+                        append(R.string.weight.toString())
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(R.string.required.toString())
                         }
                     })
                 },
@@ -210,7 +211,7 @@ fun CreateExamScreen(
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnDescriptionChange(value)) },
                 minLines = 6,
-                label = { Text(text = "Description") })
+                label = { Text(text = R.string.description.toString()) })
             Button(modifier = Modifier.padding(
                 top = MaterialTheme.spacing.medium
             ),
@@ -230,11 +231,11 @@ fun CreateExamScreen(
                             )
                         )
                     }) {
-                        Text(text = "OK")
+                        Text(text = R.string.ok.toString())
                     }
                 }, dismissButton = {
                     TextButton(onClick = { openDialog.value = false }) {
-                        Text(text = "Cancel")
+                        Text(text = R.string.cancel.toString())
                     }
                 }) {
                     DatePicker(

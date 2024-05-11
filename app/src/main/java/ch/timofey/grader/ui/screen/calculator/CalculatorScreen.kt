@@ -48,6 +48,7 @@ import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.utils.calculatePointsFromGrade
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ch.timofey.grader.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -63,7 +64,7 @@ fun CalculatorScreen(
         currentScreen = Screen.CalculatorScreen,
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
-            println("Clicked on ${menuItem.title}")
+            println(message = " ${R.string.clicked_on} + ${menuItem.title}")
             if (menuItem.onNavigate != Screen.CalculatorScreen.route) {
                 onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
@@ -75,8 +76,8 @@ fun CalculatorScreen(
             AppBar(
                 onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
-                actionContentDescription = "Toggle Drawer",
-                appBarTitle = "Calculator"
+                actionContentDescription = R.string.toggle_drawer.toString(),
+                appBarTitle = R.string.calculator.toString()
             )
         }) {
             LazyColumn(
@@ -94,7 +95,7 @@ fun CalculatorScreen(
                                 //bottom = MaterialTheme.spacing.small
                             ),
                             style = MaterialTheme.typography.titleLarge,
-                            text = "Calculated Result: "
+                            text = R.string.calculated_result.toString()
                         )
                         Spacer(Modifier.weight(1f))
                         Text(
@@ -124,7 +125,7 @@ fun CalculatorScreen(
                                 .padding(horizontal = MaterialTheme.spacing.medium),
                             textAlign = TextAlign.End,
                             fontStyle = FontStyle.Italic,
-                            text = "Points: ${calculatePointsFromGrade(state.calculatedGrade, state.minimumGrade)}"
+                            text = R.string.points.toString() + " ${calculatePointsFromGrade(state.calculatedGrade, state.minimumGrade)}"
                         )
                     }
                 }
@@ -158,13 +159,13 @@ fun CalculatorScreen(
                                 Icon(
                                     modifier = Modifier.weight(0.2f),
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = "Add Text Field"
+                                    contentDescription = R.string.add_text_field.toString()
                                 )
                                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                                 Text(
                                     modifier = Modifier.weight(0.8f),
                                     textAlign = TextAlign.Center,
-                                    text = "Add Field"
+                                    text = R.string.add_field.toString()
                                 )
                             }
                         }
@@ -182,13 +183,13 @@ fun CalculatorScreen(
                                 Icon(
                                     modifier = Modifier.weight(0.2f),
                                     imageVector = Icons.Default.Remove,
-                                    contentDescription = "Remove Text Field"
+                                    contentDescription = R.string.remove_text_field.toString()
                                 )
                                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                                 Text(
                                     modifier = Modifier.weight(0.8f),
                                     textAlign = TextAlign.Center,
-                                    text = "Remove Field"
+                                    text = R.string.remove_field.toString()
                                 )
                             }
                         }

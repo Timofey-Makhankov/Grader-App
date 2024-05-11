@@ -56,6 +56,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.util.UUID
+import ch.timofey.grader.R
 
 @Composable
 fun ExamListScreen(
@@ -122,8 +123,8 @@ fun ExamListScreen(
             AppBar(
                 onNavigationIconClick = { onEvent(ExamListEvent.OnBackButtonClick) },
                 actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-                actionContentDescription = "Go Back to previous Screen",
-                appBarTitle = "Exams",
+                actionContentDescription = R.string.go_back_to_previous_screen.toString(),
+                appBarTitle = R.string.exams.toString(),
                 locationIndicator = state.showNavigationIcons ?: false,
                 pageIndex = 3
             )
@@ -146,7 +147,7 @@ fun ExamListScreen(
                         durationMillis = 100, easing = FastOutSlowInEasing
                     )
                 )) {
-                    BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                    BottomAppBar(text = R.string.average_grade.toString() + state.averageGrade,
                         subText = if (state.minimumGrade != null && state.showPoints) {
                             "Points: ${
                                 calculatePointsFromGrade(
@@ -157,7 +158,7 @@ fun ExamListScreen(
                         floatingActionButton = {
                             FloatingActionButton(
                                 onFABClick = { onEvent(ExamListEvent.OnFABClick) },
-                                contentDescription = "Create new Exam"
+                                contentDescription = R.string.create_new_exam.toString()
                             )
                         })
                 }
@@ -184,7 +185,7 @@ fun ExamListScreen(
                     FloatingActionButton(
                         modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                         onFABClick = { onEvent(ExamListEvent.OnFABClick) },
-                        contentDescription = "Create a new Exam Card"
+                        contentDescription = R.string.create_a_new_exam_card.toString()
                     )
                 }
             }

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import ch.timofey.grader.ui.components.atom.Circle
 import ch.timofey.grader.ui.components.atom.Triangle
 import ch.timofey.grader.ui.theme.GraderTheme
+import ch.timofey.grader.R
 
 @Composable
 fun ShowNavigationIconsInformation() {
@@ -21,7 +22,7 @@ fun ShowNavigationIconsInformation() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ScreenIndicator(pages = 4, index = 2)
-        Text(text = "These Indicators show, where you are positioned in the hierarchy.")
+        Text(text = R.string.indicators_desc.toString())
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -38,7 +39,7 @@ fun ShowNavigationIconsInformation() {
 @Composable
 private fun ShowNavigationIconsInformationPreview(){
     GraderTheme {
-        InformationDialog(title = "Show Navigation Icons", onDismiss = {}) {
+        InformationDialog(title = R.string.show_navigation_icons.toString(), onDismiss = {}) {
             ShowNavigationIconsInformation()
         }
     }

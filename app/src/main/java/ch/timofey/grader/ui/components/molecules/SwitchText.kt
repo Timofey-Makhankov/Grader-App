@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
+import ch.timofey.grader.R
 
 @Composable
 fun SwitchText(
@@ -100,8 +101,8 @@ private fun PreviewSwitchText() {
                 onValueChange = {},
                 value = true,
                 enabled = false,
-                name = "Calculate Points",
-                extraInfo = "This is disabled because ...",
+                name = R.string.calculate_points.toString(),
+                extraInfo = R.string.disable_desc.toString(),
                 showExtraInformation = true,
                 dialog = {}
             )

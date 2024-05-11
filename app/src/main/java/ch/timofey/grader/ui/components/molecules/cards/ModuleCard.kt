@@ -47,6 +47,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
 import java.util.UUID
+import ch.timofey.grader.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -117,7 +118,7 @@ fun ModuleCard(
                             fontStyle = FontStyle.Italic, fontSize = 14.sp
                         )
                     ) {
-                        append("Instructor: ")
+                        append(R.string.instructor.toString())
                     }
                     withStyle(
                         SpanStyle(
@@ -138,7 +139,7 @@ fun ModuleCard(
                                 fontStyle = FontStyle.Italic
                             )
                         ) {
-                            append("Average Grade: ")
+                            append(R.string.average_grade.toString())
                         }
                         if (colorGrade) {
                             pushStyle(
@@ -151,7 +152,7 @@ fun ModuleCard(
                         append("${module.grade}")
                     })
             }
-            AnimatedVisibility(visible = isOpen, label = "Action Buttons") {
+            AnimatedVisibility(visible = isOpen, label = R.string.action_buttons.toString()) {
                 Box(
                     modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd
                 ) {
@@ -161,7 +162,7 @@ fun ModuleCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
-                                contentDescription = "Update Module"
+                                contentDescription = R.string.update_module.toString()
                             )
                         }
                         IconButton(
@@ -169,7 +170,7 @@ fun ModuleCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete Module"
+                                contentDescription = R.string.delete_module.toString()
                             )
                         }
                     }

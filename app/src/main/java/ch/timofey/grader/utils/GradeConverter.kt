@@ -1,5 +1,6 @@
 package ch.timofey.grader.utils
 
+import ch.timofey.grader.R
 import ch.timofey.grader.utils.exception.UnevenListDistributionException
 import kotlin.math.round
 
@@ -8,7 +9,7 @@ fun getAverage(grades: List<Double>, weights: List<Double>): Double {
         return 0.0
     }
     if (grades.size != weights.size) {
-        throw UnevenListDistributionException("The given lists are uneven")
+        throw UnevenListDistributionException(R.string.the_given_lists_are_uneven.toString())
     }
     var gradeSum = 0.0
     var weightSum = 0.0

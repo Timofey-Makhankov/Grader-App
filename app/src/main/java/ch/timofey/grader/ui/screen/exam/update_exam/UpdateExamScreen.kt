@@ -39,6 +39,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
+import ch.timofey.grader.R
 import ch.timofey.grader.ui.components.atom.icons.CalendarToday
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
@@ -87,7 +88,7 @@ fun UpdateExamScreen(
         AppBar(
             onNavigationIconClick = { onEvent(UpdateExamEvent.OnBackButtonPress) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to previous Screen"
+            actionContentDescription = R.string.go_back_to_previous_screen.toString()
         )
     }) {
         Column(
@@ -96,7 +97,7 @@ fun UpdateExamScreen(
                 .padding(it)
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Update Exam", style = MaterialTheme.typography.titleLarge)
+            Text(text = R.string.update_exam.toString(), style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.small)
@@ -108,12 +109,12 @@ fun UpdateExamScreen(
                 isError = !state.validName,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam name ")
+                        append(R.string.exam_name.toString())
                         withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
                             )
-                        ) { append("(Required)") }
+                        ) { append(R.string.required.toString()) }
                     })
                 },
                 supportingText = {
@@ -136,9 +137,9 @@ fun UpdateExamScreen(
                 isError = !state.validDate,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam date ")
+                        append(R.string.exam_date.toString())
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(R.string.required.toString())
                         }
                     })
                 },
@@ -166,9 +167,9 @@ fun UpdateExamScreen(
                 isError = !state.validGrade,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Grade ")
+                        append(R.string.grade.toString())
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(R.string.required.toString())
                         }
                     })
                 },
@@ -191,9 +192,9 @@ fun UpdateExamScreen(
                 isError = !state.validWeight,
                 label = {
                     Text(buildAnnotatedString {
-                        append("Weight ")
+                        append(R.string.weight.toString())
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(R.string.required.toString())
                         }
                     })
                 },
@@ -212,13 +213,13 @@ fun UpdateExamScreen(
                 value = state.description,
                 onValueChange = { value -> onEvent(UpdateExamEvent.OnDescriptionChange(value)) },
                 minLines = 6,
-                label = { Text(text = "Description") })
+                label = { Text(text = R.string.description.toString()) })
             Button(modifier = Modifier.padding(
                 top = MaterialTheme.spacing.medium
             ),
                 shape = MaterialTheme.shapes.large,
                 onClick = { onEvent(UpdateExamEvent.OnUpdateExamButtonPress) }) {
-                Text(text = "Create")
+                Text(text = R.string.create.toString())
             }
             if (openDialog.value) {
                 DatePickerDialog(properties = DialogProperties(
@@ -232,11 +233,11 @@ fun UpdateExamScreen(
                             )
                         )
                     }) {
-                        Text(text = "OK")
+                        Text(text = R.string.ok.toString())
                     }
                 }, dismissButton = {
                     TextButton(onClick = { openDialog.value = false }) {
-                        Text(text = "Cancel")
+                        Text(text = R.string.cancel.toString())
                     }
                 }) {
                     DatePicker(

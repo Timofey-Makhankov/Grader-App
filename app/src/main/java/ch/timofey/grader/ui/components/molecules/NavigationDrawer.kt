@@ -26,6 +26,7 @@ import ch.timofey.grader.ui.theme.spacing
 import ch.timofey.grader.type.MenuItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ch.timofey.grader.R
 
 @Composable
 fun NavigationDrawer(
@@ -47,7 +48,7 @@ fun NavigationDrawer(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Close Navigation Drawer",
+                        contentDescription = R.string.close_navigation_drawer.toString(),
                         modifier
                             .padding(MaterialTheme.spacing.medium)
                             .clickable {
@@ -57,7 +58,7 @@ fun NavigationDrawer(
                             })
                     Spacer(Modifier.width(MaterialTheme.spacing.small))
                     Text(
-                        text = "Grader Navigation",
+                        text = R.string.grader_navigation.toString(),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )

@@ -48,6 +48,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
 import java.util.UUID
+import ch.timofey.grader.R
 
 @Composable
 fun ExamCard(
@@ -113,7 +114,7 @@ fun ExamCard(
                         .padding(top = MaterialTheme.spacing.small),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    text = "Exam taken: ${
+                    text = R.string.exam_taken.toString() + " ${
                         exam.date.format(
                             DateTimeFormatter.ofLocalizedDate(
                                 FormatStyle.MEDIUM
@@ -136,7 +137,7 @@ fun ExamCard(
                                 fontStyle = FontStyle.Italic
                             )
                         ) {
-                            append("Average Grade: ")
+                            append(R.string.average_grade.toString())
                         }
                         if (colorGrade) {
                             pushStyle(
@@ -150,7 +151,7 @@ fun ExamCard(
                         }
                     })
                 Text(
-                    style = MaterialTheme.typography.labelLarge, text = "Weight: ${exam.weight}"
+                    style = MaterialTheme.typography.labelLarge, text = R.string.weight.toString() + " ${exam.weight}"
                 )
             }
             AnimatedVisibility(visible = isOpen) {
@@ -159,13 +160,13 @@ fun ExamCard(
                         IconButton(onClick = onEditClick) {
                             Icon(
                                 imageVector = Icons.Default.Create,
-                                contentDescription = "Update Exam"
+                                contentDescription = R.string.update_exam.toString()
                             )
                         }
                         IconButton(onClick = onDeleteClick) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete Exam"
+                                contentDescription = R.string.delete_exam.toString()
                             )
                         }
                     }

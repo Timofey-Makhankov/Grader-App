@@ -2,6 +2,7 @@ package ch.timofey.grader.ui.screen.school.create_school
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.R
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.utils.UiEvent
@@ -91,9 +92,9 @@ class CreateSchoolViewModel @Inject constructor(
                             city = _uiState.value.city
                         ))
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("School with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.school_with_name.toString() + " \"${_uiState.value.name}\" "+R.string.has_been_created.toString(), withDismissAction = true)))
                 } else {
-                    sendUiEvent(UiEvent.ShowSnackBar("School was unable to be created", true))
+                    sendUiEvent(UiEvent.ShowSnackBar(R.string.school_was_unable_to_be_created.toString(), true))
                 }
             }
         }

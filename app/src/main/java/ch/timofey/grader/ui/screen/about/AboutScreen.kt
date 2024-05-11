@@ -85,8 +85,8 @@ fun AboutScreen(
             AppBar(
                 onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
-                actionContentDescription = "Toggle Drawer",
-                appBarTitle = "About"
+                actionContentDescription = R.string.toggle_drawer.toString(),
+                appBarTitle = R.string.about.toString()
             )
         }) {
             Column(
@@ -105,7 +105,7 @@ fun AboutScreen(
                         .fillMaxWidth()
                         .padding(horizontal = MaterialTheme.spacing.medium),
                     textAlign = TextAlign.Center,
-                    text = "If you like the App, you can share it with others Or Donate me on Ko-Fi"
+                    text = R.string.about_desc.toString()
                 )
                 Button(modifier = Modifier
                     .fillMaxWidth()
@@ -114,7 +114,7 @@ fun AboutScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Github Repo")
+                        Text(text = R.string.git_repo.toString())
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                         Icon(
                             painter = painterResource(id = R.drawable.github_mark),
@@ -129,7 +129,7 @@ fun AboutScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Share")
+                        Text(text = R.string.share.toString())
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                         Icon(
                             imageVector = Icons.Default.Share, contentDescription = "Share Icon"
@@ -143,7 +143,7 @@ fun AboutScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Donate to Ko-Fi")
+                        Text(text = R.string.donate.toString())
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                         //val vector = ImageVector.vectorResource(id = R.drawable.kofi_icon)
                         //val painter = rememberVectorPainter(image = vector)

@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import ch.timofey.grader.R
 import ch.timofey.grader.ui.components.atom.InputField
 import ch.timofey.grader.ui.components.atom.InputFieldLabel
 import ch.timofey.grader.ui.components.organisms.AppBar
@@ -73,7 +74,7 @@ fun UpdateModuleScreen(
         AppBar(
             onNavigationIconClick = { onEvent(UpdateModuleEvent.OnBackButtonClick) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to Module Screen"
+            actionContentDescription = R.string.go_back_to_module_screen.toString(),
         )
     }) {
         Column(
@@ -83,7 +84,7 @@ fun UpdateModuleScreen(
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Update Module", style = MaterialTheme.typography.titleLarge
+                text = R.string.update_module.toString(), style = MaterialTheme.typography.titleLarge
             )
             InputField(modifier = Modifier
                 .padding(top = MaterialTheme.spacing.small)
@@ -93,7 +94,7 @@ fun UpdateModuleScreen(
                 onValueChange = { name ->
                     onEvent(UpdateModuleEvent.OnNameChange(name))
                 },
-                label = { InputFieldLabel(message = "Module Name", required = true) },
+                label = { InputFieldLabel(message = R.string.module_name.toString(), required = true) },
                 isError = !state.validName,
                 supportingText = {
                     if (!state.validName) {
@@ -112,7 +113,7 @@ fun UpdateModuleScreen(
                 onValueChange = { teacherFirstname ->
                     onEvent(UpdateModuleEvent.OnTeacherFirstNameChange(teacherFirstname))
                 },
-                label = { InputFieldLabel(message = "Teacher Surname", required = false) },
+                label = { InputFieldLabel(message = R.string.teacher_firstname.toString(), required = false) },
                 isError = !state.validTeacherFirstName,
                 supportingText = {
                     if (!state.validTeacherFirstName) {
@@ -131,7 +132,7 @@ fun UpdateModuleScreen(
                 onValueChange = { teacherLastName ->
                     onEvent(UpdateModuleEvent.OnTeacherLastNameChange(teacherLastName))
                 },
-                label = { InputFieldLabel(message = "Teacher Lastname", required = false) },
+                label = { InputFieldLabel(message = R.string.teacher_lastname.toString(), required = false) },
                 isError = !state.validTeacherLastName,
                 supportingText = {
                     if (!state.validTeacherLastName) {
@@ -151,7 +152,7 @@ fun UpdateModuleScreen(
                 onValueChange = { description ->
                     onEvent(UpdateModuleEvent.OnNameChange(description))
                 },
-                label = { InputFieldLabel(message = "Description") },
+                label = { InputFieldLabel(message = R.string.description.toString()) },
                 isError = !state.validDescription,
                 supportingText = {
                     if (!state.validDescription) {
@@ -171,7 +172,7 @@ fun UpdateModuleScreen(
                 onClick = { onEvent(UpdateModuleEvent.OnUpdateModuleButtonClick) }
 
             ) {
-                Text(text = "Update")
+                Text(text = R.string.update.toString())
             }
         }
     }
