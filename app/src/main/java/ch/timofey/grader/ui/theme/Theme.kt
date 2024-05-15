@@ -21,6 +21,7 @@ import ch.timofey.grader.ui.theme.scheme.DuskHorizonScheme
 import ch.timofey.grader.ui.theme.scheme.GraderColorScheme
 import ch.timofey.grader.ui.theme.scheme.PinkBlossomScheme
 import ch.timofey.grader.ui.theme.scheme.SwampScheme
+import ch.timofey.grader.ui.theme.scheme.TropicalParadiseScheme
 
 private val darkColorPalette = ColorSchemas.darkColorSchema
 private val lightColorPalette = ColorSchemas.lightColorSchema
@@ -34,6 +35,7 @@ fun getColorschemeFromAppSetting(theme: AppTheme): ColorScheme {
         AppTheme.DUSK_HORIZON_LIGHT -> DuskHorizonScheme.lightScheme
         AppTheme.DUSK_HORIZON_DARK -> DuskHorizonScheme.darkScheme
         AppTheme.SWAMP -> SwampScheme.lightScheme
+        AppTheme.TROPICAL_PARADISE -> TropicalParadiseScheme.lightScheme
         AppTheme.DEVICE_THEME -> getColorScheme()
     }
 }
