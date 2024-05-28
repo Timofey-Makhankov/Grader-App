@@ -150,7 +150,8 @@ fun ExamCard(
                         }
                     })
                 Text(
-                    style = MaterialTheme.typography.labelLarge, text = "Weight: ${exam.weight}"
+                    style = MaterialTheme.typography.labelLarge,
+                    text = "Weight: ${exam.weight}"
                 )
             }
             AnimatedVisibility(visible = isOpen) {
