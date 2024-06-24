@@ -3,6 +3,7 @@ package ch.timofey.grader.ui.screen.exam.update_exam
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.R
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.exam.ExamValidation
 import ch.timofey.grader.type.SnackBarMessage
@@ -47,7 +48,7 @@ class UpdateExamViewModel @Inject constructor(
                     dateTaken = exam.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
                 )
             } ?: run {
-                sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Exam was unable to be found", withDismissAction = true)))
+                sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.exam_was_unable_to_be_found.toString(), withDismissAction = true)))
             }
         }
     }
@@ -107,11 +108,11 @@ class UpdateExamViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateExam(updatedExam)
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Exam with name: \"${_uiState.value.name}\" has been updated", withDismissAction = true)))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.exam_with_name.toString() + " \"${_uiState.value.name}\" " + R.string.has_been_updated.toString(), withDismissAction = true)))
                 } else {
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            message = "Exam was unable to be created", true
+                            message = R.string.exam_with_unable_to_be_created.toString(), true
                         )
                     )
                 }

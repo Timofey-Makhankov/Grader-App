@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.R
 import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.exam.Exam
@@ -123,7 +124,7 @@ class ExamListViewModel @Inject constructor(
                     repository.updateOnDelete(event.examId, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "Exam has been deleted", true, "Undo"
+                            R.string.exam_has_been_deleted.toString(), true, R.string.undo.toString()
                         )
                     )
                 }
@@ -134,7 +135,7 @@ class ExamListViewModel @Inject constructor(
                     repository.updateOnDelete(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "Exam was deleted", true, "Undo"
+                            R.string.exam_was_deleted.toString(), true, R.string.undo.toString()
                         )
                     )
                 }

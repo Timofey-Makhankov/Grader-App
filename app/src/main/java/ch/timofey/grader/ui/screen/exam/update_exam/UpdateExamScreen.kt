@@ -31,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
+import ch.timofey.grader.R
 import ch.timofey.grader.ui.components.atom.icons.CalendarToday
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
@@ -87,7 +89,7 @@ fun UpdateExamScreen(
         AppBar(
             onNavigationIconClick = { onEvent(UpdateExamEvent.OnBackButtonPress) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to previous Screen"
+            actionContentDescription = stringResource(id = R.string.go_back_to_previous_screen)
         )
     }) {
         Column(
@@ -96,7 +98,7 @@ fun UpdateExamScreen(
                 .padding(it)
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Update Exam", style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(id = R.string.update_exam), style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.small)
@@ -108,12 +110,12 @@ fun UpdateExamScreen(
                 isError = !state.validName,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam name ")
+                        append(stringResource(id = R.string.exam_name))
                         withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
                             )
-                        ) { append("(Required)") }
+                        ) { append(stringResource(id = R.string.required)) }
                     })
                 },
                 supportingText = {
@@ -136,9 +138,9 @@ fun UpdateExamScreen(
                 isError = !state.validDate,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam date ")
+                        append(stringResource(id = R.string.exam_date))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -166,9 +168,9 @@ fun UpdateExamScreen(
                 isError = !state.validGrade,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Grade ")
+                        append(stringResource(id = R.string.grade))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -191,9 +193,9 @@ fun UpdateExamScreen(
                 isError = !state.validWeight,
                 label = {
                     Text(buildAnnotatedString {
-                        append("Weight ")
+                        append(stringResource(id = R.string.weight))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -212,13 +214,13 @@ fun UpdateExamScreen(
                 value = state.description,
                 onValueChange = { value -> onEvent(UpdateExamEvent.OnDescriptionChange(value)) },
                 minLines = 6,
-                label = { Text(text = "Description") })
+                label = { Text(text = stringResource(id = R.string.description)) })
             Button(modifier = Modifier.padding(
                 top = MaterialTheme.spacing.medium
             ),
                 shape = MaterialTheme.shapes.large,
                 onClick = { onEvent(UpdateExamEvent.OnUpdateExamButtonPress) }) {
-                Text(text = "Create")
+                Text(text = stringResource(id = R.string.create))
             }
             if (openDialog.value) {
                 DatePickerDialog(properties = DialogProperties(
@@ -232,11 +234,11 @@ fun UpdateExamScreen(
                             )
                         )
                     }) {
-                        Text(text = "OK")
+                        Text(text = stringResource(id = R.string.ok))
                     }
                 }, dismissButton = {
                     TextButton(onClick = { openDialog.value = false }) {
-                        Text(text = "Cancel")
+                        Text(text = stringResource(id = R.string.cancel))
                     }
                 }) {
                     DatePicker(

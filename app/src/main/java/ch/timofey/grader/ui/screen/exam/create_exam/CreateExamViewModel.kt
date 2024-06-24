@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.UUID
 import javax.inject.Inject
+import ch.timofey.grader.R
 
 @HiltViewModel
 class CreateExamViewModel @Inject constructor(
@@ -106,9 +107,9 @@ class CreateExamViewModel @Inject constructor(
                             )
                         )
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Exam with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.exam_with_name.toString() + " \"${_uiState.value.name}\" " + R.string.has_been_created, withDismissAction = true)))
                 } else {
-                    sendUiEvent(UiEvent.ShowSnackBar("Exam was unable to be created", true))
+                    sendUiEvent(UiEvent.ShowSnackBar(R.string.exame_was_unable_to_be_created.toString(), true))
                 }
             }
         }

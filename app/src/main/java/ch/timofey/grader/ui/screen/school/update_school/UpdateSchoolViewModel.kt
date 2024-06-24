@@ -3,6 +3,7 @@ package ch.timofey.grader.ui.screen.school.update_school
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.R
 import ch.timofey.grader.db.domain.school.SchoolRepository
 import ch.timofey.grader.utils.UiEvent
 import ch.timofey.grader.db.domain.school.SchoolValidation
@@ -46,7 +47,7 @@ class UpdateSchoolViewModel @Inject constructor(
                     sendUiEvents(
                         UiEvent.PopBackStack,
                         UiEvent.ShowSnackBar(
-                            message = "School was unable to be found",
+                            message = R.string.school_was_unable_to_be_found.toString(),
                             withDismissAction = true
                         )
                     )
@@ -118,9 +119,9 @@ class UpdateSchoolViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateSchool(updatedSchool)
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("School with name: \"${_uiState.value.name}\" has been updated")))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.school_with_name.toString()+" \"${_uiState.value.name}\" "+R.string.has_been_updated.toString())))
                 } else {
-                    sendUiEvent(UiEvent.ShowSnackBar("School was unable to be Updated",true))
+                    sendUiEvent(UiEvent.ShowSnackBar(R.string.school_was_unable_to_be_updated.toString(),true))
                 }
             }
         }

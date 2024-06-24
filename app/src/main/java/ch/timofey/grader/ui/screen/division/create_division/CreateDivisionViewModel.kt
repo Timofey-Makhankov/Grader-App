@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
+import ch.timofey.grader.R
 
 @HiltViewModel
 class CreateDivisionViewModel @Inject constructor(
@@ -75,9 +76,9 @@ class CreateDivisionViewModel @Inject constructor(
                             schoolId = UUID.fromString(id),
                             ))
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Division with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.division_with_name.toString()+ " \"${_uiState.value.name}\" " + R.string.has_been_created.toString(), withDismissAction = true)))
                 } else {
-                    sendUiEvent((UiEvent.ShowSnackBar("Division was unable to be created", true)))
+                    sendUiEvent((UiEvent.ShowSnackBar(R.string.division_was_unable_to_be_created.toString(), true)))
                 }
             }
         }
