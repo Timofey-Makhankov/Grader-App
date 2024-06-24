@@ -34,5 +34,4 @@ fun GraderWidget(){
             )
         }
     }
-
 }

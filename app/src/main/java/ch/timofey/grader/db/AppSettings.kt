@@ -22,5 +22,6 @@ enum class AppTheme(val title: String) {
     SWAMP("Swamp"),
     DUSK_HORIZON_LIGHT("Dusk Horizon Light"),
     DUSK_HORIZON_DARK("Dusk Horizon Dark"),
+    TROPICAL_PARADISE("Tropical Paradise"),
     DEVICE_THEME("Follow System")
 }

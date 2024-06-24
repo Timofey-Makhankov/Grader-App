@@ -50,116 +50,72 @@ object DuskHorizonScheme {
     val MidnightPlum20 = Color(0xff282247)
     val MidnightPlum10 = Color(0xff0D0630)
 
-    val DeepSea100 = Color(0xffffffff)
-    val DeepSea90 = Color(0xffe6ecf0)
-    val DeepSea80 = Color(0xffcedae1)
-    val DeepSea70 = Color(0xffb5c7d3)
-    val DeepSea60 = Color(0xff9db4c4)
-    val DeepSea50 = Color(0xff84a2b5)
-    val DeepSea40 = Color(0xff6c8fa6)
-    val DeepSea30 = Color(0xff537c98)
-    val DeepSea20 = Color(0xff3b6a89)
-    val DeepSea10 = Color(0xff22577a)
-
-    val TurquoiseMist100 = Color(0xffffffff)
-    val TurquoiseMist90 = Color(0xffe9f5f5)
-    val TurquoiseMist80 = Color(0xffd3ebeb)
-    val TurquoiseMist70 = Color(0xffbde0e1)
-    val TurquoiseMist60 = Color(0xffa7d6d7)
-    val TurquoiseMist50 = Color(0xff90cccd)
-    val TurquoiseMist40 = Color(0xff7ac2c3)
-    val TurquoiseMist30 = Color(0xff64b7b9)
-    val TurquoiseMist20 = Color(0xff4eadaf)
-    val TurquoiseMist10 = Color(0xff38a3a5)
-
-    val MeadowGreen100 = Color(0xffffffff)
-    val MeadowGreen90 = Color(0xffecf9f4)
-    val MeadowGreen80 = Color(0xffdaf4e8)
-    val MeadowGreen70 = Color(0xffc7eedd)
-    val MeadowGreen60 = Color(0xffb4e8d2)
-    val MeadowGreen50 = Color(0xffa2e3c6)
-    val MeadowGreen40 = Color(0xff8fddbb)
-    val MeadowGreen30 = Color(0xff7cd7b0)
-    val MeadowGreen20 = Color(0xff6ad2a4)
-    val MeadowGreen10 = Color(0xff57cc99)
-
-    val MintyBreeze100 = Color(0xffffffff)
-    val MintyBreeze90 = Color(0xfff1fdf4)
-    val MintyBreeze80 = Color(0xffe3fbe8)
-    val MintyBreeze70 = Color(0xffd5f9dd)
-    val MintyBreeze60 = Color(0xffc7f7d2)
-    val MintyBreeze50 = Color(0xffb8f5c6)
-    val MintyBreeze40 = Color(0xffaaf3bb)
-    val MintyBreeze30 = Color(0xff9cf1b0)
-    val MintyBreeze20 = Color(0xff8eefa4)
-    val MintyBreeze10 = Color(0xff80ed99)
-
     val lightScheme: ColorScheme = lightColorScheme(
-        primary = TurquoiseMist80,
-        onPrimary = TurquoiseMist100,
-        primaryContainer = TurquoiseMist30,
-        onPrimaryContainer = TurquoiseMist10,
-        inversePrimary = TurquoiseMist40,
+        primary = MistyHorizon10,
+        onPrimary = Color.White,
+        primaryContainer = Color.Red,
+        onPrimaryContainer = Color.Red,
+        inversePrimary = Color.Red,
 
-        secondary = MeadowGreen80,
-        onSecondary = MeadowGreen100,
-        secondaryContainer = MeadowGreen30,
-        onSecondaryContainer = MeadowGreen10,
-
-        tertiary = MintyBreeze80,
-        onTertiary = MintyBreeze100,
-        tertiaryContainer = MintyBreeze30,
-        onTertiaryContainer = MintyBreeze10,
-
-        error = DeepSea80,
-        onError = DeepSea20,
-        errorContainer = DeepSea30,
-        onErrorContainer = DeepSea90,
-
-        background = DeepSea90,
-        onBackground = DeepSea10,
-
-        surface = DeepSea100,
-        onSurface = DeepSea10,
-        inverseSurface = DeepSea10,
-        inverseOnSurface = DeepSea90,
-        surfaceVariant = DeepSea70,
-        onSurfaceVariant = DeepSea20,
-
-        outline = DeepSea30
-    )
-    val darkScheme: ColorScheme = darkColorScheme(
-        primary = MistyHorizon20,
-        onPrimary = MistyHorizon10,
-        primaryContainer = MistyHorizon70,
-        onPrimaryContainer = Color.White,
-        inversePrimary = MistyHorizon60,
-
-        secondary = OceanicBlue20,
-        onSecondary = OceanicBlue10,
-        secondaryContainer = OceanicBlue70,
+        secondary = SereneSky10,
+        onSecondary = SereneSky90,
+        secondaryContainer = SereneSky10,
         onSecondaryContainer = Color.White,
 
-        tertiary = MidnightPlum20,
-        onTertiary = MidnightPlum10,
-        tertiaryContainer = MidnightPlum70,
-        onTertiaryContainer = MidnightPlum100,
+        tertiary = OceanicBlue40,
+        onTertiary = OceanicBlue90,
+        tertiaryContainer = Color.Red,
+        onTertiaryContainer = Color.Red,
 
-        error = OceanicBlue20,
-        onError = OceanicBlue80,
-        errorContainer = OceanicBlue70,
-        onErrorContainer = OceanicBlue10,
+        error = Color.White,
+        onError = OceanicBlue20,
+        errorContainer = SereneSky10,
+        onErrorContainer = Color.Red,
 
-        background = MistyHorizon10,
-        onBackground = MistyHorizon90,
+        background = MistyHorizon90,
+        onBackground = SereneSky10,
 
-        surface = SereneSky10,
+        surface = Color.White,
+        onSurface = OceanicBlue10,
+        inverseSurface = Color.Red,
+        inverseOnSurface = Color.Red,
+        surfaceVariant = SereneSky70,
+        onSurfaceVariant = SereneSky10,
+
+        outline = SereneSky30,
+    )
+    val darkScheme: ColorScheme = darkColorScheme(
+        primary = MistyHorizon90,
+        onPrimary = OceanicBlue10,
+        primaryContainer = Color.Green,
+        onPrimaryContainer = Color.Green,
+        inversePrimary = Color.Green,
+
+        secondary = SereneSky10,
+        onSecondary = Color.Green,
+        secondaryContainer = SereneSky90,
+        onSecondaryContainer = OceanicBlue20,
+
+        tertiary = Color.Green,
+        onTertiary = Color.Green,
+        tertiaryContainer = Color.Green,
+        onTertiaryContainer = Color.Green,
+
+        error = Color.White,
+        onError = Color.Green,
+        errorContainer = OceanicBlue10,
+        onErrorContainer = SereneSky90,
+
+        background = MidnightPlum10,
+        onBackground = Color.White,
+
+        surface = OceanicBlue10,
         onSurface = Color.White,
-        inverseSurface = SereneSky90,
-        inverseOnSurface = SereneSky10,
+        inverseSurface = Color.Green,
+        inverseOnSurface = Color.Green,
         surfaceVariant = SereneSky30,
-        onSurfaceVariant = SereneSky80,
+        onSurfaceVariant = Color.White,
 
-        outline = SereneSky70,
+        outline = SereneSky90,
     )
 }

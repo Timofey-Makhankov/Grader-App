@@ -1,6 +1,5 @@
 package ch.timofey.grader.ui.screen.school.school_list
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -34,7 +33,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import ch.timofey.grader.R
@@ -87,6 +88,7 @@ fun SchoolListScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(event)
                 }
+
                 is UiEvent.ShowSnackBar -> {
                     scope.launch(Dispatchers.Main) {
                         snackBarHostState.currentSnackbarData?.dismiss()
@@ -101,6 +103,7 @@ fun SchoolListScreen(
                         }
                     }
                 }
+
                 else -> Unit
             }
         }
@@ -280,18 +283,19 @@ fun SchoolListScreen(
     }
 }
 
+private class SchoolListScreenPreviewProvider() : PreviewParameterProvider<DrawerValue> {
+    override val values: Sequence<DrawerValue> =
+        listOf(DrawerValue.Closed, DrawerValue.Open).asSequence()
+}
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-)
+@PreviewLightDark
 @Composable
-private fun PreviewMainScreen() {
+private fun PreviewMainScreen(@PreviewParameter(SchoolListScreenPreviewProvider::class) drawerState: DrawerValue) {
     GraderTheme(
-        themeSetting = AppTheme.DEVICE_THEME
+        themeSetting = AppTheme.DEVICE_THEME,
     ) {
         SchoolListScreen(
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+            drawerState = rememberDrawerState(initialValue = drawerState),
             onEvent = {},
             state = SchoolListState(
                 listOf(
@@ -330,25 +334,6 @@ private fun PreviewMainScreen() {
                     )
                 ), showNavigationIcons = true, colorGrades = true, averageGradeIsZero = false
             ),
-            uiEvent = emptyFlow(),
-            onNavigate = {},
-            snackBarHostState = SnackbarHostState(),
-            savedStateHandle = SavedStateHandle()
-        )
-    }
-}
-
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-    showBackground = true,
-)
-@Composable
-private fun PreviewMainScreenDarkMode() {
-    GraderTheme {
-        SchoolListScreen(
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
-            onEvent = {},
-            state = SchoolListState(averageGradeIsZero = false),
             uiEvent = emptyFlow(),
             onNavigate = {},
             snackBarHostState = SnackbarHostState(),
