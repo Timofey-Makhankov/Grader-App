@@ -138,7 +138,7 @@ fun SchoolListScreen(
                     FloatingActionButton(
                         modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                         onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
-                        contentDescription = R.string.create_a_new_school.toString(),
+                        contentDescription = stringResource(id = R.string.create_a_new_school),
                     )
                 }
             }
@@ -161,9 +161,9 @@ fun SchoolListScreen(
                         durationMillis = 100, easing = FastOutSlowInEasing
                     )
                 )) {
-                    BottomAppBar(text = R.string.average_grade.toString() + state.averageGrade,
+                    BottomAppBar(text = stringResource(id = R.string.average_grade) + state.averageGrade,
                         subText = if (state.minimumGrade != null && state.showPoints) {
-                            R.string.points.toString() + " ${
+                            stringResource(id = R.string.points) + " ${
                                 calculatePointsFromGrade(
                                     state.averageGrade.toDouble(), state.minimumGrade.toDouble()
                                 ).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble()
@@ -172,7 +172,7 @@ fun SchoolListScreen(
                         floatingActionButton = {
                             FloatingActionButton(
                                 onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
-                                contentDescription = R.string.create_a_new_exam_card.toString()
+                                contentDescription = stringResource(id = R.string.create_a_new_exam_card)
                             )
                         })
                 }
@@ -181,8 +181,8 @@ fun SchoolListScreen(
             AppBar(
                 onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
-                actionContentDescription = R.string.toggle_navigation_drawer.toString(),
-                appBarTitle = stringResource(R.string.school_screen_title),
+                actionContentDescription = stringResource(id = R.string.toggle_navigation_drawer),
+                appBarTitle = stringResource(id = R.string.school_screen_title),
                 locationIndicator = state.showNavigationIcons ?: false,
                 pageIndex = 0
             )

@@ -117,7 +117,7 @@
     <string name="module_has_been_deleted">Le module a été supprimé</string>
     <string name="go_back_to_module_screen">Retourner à l\'écran du module</string>
     <string name="module_was_unable_to_be_found">Le module n\'a pas pu être trouvé</string>
-    <string name="go_back_to_school_screen">Retourner à l\'écran de l'école</string>
+    <string name="go_back_to_school_screen">Retourner à l\'écran de l´école</string>
     <string name="school_name">Nom de l\'école</string>
     <string name="create_school">Créer une école</string>
     <string name="address">Adresse</string>

@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -64,7 +65,6 @@ fun CalculatorScreen(
         currentScreen = Screen.CalculatorScreen,
         items = NavigationDrawerItems.list,
         onItemClick = { menuItem ->
-            println(message = " ${R.string.clicked_on} + ${menuItem.title}")
             if (menuItem.onNavigate != Screen.CalculatorScreen.route) {
                 onNavigate(UiEvent.Navigate(menuItem.onNavigate))
             }
@@ -76,8 +76,8 @@ fun CalculatorScreen(
             AppBar(
                 onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
-                actionContentDescription = R.string.toggle_drawer.toString(),
-                appBarTitle = R.string.calculator.toString()
+                actionContentDescription = stringResource(id = R.string.toggle_drawer),
+                appBarTitle = stringResource(id = R.string.calculator)
             )
         }) {
             LazyColumn(
@@ -95,7 +95,7 @@ fun CalculatorScreen(
                                 //bottom = MaterialTheme.spacing.small
                             ),
                             style = MaterialTheme.typography.titleLarge,
-                            text = R.string.calculated_result.toString()
+                            text = stringResource(id = R.string.calculated_result)
                         )
                         Spacer(Modifier.weight(1f))
                         Text(
@@ -125,7 +125,7 @@ fun CalculatorScreen(
                                 .padding(horizontal = MaterialTheme.spacing.medium),
                             textAlign = TextAlign.End,
                             fontStyle = FontStyle.Italic,
-                            text = R.string.points.toString() + " ${calculatePointsFromGrade(state.calculatedGrade, state.minimumGrade)}"
+                            text = stringResource(id = R.string.points) + " ${calculatePointsFromGrade(state.calculatedGrade, state.minimumGrade)}"
                         )
                     }
                 }
@@ -159,13 +159,13 @@ fun CalculatorScreen(
                                 Icon(
                                     modifier = Modifier.weight(0.2f),
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = R.string.add_text_field.toString()
+                                    contentDescription = stringResource(id = R.string.add_text_field)
                                 )
                                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                                 Text(
                                     modifier = Modifier.weight(0.8f),
                                     textAlign = TextAlign.Center,
-                                    text = R.string.add_field.toString()
+                                    text = stringResource(id = R.string.add_field)
                                 )
                             }
                         }
@@ -183,13 +183,13 @@ fun CalculatorScreen(
                                 Icon(
                                     modifier = Modifier.weight(0.2f),
                                     imageVector = Icons.Default.Remove,
-                                    contentDescription = R.string.remove_text_field.toString()
+                                    contentDescription = stringResource(id = R.string.remove_text_field)
                                 )
                                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                                 Text(
                                     modifier = Modifier.weight(0.8f),
                                     textAlign = TextAlign.Center,
-                                    text = R.string.remove_field.toString()
+                                    text = stringResource(id = R.string.remove_field)
                                 )
                             }
                         }

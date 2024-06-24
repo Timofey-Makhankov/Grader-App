@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -114,7 +115,7 @@ fun ExamCard(
                         .padding(top = MaterialTheme.spacing.small),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    text = R.string.exam_taken.toString() + " ${
+                    text = stringResource(id = R.string.exam_taken) + " ${
                         exam.date.format(
                             DateTimeFormatter.ofLocalizedDate(
                                 FormatStyle.MEDIUM
@@ -137,7 +138,7 @@ fun ExamCard(
                                 fontStyle = FontStyle.Italic
                             )
                         ) {
-                            append(R.string.average_grade.toString())
+                            append(stringResource(id = R.string.average_grade))
                         }
                         if (colorGrade) {
                             pushStyle(
@@ -151,7 +152,7 @@ fun ExamCard(
                         }
                     })
                 Text(
-                    style = MaterialTheme.typography.labelLarge, text = R.string.weight.toString() + " ${exam.weight}"
+                    style = MaterialTheme.typography.labelLarge, text = stringResource(id = R.string.weight) + " ${exam.weight}"
                 )
             }
             AnimatedVisibility(visible = isOpen) {
@@ -160,13 +161,13 @@ fun ExamCard(
                         IconButton(onClick = onEditClick) {
                             Icon(
                                 imageVector = Icons.Default.Create,
-                                contentDescription = R.string.update_exam.toString()
+                                contentDescription = stringResource(id = R.string.update_exam)
                             )
                         }
                         IconButton(onClick = onDeleteClick) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = R.string.delete_exam.toString()
+                                contentDescription = stringResource(id = R.string.delete_exam)
                             )
                         }
                     }

@@ -164,7 +164,7 @@ fun SettingsScreen(
             AppBar(
                 onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
-                actionContentDescription = R.string.toggle_drawer.toString(),
+                actionContentDescription = stringResource(id = R.string.toggle_drawer),
                 appBarTitle = stringResource(R.string.settings)
             )
         }) {

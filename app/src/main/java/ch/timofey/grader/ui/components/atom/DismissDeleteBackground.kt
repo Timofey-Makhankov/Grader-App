@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import ch.timofey.grader.R
 import ch.timofey.grader.ui.theme.spacing
 
@@ -48,7 +49,7 @@ fun DismissDeleteBackground(
             Icon(
                 modifier = Modifier.padding(end = MaterialTheme.spacing.large),
                 imageVector = Icons.Default.Delete,
-                contentDescription = R.string.desc_delete.toString(),
+                contentDescription = stringResource(id = R.string.desc_delete),
                 tint = MaterialTheme.colorScheme.onErrorContainer
             )
         }

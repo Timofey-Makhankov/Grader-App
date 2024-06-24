@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
@@ -123,8 +124,8 @@ fun ExamListScreen(
             AppBar(
                 onNavigationIconClick = { onEvent(ExamListEvent.OnBackButtonClick) },
                 actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-                actionContentDescription = R.string.go_back_to_previous_screen.toString(),
-                appBarTitle = R.string.exams.toString(),
+                actionContentDescription = stringResource(id = R.string.go_back_to_previous_screen),
+                appBarTitle = stringResource(id = R.string.exams),
                 locationIndicator = state.showNavigationIcons ?: false,
                 pageIndex = 3
             )
@@ -147,7 +148,7 @@ fun ExamListScreen(
                         durationMillis = 100, easing = FastOutSlowInEasing
                     )
                 )) {
-                    BottomAppBar(text = R.string.average_grade.toString() + state.averageGrade,
+                    BottomAppBar(text = stringResource(id = R.string.average_grade) + state.averageGrade,
                         subText = if (state.minimumGrade != null && state.showPoints) {
                             "Points: ${
                                 calculatePointsFromGrade(
@@ -158,7 +159,7 @@ fun ExamListScreen(
                         floatingActionButton = {
                             FloatingActionButton(
                                 onFABClick = { onEvent(ExamListEvent.OnFABClick) },
-                                contentDescription = R.string.create_new_exam.toString()
+                                contentDescription = stringResource(id = R.string.create_new_exam)
                             )
                         })
                 }
@@ -185,7 +186,7 @@ fun ExamListScreen(
                     FloatingActionButton(
                         modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                         onFABClick = { onEvent(ExamListEvent.OnFABClick) },
-                        contentDescription = R.string.create_a_new_exam_card.toString()
+                        contentDescription = stringResource(id = R.string.create_a_new_exam_card)
                     )
                 }
             }

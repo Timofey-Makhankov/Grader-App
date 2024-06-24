@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -72,7 +73,7 @@ fun UpdateSchoolScreen(
         AppBar(
             onNavigationIconClick = { onEvent(UpdateSchoolEvent.OnReturnBack) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = R.string.go_back_to_school_screen.toString()
+            actionContentDescription = stringResource(id = R.string.go_back_to_school_screen)
         )
     }, //snackbarHost = { SnackbarHost(snackBarHostState) }
     ) {
@@ -83,18 +84,18 @@ fun UpdateSchoolScreen(
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = R.string.update_school.toString(), style = MaterialTheme.typography.titleLarge
+                text = stringResource(id = R.string.update_school), style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(value = state.name,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.school_name.toString())
+                        append(stringResource(id = R.string.school_name))
                         withStyle(
                             style = SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
                             )
                         ) {
-                            append(R.string.required.toString())
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -123,7 +124,7 @@ fun UpdateSchoolScreen(
                 value = state.address,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.address.toString())
+                        append(stringResource(id = R.string.address))
                         /*withStyle(
                             style = SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
@@ -149,7 +150,7 @@ fun UpdateSchoolScreen(
             OutlinedTextField(value = state.zip,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.zip.toString())
+                        append(stringResource(id = R.string.zip))
                         /*withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic,
@@ -179,7 +180,7 @@ fun UpdateSchoolScreen(
             OutlinedTextField(value = state.city,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.city.toString())
+                        append(stringResource(id = R.string.city))
                         /*if (state.city.isBlank()){
                             withStyle(
                                 SpanStyle(
@@ -211,7 +212,7 @@ fun UpdateSchoolScreen(
                 value = state.description,
                 label = {
                     Text(
-                        text = R.string.school_description.toString()
+                        text = stringResource(id = R.string.school_description)
                     )
                 },
                 onValueChange = { description ->
@@ -243,7 +244,7 @@ fun UpdateSchoolScreen(
                 ),
                 shape = MaterialTheme.shapes.large
             ) {
-                Text(text = R.string.update.toString())
+                Text(text = stringResource(id = R.string.update))
             }
         }
     }

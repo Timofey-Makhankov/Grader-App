@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -75,7 +76,7 @@ fun CreateDivisionScreen(
         AppBar(
             onNavigationIconClick = { onEvent(CreateDivisionEvent.OnBackButtonClick) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = R.string.go_to_settings_screen.toString()
+            actionContentDescription = stringResource(id = R.string.go_to_settings_screen)
         )
     }) {
         Column(
@@ -85,7 +86,7 @@ fun CreateDivisionScreen(
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = R.string.create_division.toString(), style = MaterialTheme.typography.titleLarge
+                text = stringResource(id = R.string.create_division), style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -95,7 +96,7 @@ fun CreateDivisionScreen(
                 value = state.name,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.division_name.toString())
+                        append(stringResource(id = R.string.division_name))
                         withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
@@ -125,7 +126,7 @@ fun CreateDivisionScreen(
                 value = state.year,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.division_year.toString())
+                        append(stringResource(id = R.string.division_year))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
                             append("(Required)")
                         }
@@ -152,7 +153,7 @@ fun CreateDivisionScreen(
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.description,
-                label = { Text(text = R.string.division_description.toString()) },
+                label = { Text(text = stringResource(id = R.string.division_description)) },
                 onValueChange = { description ->
                     onEvent(
                         CreateDivisionEvent.OnDescriptionChange(
@@ -169,7 +170,7 @@ fun CreateDivisionScreen(
                 onClick = { onEvent(CreateDivisionEvent.OnCreateDivision) }
 
             ) {
-                Text(text = R.string.create.toString())
+                Text(text = stringResource(id = R.string.create))
             }
         }
     }

@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -130,7 +131,7 @@ fun DivisionCard(
                                 fontStyle = FontStyle.Italic
                             )
                         ) {
-                            append(R.string.average_grade.toString())
+                            append(stringResource(id = R.string.average_grade))
                         }
                         if (colorGrade) {
                             pushStyle(
@@ -156,7 +157,7 @@ fun DivisionCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
-                                contentDescription = R.string.edit_the_school_card.toString()
+                                contentDescription = stringResource(id = R.string.edit_the_school_card)
                             )
                         }
                         IconButton(
@@ -164,7 +165,7 @@ fun DivisionCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = R.string.delete_the_school_card.toString()
+                                contentDescription = stringResource(id = R.string.delete_the_school_card)
                             )
                         }
                     }

@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.timofey.grader.ui.components.atom.Circle
@@ -22,7 +23,7 @@ fun ShowNavigationIconsInformation() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ScreenIndicator(pages = 4, index = 2)
-        Text(text = R.string.indicators_desc.toString())
+        Text(text = stringResource(id = R.string.indicators_desc))
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -39,7 +40,7 @@ fun ShowNavigationIconsInformation() {
 @Composable
 private fun ShowNavigationIconsInformationPreview(){
     GraderTheme {
-        InformationDialog(title = R.string.show_navigation_icons.toString(), onDismiss = {}) {
+        InformationDialog(title = stringResource(id = R.string.show_navigation_icons), onDismiss = {}) {
             ShowNavigationIconsInformation()
         }
     }

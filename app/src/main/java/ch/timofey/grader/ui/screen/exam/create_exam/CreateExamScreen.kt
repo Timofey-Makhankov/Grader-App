@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -87,7 +88,7 @@ fun CreateExamScreen(
         AppBar(
             onNavigationIconClick = { onEvent(CreateExamEvent.OnBackButtonPress) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = R.string.go_back_to_previous_screen.toString()
+            actionContentDescription = stringResource(id = R.string.go_back_to_previous_screen)
         )
     }) {
         Column(
@@ -96,7 +97,7 @@ fun CreateExamScreen(
                 .padding(it)
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = R.string.create_exam.toString(), style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(id = R.string.create_exam), style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.small)
@@ -108,7 +109,7 @@ fun CreateExamScreen(
                 isError = !state.validName,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.exam_name.toString())
+                        append(stringResource(id = R.string.exam_name))
                         withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
@@ -135,9 +136,9 @@ fun CreateExamScreen(
                 isError = !state.validDate,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.exam_date.toString())
+                        append(stringResource(id = R.string.exam_date))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append(R.string.required.toString())
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -165,9 +166,9 @@ fun CreateExamScreen(
                 isError = !state.validGrade,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.grade.toString())
+                        append(stringResource(id = R.string.grade))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append(R.string.required.toString())
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -190,9 +191,9 @@ fun CreateExamScreen(
                 isError = !state.validWeight,
                 label = {
                     Text(buildAnnotatedString {
-                        append(R.string.weight.toString())
+                        append(stringResource(id = R.string.weight))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append(R.string.required.toString())
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -211,7 +212,7 @@ fun CreateExamScreen(
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnDescriptionChange(value)) },
                 minLines = 6,
-                label = { Text(text = R.string.description.toString()) })
+                label = { Text(text = stringResource(id = R.string.description)) })
             Button(modifier = Modifier.padding(
                 top = MaterialTheme.spacing.medium
             ),
@@ -231,11 +232,11 @@ fun CreateExamScreen(
                             )
                         )
                     }) {
-                        Text(text = R.string.ok.toString())
+                        Text(text = stringResource(id = R.string.ok))
                     }
                 }, dismissButton = {
                     TextButton(onClick = { openDialog.value = false }) {
-                        Text(text = R.string.cancel.toString())
+                        Text(text = stringResource(id = R.string.cancel))
                     }
                 }) {
                     DatePicker(

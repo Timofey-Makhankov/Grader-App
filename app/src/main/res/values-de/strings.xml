@@ -131,5 +131,5 @@
     <string name="school_was_unable_to_be_found">Schule konnte nicht gefunden werden</string>
     <string name="school_was_unable_to_be_updated">Schule konnte nicht aktualisiert werden</string>
     <string name="the_given_lists_are_uneven">Die angegebenen Listen sind ungleich</string>
-    <string name="grader_navigation">>Навигация по грейдеру</string>Notenvergabe
+    <string name="grader_navigation">Grader Navigation</string>Notenvergabe
 </resources>

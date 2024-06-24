@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -73,7 +74,7 @@ fun CreateSchoolScreen(
         AppBar(
             onNavigationIconClick = { onEvent(CreateSchoolEvent.OnReturnBack) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = R.string.go_back_to_school_screen.toString()
+            actionContentDescription = stringResource(id = R.string.go_back_to_school_screen)
         )
     }) {
         Column(
@@ -83,18 +84,18 @@ fun CreateSchoolScreen(
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = R.string.create_school.toString(), style = MaterialTheme.typography.titleLarge
+                text = stringResource(id = R.string.create_school), style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(value = state.name,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.school_name.toString())
+                        append(stringResource(id = R.string.school_name))
                         withStyle(
                             style = SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
                             )
                         ) {
-                            append(R.string.required.toString())
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -121,7 +122,7 @@ fun CreateSchoolScreen(
                 .padding(horizontal = MaterialTheme.spacing.large)
                 .fillMaxWidth(), value = state.address, label = {
                 Text(text = buildAnnotatedString {
-                    append(R.string.address.toString())
+                    append(stringResource(id = R.string.address))
                     /*withStyle(
                         style = SpanStyle(
                             fontStyle = FontStyle.Italic, fontSize = 8.sp
@@ -184,7 +185,7 @@ fun CreateSchoolScreen(
             OutlinedTextField(value = state.city,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append(R.string.city.toString())
+                        append(stringResource(id = R.string.city))
                         /*if (state.city.isBlank()) {
                             withStyle(
                                 SpanStyle(
@@ -222,7 +223,7 @@ fun CreateSchoolScreen(
                 value = state.description,
                 label = {
                     Text(
-                        text = R.string.school_description.toString()
+                        text = stringResource(id = R.string.school_description)
                     )
                 },
                 onValueChange = { description ->
@@ -254,7 +255,7 @@ fun CreateSchoolScreen(
                 ),
                 shape = MaterialTheme.shapes.large
             ) {
-                Text(text = R.string.create.toString())
+                Text(text = stringResource(id = R.string.create))
             }
         }
     }

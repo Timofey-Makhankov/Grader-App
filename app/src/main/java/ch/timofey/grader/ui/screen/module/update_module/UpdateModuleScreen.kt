@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.R
 import ch.timofey.grader.ui.components.atom.InputField
@@ -74,7 +75,7 @@ fun UpdateModuleScreen(
         AppBar(
             onNavigationIconClick = { onEvent(UpdateModuleEvent.OnBackButtonClick) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = R.string.go_back_to_module_screen.toString(),
+            actionContentDescription = stringResource(id = R.string.go_back_to_module_screen),
         )
     }) {
         Column(
@@ -84,7 +85,7 @@ fun UpdateModuleScreen(
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = R.string.update_module.toString(), style = MaterialTheme.typography.titleLarge
+                text = stringResource(id = R.string.update_module), style = MaterialTheme.typography.titleLarge
             )
             InputField(modifier = Modifier
                 .padding(top = MaterialTheme.spacing.small)
@@ -94,7 +95,7 @@ fun UpdateModuleScreen(
                 onValueChange = { name ->
                     onEvent(UpdateModuleEvent.OnNameChange(name))
                 },
-                label = { InputFieldLabel(message = R.string.module_name.toString(), required = true) },
+                label = { InputFieldLabel(message = stringResource(id = R.string.module_name), required = true) },
                 isError = !state.validName,
                 supportingText = {
                     if (!state.validName) {
@@ -113,7 +114,7 @@ fun UpdateModuleScreen(
                 onValueChange = { teacherFirstname ->
                     onEvent(UpdateModuleEvent.OnTeacherFirstNameChange(teacherFirstname))
                 },
-                label = { InputFieldLabel(message = R.string.teacher_firstname.toString(), required = false) },
+                label = { InputFieldLabel(message = stringResource(id = R.string.teacher_firstname), required = false) },
                 isError = !state.validTeacherFirstName,
                 supportingText = {
                     if (!state.validTeacherFirstName) {
@@ -132,7 +133,7 @@ fun UpdateModuleScreen(
                 onValueChange = { teacherLastName ->
                     onEvent(UpdateModuleEvent.OnTeacherLastNameChange(teacherLastName))
                 },
-                label = { InputFieldLabel(message = R.string.teacher_lastname.toString(), required = false) },
+                label = { InputFieldLabel(message = stringResource(id = R.string.teacher_lastname), required = false) },
                 isError = !state.validTeacherLastName,
                 supportingText = {
                     if (!state.validTeacherLastName) {
@@ -152,7 +153,7 @@ fun UpdateModuleScreen(
                 onValueChange = { description ->
                     onEvent(UpdateModuleEvent.OnNameChange(description))
                 },
-                label = { InputFieldLabel(message = R.string.description.toString()) },
+                label = { InputFieldLabel(message = stringResource(id = R.string.description)) },
                 isError = !state.validDescription,
                 supportingText = {
                     if (!state.validDescription) {
@@ -172,7 +173,7 @@ fun UpdateModuleScreen(
                 onClick = { onEvent(UpdateModuleEvent.OnUpdateModuleButtonClick) }
 
             ) {
-                Text(text = R.string.update.toString())
+                Text(text = stringResource(id = R.string.update))
             }
         }
     }

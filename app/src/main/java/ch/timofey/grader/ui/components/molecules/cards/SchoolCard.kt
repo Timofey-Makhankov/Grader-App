@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -118,7 +119,7 @@ fun SchoolCard(
                                 fontStyle = FontStyle.Italic
                             )
                         ) {
-                            append(R.string.average_grade.toString())
+                            append(stringResource(id = R.string.average_grade))
                         }
                         if (colorGrade) {
                             pushStyle(

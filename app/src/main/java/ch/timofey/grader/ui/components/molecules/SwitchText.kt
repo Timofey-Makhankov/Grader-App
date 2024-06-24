@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -101,8 +102,8 @@ private fun PreviewSwitchText() {
                 onValueChange = {},
                 value = true,
                 enabled = false,
-                name = R.string.calculate_points.toString(),
-                extraInfo = R.string.disable_desc.toString(),
+                name = stringResource(id = R.string.calculate_points),
+                extraInfo = stringResource(id = R.string.disable_desc),
                 showExtraInformation = true,
                 dialog = {}
             )
