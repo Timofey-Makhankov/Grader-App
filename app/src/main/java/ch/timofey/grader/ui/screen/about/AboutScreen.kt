@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,8 +86,8 @@ fun AboutScreen(
             AppBar(
                 onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
-                actionContentDescription = "Toggle Drawer",
-                appBarTitle = "About"
+                actionContentDescription = stringResource(id = R.string.toggle_drawer),
+                appBarTitle = stringResource(id = R.string.about)
             )
         }) {
             Column(
@@ -105,7 +106,7 @@ fun AboutScreen(
                         .fillMaxWidth()
                         .padding(horizontal = MaterialTheme.spacing.medium),
                     textAlign = TextAlign.Center,
-                    text = "If you like the App, you can share it with others Or Donate me on Ko-Fi"
+                    text = stringResource(id = R.string.about_desc)
                 )
                 Button(modifier = Modifier
                     .fillMaxWidth()
@@ -114,7 +115,7 @@ fun AboutScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Github Repo")
+                        Text(text = stringResource(id = R.string.git_repo))
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                         Icon(
                             painter = painterResource(id = R.drawable.github_mark),
@@ -129,7 +130,7 @@ fun AboutScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Share")
+                        Text(text = stringResource(id = R.string.share))
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                         Icon(
                             imageVector = Icons.Default.Share, contentDescription = "Share Icon"
@@ -143,7 +144,7 @@ fun AboutScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Donate to Ko-Fi")
+                        Text(text = stringResource(R.string.donate))
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
                         //val vector = ImageVector.vectorResource(id = R.drawable.kofi_icon)
                         //val painter = rememberVectorPainter(image = vector)

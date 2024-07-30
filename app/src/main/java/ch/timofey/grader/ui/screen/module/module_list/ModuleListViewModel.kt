@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.R
 import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.division.DivisionRepository
 import ch.timofey.grader.db.domain.module.Module
@@ -120,7 +121,7 @@ class ModuleListViewModel @Inject constructor(
                     repository.updateOnDeleteModule(event.moduleId, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "Module has been deleted", true, "Undo"
+                            R.string.module_has_been_deleted.toString(), true, R.string.undo.toString()
                         )
                     )
                 }
@@ -131,7 +132,7 @@ class ModuleListViewModel @Inject constructor(
                     repository.updateOnDeleteModule(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "Module was deleted", true, "Undo"
+                            R.string.module_has_been_deleted.toString(), true, R.string.undo.toString()
                         )
                     )
                 }

@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -46,6 +47,7 @@ import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import ch.timofey.grader.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,7 +88,7 @@ fun CreateExamScreen(
         AppBar(
             onNavigationIconClick = { onEvent(CreateExamEvent.OnBackButtonPress) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to previous Screen"
+            actionContentDescription = stringResource(id = R.string.go_back_to_previous_screen)
         )
     }) {
         Column(
@@ -95,7 +97,7 @@ fun CreateExamScreen(
                 .padding(it)
                 .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Create Exam", style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(id = R.string.create_exam), style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.small)
@@ -107,12 +109,12 @@ fun CreateExamScreen(
                 isError = !state.validName,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam name ")
+                        append(stringResource(id = R.string.exam_name))
                         withStyle(
                             SpanStyle(
                                 fontStyle = FontStyle.Italic, fontSize = 8.sp
                             )
-                        ) { append("(Required)") }
+                        ) { append(R.string.required.toString()) }
                     })
                 },
                 supportingText = {
@@ -134,9 +136,9 @@ fun CreateExamScreen(
                 isError = !state.validDate,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Exam date ")
+                        append(stringResource(id = R.string.exam_date))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -164,9 +166,9 @@ fun CreateExamScreen(
                 isError = !state.validGrade,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Grade ")
+                        append(stringResource(id = R.string.grade))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -189,9 +191,9 @@ fun CreateExamScreen(
                 isError = !state.validWeight,
                 label = {
                     Text(buildAnnotatedString {
-                        append("Weight ")
+                        append(stringResource(id = R.string.weight))
                         withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)) {
-                            append("(Required)")
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -210,7 +212,7 @@ fun CreateExamScreen(
                 value = state.description,
                 onValueChange = { value -> onEvent(CreateExamEvent.OnDescriptionChange(value)) },
                 minLines = 6,
-                label = { Text(text = "Description") })
+                label = { Text(text = stringResource(id = R.string.description)) })
             Button(modifier = Modifier.padding(
                 top = MaterialTheme.spacing.medium
             ),
@@ -230,11 +232,11 @@ fun CreateExamScreen(
                             )
                         )
                     }) {
-                        Text(text = "OK")
+                        Text(text = stringResource(id = R.string.ok))
                     }
                 }, dismissButton = {
                     TextButton(onClick = { openDialog.value = false }) {
-                        Text(text = "Cancel")
+                        Text(text = stringResource(id = R.string.cancel))
                     }
                 }) {
                     DatePicker(

@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
+import ch.timofey.grader.R
 
 @HiltViewModel
 class UpdateDivisionViewModel @Inject constructor(
@@ -92,9 +93,9 @@ class UpdateDivisionViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateDivision(updatedDivision)
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Division with name: \"${_uiState.value.name}\" has been updated", withDismissAction = true)))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.division_with_name.toString()+ " \"${_uiState.value.name}\" " + R.string.has_been_updated.toString(), withDismissAction = true)))
                 } else {
-                    sendUiEvent(UiEvent.ShowSnackBar("Division was unable to be Updated",true))
+                    sendUiEvent(UiEvent.ShowSnackBar(R.string.division_was_unable_to_be_updated.toString(),true))
                 }
             }
         }

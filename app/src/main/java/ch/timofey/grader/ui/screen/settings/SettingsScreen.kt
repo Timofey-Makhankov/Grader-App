@@ -164,8 +164,8 @@ fun SettingsScreen(
             AppBar(
                 onNavigationIconClick = { scope.launch(Dispatchers.Main) { drawerState.open() } },
                 actionIcon = Icons.Default.Menu,
-                actionContentDescription = "Toggle Drawer",
-                appBarTitle = "Settings"
+                actionContentDescription = stringResource(id = R.string.toggle_drawer),
+                appBarTitle = stringResource(R.string.settings)
             )
         }) {
             Column(
@@ -176,7 +176,7 @@ fun SettingsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "App Styling",
+                    stringResource(R.string.app_styling),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = MaterialTheme.spacing.large),
@@ -194,7 +194,7 @@ fun SettingsScreen(
                     )
                 )
                 DropDownMenu(
-                    value = state.appTheme.title, title = "App Theme"
+                    value = state.appTheme.title, title = stringResource(R.string.app_theme)
                 ) { afterSelection ->
                     AppTheme.entries.filter { value -> value != state.appTheme }.forEach { theme ->
                         DropdownMenuItem(text = { Text(text = theme.title) }, onClick = {
@@ -205,7 +205,7 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
-                    value = Locale(state.language.tag).displayLanguage, title = "language"
+                    value = Locale(state.language.tag).displayLanguage, title = stringResource(R.string.language)
                 ) { afterSelection ->
                     AppLanguage.entries.filter { value -> value != state.language }
                         .forEach { appLanguage ->
@@ -221,7 +221,7 @@ fun SettingsScreen(
                     enable = false,
                     value = if (state.dateFormat != DateFormatting.DEFAULT) Locale(
                         state.dateFormat.language, state.dateFormat.country
-                    ).displayName else "Follow System", title = "Date Format"
+                    ).displayName else stringResource(R.string.follow_system), title = stringResource(R.string.date_format)
                 ) { afterSelection ->
                     DateFormatting.entries.filter { value -> value != state.dateFormat }
                         .forEach { format ->
@@ -247,7 +247,7 @@ fun SettingsScreen(
                         )
                     },
                     value = state.showNavigationIcons,
-                    name = "Show Navigation Icons",
+                    name = stringResource(R.string.show_navigation_icons),
                     dialog = { InformationDialog(onDismiss = { it() }) { ShowNavigationIconsInformation() } },
                     showExtraInformation = true
                 )
@@ -255,7 +255,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                     onValueChange = { value -> onEvent(SettingsEvent.OnSwapNavigationChange(value)) },
                     value = state.swapNavigation,
-                    name = "Swap Long Press Navigation",
+                    name = stringResource(R.string.swap_long_press_navigation),
                     dialog = {
                         InformationDialog(onDismiss = { it() }) {
                             Text(text = "This is a description")
@@ -268,7 +268,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                     onValueChange = { value -> onEvent(SettingsEvent.OnGradeColorChange(value)) },
                     value = state.colorGrades,
-                    name = "Color Calculated Grades",
+                    name = stringResource(R.string.color_calculated_grades),
                     dialog = {
                         InformationDialog(onDismiss = { it() }) {
                             Text(text = "This is a description")
@@ -278,7 +278,7 @@ fun SettingsScreen(
                 )
                 Spacer(Modifier.height(MaterialTheme.spacing.large))
                 Text(
-                    "Data Manipulation",
+                    stringResource(R.string.data_manipulation),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = MaterialTheme.spacing.large),
@@ -311,7 +311,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                     onValueChange = { value -> onEvent(SettingsEvent.OnCalculatePointsChange(value)) },
                     value = state.calculatePointsState,
-                    name = "Calculate Points from Grade",
+                    name = stringResource(R.string.calc_points_from_grade),
                     dialog = {
                         InformationDialog(onDismiss = { it() }) {
                             Text(text = "This is a description")
@@ -324,8 +324,8 @@ fun SettingsScreen(
                     onValueChange = { value -> onEvent(SettingsEvent.OnDoublePointsChange(value)) },
                     value = state.doublePointsState,
                     enabled = state.calculatePointsState,
-                    name = "Double Calculated Points",
-                    extraInfo = if (!state.calculatePointsState) "Enable 'Calculate Points' to enable setting" else "",
+                    name = stringResource(R.string.double_calc_points),
+                    extraInfo = if (!state.calculatePointsState) stringResource(R.string.extrainf_calc_double_points) else "",
                     dialog = {
                         InformationDialog(onDismiss = { it() }) {
                             Text(text = "This is a description")
@@ -343,7 +343,7 @@ fun SettingsScreen(
                     singleLine = true,
                     isError = !state.validMinimumGrade,
                     label = {
-                        Text(text = "Minimum Grade for Calculating Points")
+                        Text(text = stringResource(R.string.min_grade_for_calc))
                     },
                     supportingText = {
                         if (!state.validMinimumGrade) {
@@ -371,10 +371,10 @@ fun SettingsScreen(
                         )
                     },
                     value = state.enableSwipeToDelete,
-                    name = "Enable Swipe Right for Deletion",
+                    name = stringResource(R.string.enable_swipe_right_for_deletion),
                     dialog = {
                         InformationDialog(onDismiss = { it() }) {
-                            Text(text = "Enable Left Swipe to Delete a given on all List Screens. Upon deletion, it will show you a Snack bar of the deleted Item and can be undone")
+                            Text(text = stringResource(R.string.enable_swipe_right_for_deletion_desc))
                         }
                     },
                     showExtraInformation = true
@@ -384,7 +384,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)//, vertical = MaterialTheme.spacing.extraSmall)
                 ) {
                     Text(
-                        text = "Clear Data from the Device",
+                        text = stringResource(R.string.clear_data_from_the_device),
                         style = MaterialTheme.typography.titleMedium
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -392,12 +392,12 @@ fun SettingsScreen(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
                         contentColor = MaterialTheme.colorScheme.error,
                     ), onClick = { onEvent(SettingsEvent.OnDeleteDatabaseButtonClick) }) {
-                        Text(text = "Clear Data")
+                        Text(text = stringResource(R.string.clear_data))
                     }
                 }
                 Spacer(Modifier.height(MaterialTheme.spacing.large))
                 Text(
-                    "Backup",
+                    stringResource(R.string.backup),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = MaterialTheme.spacing.large),
@@ -419,13 +419,13 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
                     Text(
-                        text = "Create Application Backup",
+                        text = stringResource(R.string.create_application_backup),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(0.6f)
                     )
                     Button(modifier = Modifier.weight(0.4f),
                         onClick = { createBackup.launch("grader-backup-${LocalDate.now()}") }) {
-                        Text(text = "Create Backup")
+                        Text(text = stringResource(R.string.create_backup))
                     }
                 }
                 Row(
@@ -433,13 +433,13 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
                     Text(
-                        text = "Load Backup from File",
+                        text = stringResource(R.string.load_backup_from_file),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(0.6f)
                     )
                     Button(modifier = Modifier.weight(0.4f),
                         onClick = { loadBackup.launch(arrayOf("application/json")) }) {
-                        Text(text = "Load Backup")
+                        Text(text = stringResource(R.string.load_backup))
                     }
                 }
                 Row(
@@ -447,13 +447,13 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
                     Text(
-                        text = "Create Application Report",
+                        text = stringResource(R.string.create_application_report),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(0.6f)
                     )
                     Button(modifier = Modifier.weight(0.4f),
                         onClick = { createReport.launch("report-${LocalDateTime.now()}.json") }) {
-                        Text(text = "Create Report")
+                        Text(text = stringResource(R.string.create_report))
                     }
                 }
                 if (state.showDeleteDataDialog) {
@@ -462,16 +462,16 @@ fun SettingsScreen(
                         onDismissRequest = { onEvent(SettingsEvent.OnDismissDeleteData) },
                         confirmButton = {
                             TextButton(onClick = { onEvent(SettingsEvent.OnConfirmDeleteData) }, enabled = !buttonDisabled.value) {
-                                Text(text = "Confirm")
+                                Text(text = stringResource(R.string.confirm))
                             }
                         },
                         dismissButton = {
                             TextButton(onClick = { onEvent(SettingsEvent.OnDismissDeleteData) }) {
-                                Text(text = "Cancel")
+                                Text(text = stringResource(R.string.cancel))
                             }
                         },
-                        title = { Text(text = "Delete Application Data") },
-                        icon = { Icon( imageVector = Icons.Default.DeleteForever, contentDescription = "Delete Application Data") },
+                        title = { Text(text = stringResource(R.string.delete_application_data)) },
+                        icon = { Icon( imageVector = Icons.Default.DeleteForever, contentDescription = stringResource(R.string.delete_application_data)) },
                         text = { Text(text = stringResource(R.string.delete_data_dialog_content)) },
                         properties = DialogProperties(
                             dismissOnBackPress = true,

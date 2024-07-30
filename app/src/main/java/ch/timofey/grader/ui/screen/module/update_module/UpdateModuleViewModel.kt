@@ -3,6 +3,7 @@ package ch.timofey.grader.ui.screen.module.update_module
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.R
 import ch.timofey.grader.db.domain.module.ModuleRepository
 import ch.timofey.grader.db.domain.module.ModuleValidation
 import ch.timofey.grader.type.SnackBarMessage
@@ -43,7 +44,7 @@ class UpdateModuleViewModel @Inject constructor(
             } ?: run {
                 sendUiEvents(
                     UiEvent.PopBackStack, UiEvent.ShowSnackBar(
-                        message = "Module was unable to be found", withDismissAction = true
+                        message = R.string.module_was_unable_to_be_found.toString(), withDismissAction = true
                     )
                 )
             }
@@ -103,9 +104,9 @@ class UpdateModuleViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.IO) {
                         repository.updateModule(updatedModule)
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Module with name: \"${_uiState.value.name}\" has been updated", withDismissAction = true)))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.module_with_name.toString() + " \"${_uiState.value.name}\" "+R.string.has_been_updated.toString(), withDismissAction = true)))
                 } else {
-                    sendUiEvent(UiEvent.ShowSnackBar(message = "Module was unable to be created", withDismissAction = true)
+                    sendUiEvent(UiEvent.ShowSnackBar(message = R.string.module_was_unable_to_be_created.toString(), withDismissAction = true)
                     )
                 }
             }
