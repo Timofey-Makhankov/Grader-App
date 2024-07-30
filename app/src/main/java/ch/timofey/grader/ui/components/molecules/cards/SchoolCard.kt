@@ -7,6 +7,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
+import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
@@ -69,18 +72,21 @@ fun SchoolCard(
                     durationMillis = 300, easing = LinearOutSlowInEasing
                 )
             )
-            .combinedClickable(interactionSource = mutableInteractionSource,
+            .combinedClickable(
+                interactionSource = mutableInteractionSource,
                 indication = null,
-                onClick = { onClick() },
-                onLongClick = { onLongClick() })
-            .then(modifier),
+                onClick = onClick,
+                onLongClick = onLongClick)
+            .then(modifier)
+            .indication(mutableInteractionSource, rememberRipple()),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
         shape = MaterialTheme.shapes.large
     ) {
         Column(
-            modifier = Modifier.padding(MaterialTheme.spacing.small)
+            modifier = Modifier
+                .padding(MaterialTheme.spacing.small)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

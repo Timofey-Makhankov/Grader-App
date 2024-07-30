@@ -7,6 +7,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -68,8 +70,14 @@ fun ExamCard(
                 durationMillis = 300, easing = LinearOutSlowInEasing
             )
         )
-        .clickable(interactionSource = interactionSource, indication = null) { onClick() }
-        .then(modifier), colors = CardDefaults.cardColors(
+        .clickable(
+            interactionSource = interactionSource,
+            indication = null,
+            onClick = onClick
+        )
+        .then(modifier)
+        .indication(interactionSource, rememberRipple()),
+        colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.surfaceVariant
     ), shape = MaterialTheme.shapes.large) {
         Column(
@@ -191,7 +199,7 @@ private fun ExamCardPreview() {
             date = LocalDate.now(),
             moduleId = UUID.randomUUID()
         ),
-            colorGrade = false,
+            colorGrade = true,
             onCheckBoxClick = {},
             onDeleteClick = {},
             onEditClick = {},
