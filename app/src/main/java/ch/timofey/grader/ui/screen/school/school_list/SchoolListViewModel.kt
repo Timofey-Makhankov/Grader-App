@@ -3,6 +3,7 @@ package ch.timofey.grader.ui.screen.school.school_list
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.R
 import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.db.domain.school.SchoolRepository
@@ -86,7 +87,7 @@ class SchoolListViewModel @Inject constructor(
                     repository.updateOnDeleteSchool(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "School has been deleted", true, "Undo"
+                            R.string.school_has_been_deleted.toString(), true, R.string.undo.toString()
                         )
                     )
                 }
@@ -107,7 +108,7 @@ class SchoolListViewModel @Inject constructor(
                     }
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "School was deleted", true, "Undo"
+                            R.string.school_has_been_deleted.toString(), true, R.string.undo.toString()
                         )
                     )
                 }

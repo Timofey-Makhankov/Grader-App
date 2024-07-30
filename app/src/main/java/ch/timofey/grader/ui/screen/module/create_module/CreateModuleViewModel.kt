@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
+import ch.timofey.grader.R
 
 @HiltViewModel
 class CreateModuleViewModel @Inject constructor(
@@ -87,9 +88,9 @@ class CreateModuleViewModel @Inject constructor(
                             )
                         )
                     }
-                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Module with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))
+                    sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage(R.string.module_with_name.toString() + " \"${_uiState.value.name}\" "+R.string.has_been_created.toString(), withDismissAction = true)))
                 } else {
-                    sendUiEvent(UiEvent.ShowSnackBar("Module was unable to be created", true))
+                    sendUiEvent(UiEvent.ShowSnackBar(R.string.module_was_unable_to_be_created.toString(), true))
                 }
             }
         }

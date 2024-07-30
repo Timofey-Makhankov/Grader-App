@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.util.UUID
 import javax.inject.Inject
+import ch.timofey.grader.R
 
 @HiltViewModel
 class DivisionListViewModel @Inject constructor(
@@ -57,6 +58,7 @@ class DivisionListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllDivisionsFromSchoolId(UUID.fromString(schoolId))
                 .collect { divisionList ->
+                    println(R.string.division_list.toString() + " $divisionList")
                     _uiState.value =
                         _uiState.value.copy(divisionList = divisionList.filter { division -> !division.onDelete })
                     if (divisionList.isNotEmpty()) {
@@ -117,18 +119,19 @@ class DivisionListViewModel @Inject constructor(
                     repository.updateOnDeleteDivision(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "Division was deleted", true, "Undo"
+                            R.string.division_was_deleted.toString(), true, R.string.undo.toString()
                         )
                     )
                 }
             }
 
             is DivisionListEvent.OnDeleteIconClick -> {
+                Log.d("DivisionListViewModel", "Delete Button clicked")
                 viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteDivision(event.id, true)
                     sendUiEvent(
                         UiEvent.ShowSnackBar(
-                            "Division was deleted", true, "Undo"
+                            R.string.division_was_deleted.toString(), true, R.string.undo.toString()
                         )
                     )
                 }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -35,6 +36,7 @@ import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import ch.timofey.grader.R
 
 @Composable
 fun UpdateDivisionScreen(
@@ -72,7 +74,7 @@ fun UpdateDivisionScreen(
         topBar = { AppBar(
             onNavigationIconClick = { onEvent(UpdateDivisionEvent.OnBackButtonClick) },
             actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-            actionContentDescription = "Go back to Division Screen"
+            actionContentDescription = stringResource(id = R.string.go_back_to_division_screen)
         )}) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -82,7 +84,7 @@ fun UpdateDivisionScreen(
                 .fillMaxSize()
         ) {
             Text(
-                text = "Update Division", style = MaterialTheme.typography.titleLarge
+                text = stringResource(id = R.string.update_divsion), style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -92,13 +94,13 @@ fun UpdateDivisionScreen(
                 value = state.name,
                 label = {
                     Text(text = buildAnnotatedString {
-                        append("Division Name ")
+                        append(stringResource(id = R.string.division_name))
                         withStyle(
                             SpanStyle(
                             fontStyle = FontStyle.Italic, fontSize = 8.sp
                         )
                         ){
-                            append("(Required)")
+                            append(stringResource(id = R.string.required))
                         }
                     })
                 },
@@ -121,9 +123,9 @@ fun UpdateDivisionScreen(
                     .fillMaxWidth(),
                 value = state.year,
                 label = { Text(text = buildAnnotatedString {
-                    append("Division Year ")
+                    append(stringResource(id = R.string.division_year))
                     withStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 8.sp)){
-                        append("(Required)")
+                        append(stringResource(id = R.string.required))
                     }
                 }) },
                 onValueChange = { year ->
@@ -147,7 +149,7 @@ fun UpdateDivisionScreen(
                     .padding(horizontal = MaterialTheme.spacing.large)
                     .fillMaxWidth(),
                 value = state.description,
-                label = { Text(text = "Division Description") },
+                label = { Text(text = stringResource(id = R.string.division_description)) },
                 onValueChange = { description ->
                     onEvent(
                         UpdateDivisionEvent.OnDescriptionChange(
@@ -164,7 +166,7 @@ fun UpdateDivisionScreen(
                 onClick = { onEvent(UpdateDivisionEvent.OnUpdateDivision) }
 
             ) {
-                Text(text = "Update")
+                Text(text = stringResource(id = R.string.update))
             }
         }
     }

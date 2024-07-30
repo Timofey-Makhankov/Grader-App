@@ -33,10 +33,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
+import ch.timofey.grader.R
 import ch.timofey.grader.db.domain.module.Module
 import ch.timofey.grader.navigation.NavigationDrawerItems
 import ch.timofey.grader.navigation.Screen
@@ -145,7 +147,7 @@ fun ModuleListScreen(
                     FloatingActionButton(
                         modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                         onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
-                        contentDescription = "Create a new Module",
+                        contentDescription = stringResource(id = R.string.create_module),
                     )
                 }
             }
@@ -168,7 +170,7 @@ fun ModuleListScreen(
                         durationMillis = 100, easing = FastOutSlowInEasing
                     )
                 )) {
-                    BottomAppBar(text = "Average Grade: ${state.averageGrade}",
+                    BottomAppBar(text = stringResource(id = R.string.average_grade) + state.averageGrade,
                         subText = if (state.minimumGrade != null && state.showPoints) {
                             "Points: ${
                                 calculatePointsFromGrade(
@@ -179,7 +181,7 @@ fun ModuleListScreen(
                         floatingActionButton = {
                             FloatingActionButton(
                                 onFABClick = { onEvent(ModuleListEvent.OnFABClick) },
-                                contentDescription = "Create a new Exam Card"
+                                contentDescription = stringResource(id = R.string.create_a_new_exam_card)
                             )
                         })
                 }
@@ -188,8 +190,8 @@ fun ModuleListScreen(
             AppBar(
                 onNavigationIconClick = { onEvent(ModuleListEvent.OnReturnBack) },
                 actionIcon = Icons.AutoMirrored.Filled.ArrowBack,
-                actionContentDescription = "Go Back to previous Screen",
-                appBarTitle = "Modules",
+                actionContentDescription = stringResource(id = R.string.go_back_to_previous_screen),
+                appBarTitle = stringResource(id = R.string.modules),
                 locationIndicator = state.showNavigationIcons ?: false,
                 pageIndex = 2
             )

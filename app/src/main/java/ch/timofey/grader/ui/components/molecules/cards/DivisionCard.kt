@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -49,6 +50,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
 import java.util.UUID
+import ch.timofey.grader.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -132,7 +134,7 @@ fun DivisionCard(
                                 fontStyle = FontStyle.Italic
                             )
                         ) {
-                            append("Average Grade: ")
+                            append(stringResource(id = R.string.average_grade))
                         }
                         if (colorGrade) {
                             pushStyle(
@@ -158,7 +160,7 @@ fun DivisionCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
-                                contentDescription = "Edit the School Card"
+                                contentDescription = stringResource(id = R.string.edit_the_school_card)
                             )
                         }
                         IconButton(
@@ -166,7 +168,7 @@ fun DivisionCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete the School Card"
+                                contentDescription = stringResource(id = R.string.delete_the_school_card)
                             )
                         }
                     }

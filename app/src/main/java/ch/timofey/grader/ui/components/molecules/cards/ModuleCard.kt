@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -49,6 +50,7 @@ import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
 import ch.timofey.grader.ui.theme.spacing
 import java.util.UUID
+import ch.timofey.grader.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -123,7 +125,7 @@ fun ModuleCard(
                             fontStyle = FontStyle.Italic, fontSize = 14.sp
                         )
                     ) {
-                        append("Instructor: ")
+                        append(stringResource(id = R.string.instructor))
                     }
                     withStyle(
                         SpanStyle(
@@ -144,7 +146,7 @@ fun ModuleCard(
                                 fontStyle = FontStyle.Italic
                             )
                         ) {
-                            append("Average Grade: ")
+                            append(stringResource(id = R.string.average_grade))
                         }
                         if (colorGrade) {
                             pushStyle(
@@ -157,7 +159,7 @@ fun ModuleCard(
                         append("${module.grade}")
                     })
             }
-            AnimatedVisibility(visible = isOpen, label = "Action Buttons") {
+            AnimatedVisibility(visible = isOpen, label = stringResource(id = R.string.action_buttons)) {
                 Box(
                     modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd
                 ) {
@@ -167,7 +169,7 @@ fun ModuleCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
-                                contentDescription = "Update Module"
+                                contentDescription = stringResource(id = R.string.update_module)
                             )
                         }
                         IconButton(
@@ -175,7 +177,7 @@ fun ModuleCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete Module"
+                                contentDescription = stringResource(id = R.string.delete_module)
                             )
                         }
                     }
