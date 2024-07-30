@@ -51,7 +51,7 @@ object DuskHorizonScheme {
     val MidnightPlum10 = Color(0xff0D0630)
 
     val lightScheme: ColorScheme = lightColorScheme(
-        primary = MistyHorizon10,
+        primary = OceanicBlue10,
         onPrimary = Color.White,
         primaryContainer = Color.Red,
         onPrimaryContainer = Color.Red,
@@ -62,60 +62,60 @@ object DuskHorizonScheme {
         secondaryContainer = SereneSky10,
         onSecondaryContainer = Color.White,
 
-        tertiary = OceanicBlue40,
+        tertiary = OceanicBlue30,
         onTertiary = OceanicBlue90,
         tertiaryContainer = Color.Red,
         onTertiaryContainer = Color.Red,
 
         error = Color.White,
         onError = OceanicBlue20,
-        errorContainer = SereneSky10,
+        errorContainer = Color.Red,
         onErrorContainer = Color.Red,
 
         background = MistyHorizon90,
         onBackground = SereneSky10,
 
         surface = Color.White,
-        onSurface = OceanicBlue10,
+        onSurface = OceanicBlue20,
         inverseSurface = Color.Red,
         inverseOnSurface = Color.Red,
-        surfaceVariant = SereneSky70,
-        onSurfaceVariant = SereneSky10,
+        surfaceVariant = MistyHorizon50,
+        onSurfaceVariant = OceanicBlue20,
 
         outline = SereneSky30,
     )
     val darkScheme: ColorScheme = darkColorScheme(
         primary = MistyHorizon90,
-        onPrimary = OceanicBlue10,
-        primaryContainer = Color.Green,
-        onPrimaryContainer = Color.Green,
-        inversePrimary = Color.Green,
+        onPrimary = OceanicBlue40,
+        primaryContainer = Color.Magenta,
+        onPrimaryContainer = Color.Magenta,
+        inversePrimary = Color.Magenta,
 
         secondary = SereneSky10,
-        onSecondary = Color.Green,
+        onSecondary = Color.White,
         secondaryContainer = SereneSky90,
         onSecondaryContainer = OceanicBlue20,
 
-        tertiary = Color.Green,
-        onTertiary = Color.Green,
+        tertiary = SereneSky40,
+        onTertiary = Color.White,
         tertiaryContainer = Color.Green,
         onTertiaryContainer = Color.Green,
 
         error = Color.White,
         onError = Color.Green,
-        errorContainer = OceanicBlue10,
+        errorContainer = Color.Red,
         onErrorContainer = SereneSky90,
 
-        background = MidnightPlum10,
-        onBackground = Color.White,
+        background = Color.Black,
+        onBackground = MidnightPlum70,
 
-        surface = OceanicBlue10,
+        surface = SereneSky10,
         onSurface = Color.White,
         inverseSurface = Color.Green,
         inverseOnSurface = Color.Green,
-        surfaceVariant = SereneSky30,
+        surfaceVariant = OceanicBlue30,
         onSurfaceVariant = Color.White,
 
-        outline = SereneSky90,
+        outline = SereneSky10,
     )
 }

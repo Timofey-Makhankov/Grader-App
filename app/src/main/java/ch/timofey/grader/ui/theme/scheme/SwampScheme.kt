@@ -50,37 +50,37 @@ object SwampScheme {
     val MintyBreeze10 = Color(0xff80ed99)
 
     val lightScheme: ColorScheme = lightColorScheme(
-        primary = TurquoiseMist10,
-        onPrimary = TurquoiseMist90,
-        primaryContainer = Color.Green,
-        onPrimaryContainer = Color.Green,
-        inversePrimary = Color.Green,
+        primary = MeadowGreen10,
+        onPrimary = MeadowGreen90,
+        primaryContainer = Color.Magenta,
+        onPrimaryContainer = Color.Magenta,
+        inversePrimary = Color.Magenta,
 
-        secondary = TurquoiseMist30,
-        onSecondary = Color.Green,
-        secondaryContainer = DeepSea10,
+        secondary = TurquoiseMist60,
+        onSecondary = Color.Magenta,
+        secondaryContainer = TurquoiseMist10,
         onSecondaryContainer = DeepSea90,
 
-        tertiary = Color.Red,
-        onTertiary = Color.Red,
-        tertiaryContainer = Color.Red,
-        onTertiaryContainer = Color.Red,
+        tertiary = MintyBreeze10,
+        onTertiary = Color.White,
+        tertiaryContainer = Color.Magenta,
+        onTertiaryContainer = Color.Magenta,
 
         error = DeepSea90,
         onError = Color.Red,
-        errorContainer = DeepSea10,
-        onErrorContainer = Color.Red,
+        errorContainer = Color.Red,
+        onErrorContainer = Color.Magenta,
 
         background = MeadowGreen90,
-        onBackground = DeepSea10,
+        onBackground = TurquoiseMist10,
 
         surface = MintyBreeze90,
-        onSurface = DeepSea10,
-        inverseSurface = Color.Red,
-        inverseOnSurface = Color.Red,
-        surfaceVariant = DeepSea70,
-        onSurfaceVariant = DeepSea10,
+        onSurface = TurquoiseMist10,
+        inverseSurface = Color.Magenta,
+        inverseOnSurface = Color.Magenta,
+        surfaceVariant = MintyBreeze60,
+        onSurfaceVariant = TurquoiseMist10,
 
-        outline = DeepSea40,
+        outline = TurquoiseMist10,
     )
 }

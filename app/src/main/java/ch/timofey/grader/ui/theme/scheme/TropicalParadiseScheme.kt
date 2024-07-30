@@ -61,37 +61,37 @@ object TropicalParadiseScheme {
     val AzureDream10 = Color(0xff3777ff)
 
     val lightScheme: ColorScheme = lightColorScheme(
-        primary = SunlitApricot80,
-        onPrimary = Color.White,
-        primaryContainer = SunlitApricot30,
-        onPrimaryContainer = SunlitApricot10,
-        inversePrimary = SunlitApricot40,
+        primary = AzureDream10,
+        onPrimary = SunlitApricot80,
+        primaryContainer = Color.Green,
+        onPrimaryContainer = Color.Green,
+        inversePrimary = Color.Green,
 
-        secondary = BlushPetal80,
-        onSecondary = Color.White,
-        secondaryContainer = BlushPetal30,
-        onSecondaryContainer = BlushPetal10,
+        secondary = BlushPetal50,
+        onSecondary = Color.Magenta,
+        secondaryContainer = SunlitApricot20,
+        onSecondaryContainer = PeachCream90,
 
-        tertiary = AzureDream80,
+        tertiary = SunlitApricot40,
         onTertiary = Color.White,
-        tertiaryContainer = AzureDream30,
-        onTertiaryContainer = AzureDream10,
+        tertiaryContainer = Color.Magenta,
+        onTertiaryContainer = Color.Magenta,
 
-        error = SunlitApricot80,
-        onError = SunlitApricot20,
-        errorContainer = SunlitApricot30,
-        onErrorContainer = SunlitApricot90,
+        error = Color.White,
+        onError = Color.Magenta,
+        errorContainer = Color.Red,
+        onErrorContainer = Color.Magenta,
 
-        background = PeachCream90,
-        onBackground = PeachCream80,
+        background = PeachCream80,
+        onBackground = AzureDream20,
 
-        surface = Color.White,
-        onSurface = LemonMeringue10,
-        inverseSurface = LemonMeringue10,
-        inverseOnSurface = LemonMeringue90,
-        surfaceVariant = LemonMeringue70,
-        onSurfaceVariant = LemonMeringue20,
+        surface = AzureDream90,
+        onSurface = AzureDream30,
+        inverseSurface = Color.Magenta,
+        inverseOnSurface = Color.Magenta,
+        surfaceVariant = AzureDream70,
+        onSurfaceVariant = AzureDream10,
 
-        outline = SunlitApricot30,
+        outline = AzureDream30
     )
 }
