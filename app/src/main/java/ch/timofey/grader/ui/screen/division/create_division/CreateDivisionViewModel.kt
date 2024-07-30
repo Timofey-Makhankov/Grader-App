@@ -73,6 +73,7 @@ class CreateDivisionViewModel @Inject constructor(
                             description = _uiState.value.description,
                             schoolYear = _uiState.value.year.toInt(),
                             schoolId = UUID.fromString(id),
+                            isSelected = true
                             ))
                     }
                     sendUiEvent(UiEvent.PopBackStackAndShowSnackBar(SnackBarMessage("Division with name: \"${_uiState.value.name}\" has been created", withDismissAction = true)))

@@ -1,6 +1,7 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
 import ch.timofey.grader.db.domain.exam.ExamValidationFields
+import ch.timofey.grader.type.DateFormatting
 
 data class CreateExamState(
     override val name: String = "",
@@ -18,4 +19,5 @@ data class CreateExamState(
     val errorMessageGrade: String = "",
     val errorMessageWeight: String = "",
     val errorMessageDate: String = "",
+    val dateFormatting: DateFormatting = DateFormatting.DEFAULT
 ) : ExamValidationFields

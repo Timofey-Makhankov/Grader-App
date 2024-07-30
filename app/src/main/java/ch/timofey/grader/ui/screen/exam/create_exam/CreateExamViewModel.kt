@@ -1,9 +1,11 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.db.AppSettings
 import ch.timofey.grader.db.domain.exam.Exam
 import ch.timofey.grader.db.domain.exam.ExamRepository
 import ch.timofey.grader.db.domain.exam.ExamValidation
@@ -14,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -26,7 +29,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateExamViewModel @Inject constructor(
-    private val repository: ExamRepository, savedStateHandle: SavedStateHandle
+    private val repository: ExamRepository,
+    private val dataStore: DataStore<AppSettings>,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val moduleId = savedStateHandle.get<String>("id").orEmpty()
 
@@ -35,6 +40,16 @@ class CreateExamViewModel @Inject constructor(
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStore.data.collectLatest {
+                _uiState.value = _uiState.value.copy(
+                    dateFormatting = it.dateFormatter
+                )
+            }
+        }
+    }
 
     fun onEvent(event: CreateExamEvent) {
         when (event) {
@@ -102,6 +117,7 @@ class CreateExamViewModel @Inject constructor(
                                         AppCompatDelegate.getApplicationLocales().get(0)!!
                                     )
                                 ),
+                                isSelected = true,
                                 moduleId = UUID.fromString(moduleId)
                             )
                         )

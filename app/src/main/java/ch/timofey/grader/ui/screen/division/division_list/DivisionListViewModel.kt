@@ -57,7 +57,6 @@ class DivisionListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllDivisionsFromSchoolId(UUID.fromString(schoolId))
                 .collect { divisionList ->
-                    println("division List $divisionList")
                     _uiState.value =
                         _uiState.value.copy(divisionList = divisionList.filter { division -> !division.onDelete })
                     if (divisionList.isNotEmpty()) {
@@ -125,7 +124,6 @@ class DivisionListViewModel @Inject constructor(
             }
 
             is DivisionListEvent.OnDeleteIconClick -> {
-                Log.d("DivisionListViewModel", "Delete Button clicked")
                 viewModelScope.launch(Dispatchers.IO) {
                     repository.updateOnDeleteDivision(event.id, true)
                     sendUiEvent(
@@ -146,7 +144,7 @@ class DivisionListViewModel @Inject constructor(
 
     private fun calculateAverageGrade(list: List<Division>): Double {
         val validExams = list.map { it }.filter { it.isSelected }
-        val gradeList = validExams.map { it.grade }
+        val gradeList = validExams.map { it.grade }.filter { it > 0 }
         return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
             .toDouble()
     }

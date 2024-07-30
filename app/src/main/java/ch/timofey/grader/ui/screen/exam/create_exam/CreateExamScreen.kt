@@ -1,5 +1,6 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,8 +11,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CalendarLocale
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerFormatter
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,6 +51,8 @@ import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +65,7 @@ fun CreateExamScreen(
     snackBarHostState: SnackbarHostState
 ) {
     val openDialog = remember { mutableStateOf(isDialogOpen) }
-    val datePickerState = rememberDatePickerState()
+    val datePickerState =  DatePickerState(locale = CalendarLocale(state.dateFormatting.language, state.dateFormatting.country))
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
@@ -238,7 +245,8 @@ fun CreateExamScreen(
                     }
                 }) {
                     DatePicker(
-                        state = datePickerState
+                        state = datePickerState,
+                        dateFormatter = remember { DatePickerDefaults.dateFormatter("YYYY", "ddMMYYYY", "ddMMYYYY") }
                     )
                 }
             }

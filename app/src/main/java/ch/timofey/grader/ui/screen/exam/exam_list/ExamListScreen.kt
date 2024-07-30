@@ -1,7 +1,6 @@
 package ch.timofey.grader.ui.screen.exam.exam_list
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -220,6 +219,7 @@ fun ExamListScreen(
                         ExamCard(modifier = Modifier.padding(MaterialTheme.spacing.small),
                             exam = exam,
                             isOpen = expandCard.value,
+                            colorGrade = state.colorGrades,
                             onClick = {
                                 expandCard.value = !expandCard.value
                             },

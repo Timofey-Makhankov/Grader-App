@@ -16,7 +16,6 @@ sealed class Screen(var route: String) {
     data object ModuleEditScreen : Screen("edit_module_screen")
     data object ExamEditScreen : Screen("edit_exam_screen")
     data object CalculatorScreen : Screen("calculator_screen")
-    data object WalkthroughScreen : Screen("walkthrough_screen")
 
     fun withArgs(vararg args: String): String {
         return buildString {

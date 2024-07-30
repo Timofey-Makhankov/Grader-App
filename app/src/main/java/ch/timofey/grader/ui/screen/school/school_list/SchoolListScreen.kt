@@ -7,7 +7,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -142,7 +144,7 @@ fun SchoolListScreen(
                         modifier = if (!it) Modifier.requiredWidth(0.dp) else Modifier,
                         onFABClick = { onEvent(SchoolListEvent.OnCreateSchool) },
                         contentDescription = "Create a new School",
-                    )
+                        )
                 }
             }
         }, bottomBar = {
@@ -276,9 +278,7 @@ fun SchoolListScreen(
                             })
                     }
                 }
-
             }
-
         }
     }
 }
@@ -292,7 +292,7 @@ private class SchoolListScreenPreviewProvider() : PreviewParameterProvider<Drawe
 @Composable
 private fun PreviewMainScreen(@PreviewParameter(SchoolListScreenPreviewProvider::class) drawerState: DrawerValue) {
     GraderTheme(
-        themeSetting = AppTheme.DEVICE_THEME,
+        themeSetting = AppTheme.GRADER_THEME_LIGHT,
     ) {
         SchoolListScreen(
             drawerState = rememberDrawerState(initialValue = drawerState),
@@ -306,7 +306,8 @@ private fun PreviewMainScreen(@PreviewParameter(SchoolListScreenPreviewProvider:
                         address = "Ausstellungsstrasse 70",
                         zipCode = "8005",
                         city = "Zürich",
-                        grade = 0.0
+                        grade = 0.0,
+                        isSelected = false
                     ), School(
                         id = UUID.randomUUID(),
                         name = "Schulhaus Riedenhalden",
@@ -314,7 +315,8 @@ private fun PreviewMainScreen(@PreviewParameter(SchoolListScreenPreviewProvider:
                         address = "Riedenhaldenstrasse 12",
                         zipCode = "8046",
                         city = "Zürich",
-                        grade = 0.0
+                        grade = 0.0,
+                        isSelected = false
                     ), School(
                         id = UUID.randomUUID(),
                         name = "Berufsmaturitätsschule Zürich",
@@ -322,7 +324,8 @@ private fun PreviewMainScreen(@PreviewParameter(SchoolListScreenPreviewProvider:
                         address = "",
                         zipCode = "",
                         city = "Zürich",
-                        grade = 0.0
+                        grade = 0.0,
+                        isSelected = false
                     ), School(
                         id = UUID.randomUUID(),
                         name = "Noser Young",
@@ -330,9 +333,10 @@ private fun PreviewMainScreen(@PreviewParameter(SchoolListScreenPreviewProvider:
                         address = "Herostrasse 12",
                         zipCode = "",
                         city = "Zürich",
-                        grade = 0.0
+                        grade = 0.0,
+                        isSelected = false
                     )
-                ), showNavigationIcons = true, colorGrades = true, averageGradeIsZero = false
+                ), showNavigationIcons = true, colorGrades = true, averageGradeIsZero = true
             ),
             uiEvent = emptyFlow(),
             onNavigate = {},

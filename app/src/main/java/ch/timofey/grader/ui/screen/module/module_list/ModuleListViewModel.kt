@@ -147,7 +147,7 @@ class ModuleListViewModel @Inject constructor(
 
     private fun calculateAverageGrade(list: List<Module>): Double {
         val validExams = list.map { it }.filter { it.isSelected }
-        val gradeList = validExams.map { it.grade }
+        val gradeList = validExams.map { it.grade }.filter { it > 0 }
         return getAverage(grades = gradeList).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
             .toDouble()
     }

@@ -82,7 +82,8 @@ class CreateModuleViewModel @Inject constructor(
                                 description = _uiState.value.description,
                                 teacherFirstname = _uiState.value.teacherFirstName,
                                 teacherLastname = _uiState.value.teacherLastName,
-                                divisionId = UUID.fromString(divisionId)
+                                divisionId = UUID.fromString(divisionId),
+                                isSelected = true
                             )
                         )
                     }

@@ -1,7 +1,7 @@
 package ch.timofey.grader.type
 
 enum class DateFormatting(val language: String, val country: String) {
-    DEFAULT("default", ""),
+    DEFAULT("Default", ""),
     ENGLISH_US("en", "US"),
     ENGLISH("en", ""),
     GERMAN("de", ""),
