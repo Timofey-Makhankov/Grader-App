@@ -3,9 +3,9 @@ package ch.timofey.grader.ui.screen.about
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import ch.timofey.grader.GraderApp
 import ch.timofey.grader.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ class AboutViewModel @Inject constructor(application: Application) : AndroidView
             is AboutEvent.OnButtonSourceCLick -> {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Timofey-Makhankov/Grader-App"))
                 browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity( getApplication() ,browserIntent, null);
+                getApplication<GraderApp>().applicationContext.startActivity(browserIntent, null);
             }
 
             is AboutEvent.OnButtonShareClick -> {
@@ -35,7 +35,7 @@ class AboutViewModel @Inject constructor(application: Application) : AndroidView
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Grader Github Repo")
                 shareIntent.putExtra(Intent.EXTRA_TEXT, "https://github.com/Timofey-Makhankov/Grader-App")
                 shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(getApplication(), shareIntent, null)
+                getApplication<GraderApp>().applicationContext.startActivity(shareIntent, null)
             }
 
             is AboutEvent.OnButtonCreateClick -> {
@@ -45,13 +45,13 @@ class AboutViewModel @Inject constructor(application: Application) : AndroidView
                 intent.putExtra(Intent.EXTRA_TITLE, "file_name_to_save_as")
                 intent.putExtra(Intent.EXTRA_TEXT, "jhdvuhavuhsehvbuhbvuhsbvuhbvudhvbudhvbudhb")
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity( getApplication(), intent, null)
+                getApplication<GraderApp>().applicationContext.startActivity( intent, null)
             }
 
             is AboutEvent.OnButtonDonateClick -> {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-fi.com/timofeymakhankov"))
                 browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity( getApplication() ,browserIntent, null);
+                getApplication<GraderApp>().applicationContext.startActivity(browserIntent, null);
             }
         }
     }

@@ -1,7 +1,7 @@
 package ch.timofey.grader.ui.screen.calculator
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,7 +51,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ch.timofey.grader.R
 
-@OptIn(ExperimentalFoundationApi::class)
+@SuppressLint("DefaultLocale")
 @Composable
 fun CalculatorScreen(
     state: CalculatorState,
@@ -130,7 +130,7 @@ fun CalculatorScreen(
                     }
                 }
                 items((0..<state.rowCount).toList(), key = { index -> index }) { index ->
-                    GradeInputField(modifier = Modifier.animateItemPlacement(),
+                    GradeInputField(modifier = Modifier.animateItem(),
                         weight = state.weights[index],
                         grade = state.grades[index],
                         onGradeChange = { grade ->
@@ -146,7 +146,7 @@ fun CalculatorScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = MaterialTheme.spacing.small)
-                            .animateItemPlacement()
+                            .animateItem()
                     ) {
                         Button(modifier = Modifier
                             .weight(1f)

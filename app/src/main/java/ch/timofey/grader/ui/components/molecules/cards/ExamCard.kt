@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -78,7 +79,7 @@ fun ExamCard(
             onClick = onClick
         )
         .then(modifier)
-        .indication(interactionSource, rememberRipple()),
+        .indication(interactionSource, ripple()),
         colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.surfaceVariant
     ), shape = MaterialTheme.shapes.large) {
