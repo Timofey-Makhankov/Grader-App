@@ -19,6 +19,7 @@ import ch.timofey.grader.ui.theme.spacing
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
+    modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
     actionIcon: ImageVector,
     actionContentDescription: String,
@@ -27,7 +28,9 @@ fun AppBar(
     pageIndex: Int? = 0,
     pageNumber: Int = 4
 ) {
-    TopAppBar(title = {
+    TopAppBar(
+        modifier = Modifier.then(modifier),
+        title = {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {

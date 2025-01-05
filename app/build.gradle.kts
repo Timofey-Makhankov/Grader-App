@@ -29,7 +29,7 @@ android {
         minSdk = 28
         targetSdk = 35
         versionCode = 123
-        versionName = "0.12.3-Beta"
+        versionName = "0.12.3-Beta-Extended-FAB"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -56,6 +56,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
         getByName("debug") {
             versionNameSuffix = ":debug"
