@@ -6,6 +6,7 @@ plugins {
     id ("dagger.hilt.android.plugin")
     id ("com.google.devtools.ksp")
     id ("org.jetbrains.kotlin.plugin.compose")
+    id ("de.mannodermaus.android-junit5") version "1.11.2.0"
 }
 
 android {
@@ -107,7 +108,20 @@ dependencies {
 
 
     // Unit Testing
-    testImplementation ("junit:junit:4.13.2")
+    testImplementation("junit:junit:4.13.2")
+
+    // JUnit5 External Lib
+    // (Required) Writing and executing Unit Tests on the JUnit Platform
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.2")
+
+    // (Optional) If you need "Parameterized Tests"
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.2")
+
+    // (Optional) If you also have JUnit 4-based tests
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.2")
+
+    implementation("org.assertj:assertj-core:3.27.3")
 
     // Kotlin Faker
     debugImplementation ("io.github.serpro69:kotlin-faker:1.16.0")
@@ -124,6 +138,8 @@ dependencies {
     androidTestImplementation ("androidx.test.ext:junit:1.2.1")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:$compose_ui_version")
+
+    androidTestImplementation("org.junit.jupiter:junit-jupiter-api:5.11.2")
 
     implementation( platform("androidx.compose:compose-bom:2024.12.01") )
 
@@ -188,4 +204,8 @@ dependencies {
 
 hilt {
     enableAggregatingTask = true
+}
+
+junitPlatform {
+    instrumentationTests.includeExtensions.set(true)
 }
