@@ -26,11 +26,13 @@ jobs:
           distribution: 'corretto'
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
+      - name: set APK name
+        run: echo "APK_NAME=Grader.${RELEASE_VERSION}.apk" >> $GITHUB_ENV
       - name: Build Project
         run: ./gradlew assembleDebug
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Grader-{{env.RELEASE_VERSION}}.apk
+          name: ${{env.APK_NAME}}
           path: app/build/outputs/apk/debug/app-universal-debug.apk
 
