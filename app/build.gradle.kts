@@ -30,9 +30,9 @@ android {
         testApplicationId = "ch.timofey.grader"
         minSdk = 28
         targetSdk = 35
-        versionCode = 124
-        versionName = "0.12.4-Beta"
-
+        versionCode = 125
+        versionName = "0.12.5-Beta"
+        testApplicationId = "ch.timofey.grader.test"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
         resourceConfigurations += listOf("en", "de", "ru")
