@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import ch.timofey.grader.ui.theme.GraderTheme
@@ -18,6 +19,8 @@ import ch.timofey.grader.ui.theme.spacing
 @Composable
 fun GradeInputField(
     modifier: Modifier = Modifier,
+    testGradeTag: String = "gradeInput",
+    testWeightTag: String = "weightInput",
     onGradeChange: (value: String) -> Unit,
     onWeightChange: (value: String) -> Unit,
     grade: String,
@@ -35,8 +38,8 @@ fun GradeInputField(
                 onGradeChange(it)
             },
             shape = MaterialTheme.shapes.medium,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(testGradeTag)
         )
         Spacer(modifier = modifier.width(MaterialTheme.spacing.medium))
         OutlinedTextField(
@@ -46,7 +49,8 @@ fun GradeInputField(
                 onWeightChange(it)
             },
             shape = MaterialTheme.shapes.medium,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(testWeightTag)
         )
     }
 }
@@ -55,6 +59,10 @@ fun GradeInputField(
 @Composable
 private fun GradeInputFieldPreview() {
     GraderTheme {
-        GradeInputField(onGradeChange = {}, onWeightChange = {}, grade = "4.5", weight = "1.0")
+        GradeInputField(
+            onGradeChange = {},
+            onWeightChange = {},
+            grade = "4.5",
+            weight = "1.0")
     }
 }

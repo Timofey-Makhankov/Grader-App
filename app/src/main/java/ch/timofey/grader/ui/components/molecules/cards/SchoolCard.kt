@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -35,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -45,7 +45,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
-import androidx.compose.ui.unit.dp
 import ch.timofey.grader.db.domain.school.School
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.getGradeColors
@@ -70,6 +69,7 @@ fun SchoolCard(
     val mutableInteractionSource = remember { MutableInteractionSource() }
     Card(
         modifier = Modifier
+            .testTag("schoolCard_${school.name}")
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300, easing = LinearOutSlowInEasing
@@ -170,13 +170,19 @@ fun SchoolCard(
                                 )
                             }
                             IconButton(
-                                onClick = onDeleteClick
+                                onClick = onDeleteClick,
+                                modifier = Modifier.testTag("deleteIcon_${school.name.trim()}") // Trim spaces to ensure exact match
                             ) {
+                                println("isOpen: $isOpen")
+                                println("Setting testTag: deleteIcon_${school.name.trim()}")
+                                val expectedTag = "deleteIcon_${school.name.trim()}"
+                                println("Setting testTag: $expectedTag") // This prints what the tag should be
                                 Icon(
                                     imageVector = Icons.Default.Delete,
-                                    contentDescription = R.string.delete_school.toString()
+                                    contentDescription = stringResource(id = R.string.delete_school)
                                 )
                             }
+
                         }
                     }
                 }
@@ -196,7 +202,7 @@ private fun PreviewSchoolCard() {
             "",
             "",
             "",
-            isSelected = true,
+            isSelected = false,
             grade = 5.6
         ),
             onCheckBoxClick = {},
