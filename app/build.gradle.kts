@@ -105,6 +105,26 @@ tasks.register("jacocoTestReport", org.gradle.testing.jacoco.tasks.JacocoReport:
     executionData.setFrom(files("$buildDir/jacoco/testDebugUnitTest.exec"))
 }
 
+tasks.register("jacocoAndroidTestReport", org.gradle.testing.jacoco.tasks.JacocoReport::class) {
+    dependsOn("connectedDebugAndroidTest") // ✅ Run UI tests before generating report
+
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/jacocoAndroidHtml"))
+    }
+
+    sourceDirectories.setFrom(files("$projectDir/app/src/main/java"))
+    classDirectories.setFrom(
+        fileTree("$buildDir/tmp/kotlin-classes/debug") {
+            exclude("**/*Test*.*", "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
+        }
+    )
+    executionData.setFrom(files("$buildDir/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"))
+}
+
+
 composeCompiler {
     reportsDestination = layout.buildDirectory.dir("compose_compiler")
     stabilityConfigurationFiles = listOf(rootProject.layout.projectDirectory.file("stability_config.conf"))

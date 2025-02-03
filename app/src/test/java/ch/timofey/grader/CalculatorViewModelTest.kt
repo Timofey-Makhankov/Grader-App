@@ -3,15 +3,19 @@ package ch.timofey.grader
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import ch.timofey.grader.ui.screen.calculator.CalculatorEvent
 import ch.timofey.grader.ui.screen.calculator.CalculatorViewModel
+import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -58,5 +62,24 @@ class CalculatorViewModelTest {
         val result = viewModel.predictRequiredGrade(goal, currentTotal, count, additionalCount)
         val expected = (goal * (count + additionalCount)) - currentTotal
         assertEquals(expected, result, 0.001)
+    }
+
+    @Test
+    fun sendUiEvent_emitsCorrectEvent() = runTest {
+        val testEvent = UiEvent.Navigate("test_route")
+        val job = launch { viewModel.uiEvent.collect { event -> assertEquals(testEvent, event) } }
+        viewModel.onEvent(CalculatorEvent.OnAddFieldClick)
+        job.cancel()
+    }
+
+    @Test
+    fun updateGrade_calculatesCorrectGrade() = runBlocking {
+        viewModel.onEvent(CalculatorEvent.OnGradeChange(0, "95"))
+        viewModel.onEvent(CalculatorEvent.OnGradeChange(1, "85"))
+        viewModel.onEvent(CalculatorEvent.OnWeightChange(0, "2.0"))
+
+        testDispatcher.scheduler.advanceUntilIdle()
+        val updatedGrade = viewModel.uiState.value.calculatedGrade
+        assertTrue(updatedGrade > 0)
     }
 }

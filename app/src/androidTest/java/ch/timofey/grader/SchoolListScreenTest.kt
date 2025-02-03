@@ -25,13 +25,47 @@ import java.util.UUID
 import org.junit.Assert.assertTrue
 
 @RunWith(AndroidJUnit4::class)
-class SchoolListScreenComponentTest {
+class SchoolListScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
     @Test
-    fun schoolListScreen_clickOnSchoolCard_triggersOnEvent() {
+    fun schoolListScreen_displaysSchoolsCorrectly() {
+        val fakeState = SchoolListState(
+            schoolList = listOf(
+                School(
+                    id = UUID.randomUUID(),
+                    name = "Test School",
+                    description = "A test school",
+                    address = "123 Test St",
+                    zipCode = "12345",
+                    city = "Test City",
+                    grade = 4.5,
+                    isSelected = false
+                )
+            )
+        )
+
+        composeTestRule.setContent {
+            GraderTheme {
+                SchoolListScreen(
+                    drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+                    state = fakeState,
+                    onEvent = {},
+                    uiEvent = emptyFlow(),
+                    onNavigate = {},
+                    snackBarHostState = SnackbarHostState(),
+                    savedStateHandle = SavedStateHandle()
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithText("Test School").assertIsDisplayed()
+    }
+
+    @Test
+    fun schoolListScreen_clickOnSchoolTriggersEvent() {
         val fakeSchool = School(
             id = UUID.randomUUID(),
             name = "Test School",
@@ -42,20 +76,15 @@ class SchoolListScreenComponentTest {
             grade = 0.0,
             isSelected = false
         )
-        val fakeState = SchoolListState(
-            schoolList = listOf(fakeSchool),
-            averageGrade = "0.0",
-            averageGradeIsZero = true,
-            showNavigationIcons = true,
-            colorGrades = true,
-            swipingEnabled = true,
-            minimumGrade = 0.0
-        )
-        var eventCalled = false
+
+        val fakeState = SchoolListState(schoolList = listOf(fakeSchool))
+        var eventTriggered = false
         val fakeOnEvent: (SchoolListEvent) -> Unit = { event ->
-            if (event is SchoolListEvent.OnItemClickDelete && event.schoolId == fakeSchool.id)
-                eventCalled = true
+            if (event is SchoolListEvent.OnItemClickDelete && event.schoolId == fakeSchool.id) {
+                eventTriggered = true
+            }
         }
+
         composeTestRule.setContent {
             GraderTheme {
                 SchoolListScreen(
@@ -69,11 +98,12 @@ class SchoolListScreenComponentTest {
                 )
             }
         }
-        // Look for a test tag "schoolCard_Test School"
+
         composeTestRule.onNodeWithText("Test School").assertIsDisplayed().performTouchInput {
             longClick()
         }
         composeTestRule.onNodeWithTag("deleteIcon_Test School").assertIsDisplayed().performClick()
         composeTestRule.waitForIdle()
-        assertTrue("Expected OnItemClickDelete event for 'Test School'", eventCalled)    }
+        assertTrue(eventTriggered)
+    }
 }
