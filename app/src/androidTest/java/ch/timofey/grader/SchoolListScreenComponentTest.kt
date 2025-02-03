@@ -3,9 +3,11 @@ package ch.timofey.grader
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.printToLog
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.timofey.grader.db.domain.school.School
@@ -38,6 +40,7 @@ class SchoolListScreenComponentTest {
             grade = 0.0,
             isSelected = false
         )
+
         val fakeState = SchoolListState(
             schoolList = listOf(fakeSchool),
             averageGrade = "0.0",
@@ -47,11 +50,13 @@ class SchoolListScreenComponentTest {
             swipingEnabled = true,
             minimumGrade = 0.0
         )
+
         var eventCalled = false
         val fakeOnEvent: (SchoolListEvent) -> Unit = { event ->
             if (event is SchoolListEvent.OnItemClickDelete && event.schoolId == fakeSchool.id)
                 eventCalled = true
         }
+
         composeTestRule.setContent {
             GraderTheme {
                 SchoolListScreen(
@@ -65,8 +70,29 @@ class SchoolListScreenComponentTest {
                 )
             }
         }
-        // Look for a test tag "schoolCard_Test School"
-        composeTestRule.onNodeWithTag("schoolCard_Test School").performClick()
+
         composeTestRule.waitForIdle()
-        assertTrue("Expected OnItemClickDelete event for 'Test School'", eventCalled)    }
+
+        // Ensure the school card exists
+        composeTestRule.onNodeWithTag("schoolCard_Test School")
+            .assertExists("ERROR: School Card Not Found! Check if it's rendered properly.")
+            .performClick()
+
+        composeTestRule.waitForIdle() // Wait for the animation
+
+        // Print all UI elements to check if delete button exists
+        composeTestRule.onAllNodes(isRoot()).printToLog("UI_TREE_DUMP")
+
+        // Wait extra time to allow animations to finish
+        composeTestRule.mainClock.advanceTimeBy(500) // Wait 500ms more
+
+        // Now check if delete button exists
+        composeTestRule.onNodeWithTag("deleteIcon_Test School")
+            .assertExists("ERROR: Delete Button Not Found! Ensure the card expands when clicked.")
+            .performClick()
+
+        assertTrue("Expected OnItemClickDelete event for 'Test School'", eventCalled)
+    }
+
+
 }

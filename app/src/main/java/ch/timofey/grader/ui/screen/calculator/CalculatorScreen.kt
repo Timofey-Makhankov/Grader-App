@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -90,10 +91,9 @@ fun CalculatorScreen(
                 item(key = "result") {
                     Row(modifier = Modifier) {
                         Text(
-                            modifier = Modifier.padding(
-                                start = MaterialTheme.spacing.small,
-                                //bottom = MaterialTheme.spacing.small
-                            ),
+                            modifier = Modifier
+                                .padding(start = MaterialTheme.spacing.small)
+                                .testTag("calculatedResult"),  // Ensuring the test can find it
                             style = MaterialTheme.typography.titleLarge,
                             text = stringResource(id = R.string.calculated_result)
                         )
@@ -149,9 +149,11 @@ fun CalculatorScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = MaterialTheme.spacing.small)
+                            .testTag("addFieldButton")
                             .animateItem()
                     ) {
-                        Button(modifier = Modifier
+                        Button(
+                            modifier = Modifier
                             .weight(1f)
                             .padding(horizontal = MaterialTheme.spacing.small),
                             colors = ButtonDefaults.buttonColors(),

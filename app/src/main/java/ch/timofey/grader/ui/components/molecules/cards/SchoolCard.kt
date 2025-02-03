@@ -171,13 +171,18 @@ fun SchoolCard(
                             }
                             IconButton(
                                 onClick = onDeleteClick,
-                                modifier = Modifier.testTag("deleteIcon_${school.name}")
+                                modifier = Modifier.testTag("deleteIcon_${school.name.trim()}") // Trim spaces to ensure exact match
                             ) {
+                                println("isOpen: $isOpen")
+                                println("Setting testTag: deleteIcon_${school.name.trim()}")
+                                val expectedTag = "deleteIcon_${school.name.trim()}"
+                                println("Setting testTag: $expectedTag") // This prints what the tag should be
                                 Icon(
                                     imageVector = Icons.Default.Delete,
-                                    contentDescription = R.string.delete_school.toString()
+                                    contentDescription = stringResource(id = R.string.delete_school)
                                 )
                             }
+
                         }
                     }
                 }
