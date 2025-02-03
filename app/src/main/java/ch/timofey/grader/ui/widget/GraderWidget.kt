@@ -13,7 +13,7 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import ch.timofey.grader.MainActivity
+import ch.timofey.grader.ui.MainActivity
 
 @Composable
 fun GraderWidget(){

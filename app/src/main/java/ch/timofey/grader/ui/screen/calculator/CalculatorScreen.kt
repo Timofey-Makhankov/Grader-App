@@ -130,7 +130,10 @@ fun CalculatorScreen(
                     }
                 }
                 items((0..<state.rowCount).toList(), key = { index -> index }) { index ->
-                    GradeInputField(modifier = Modifier.animateItem(),
+                    GradeInputField(
+                        modifier = Modifier.animateItem(),
+                        testGradeTag = "gradeInput_$index",
+                        testWeightTag = "weightInput_$index",
                         weight = state.weights[index],
                         grade = state.grades[index],
                         onGradeChange = { grade ->

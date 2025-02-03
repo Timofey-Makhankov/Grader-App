@@ -9,3 +9,14 @@ plugins {
     //id "org.jetbrains.dokka" version "2.0.0" apply false
     id ("org.jetbrains.kotlin.plugin.compose") version ("2.0.0") apply (false)
 }
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.8.0")
+    }
+}
+

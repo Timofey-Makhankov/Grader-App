@@ -99,6 +99,10 @@ class CalculatorViewModel @Inject constructor(
                 .map { it.toDouble() })
     }
 
+    fun predictRequiredGrade(goal: Double, currentTotal: Double, count: Int, additionalCount: Int): Double {
+        return (goal * (count + additionalCount)) - currentTotal
+    }
+
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(event)

@@ -1,4 +1,4 @@
-package ch.timofey.grader
+package ch.timofey.grader.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -48,4 +48,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
