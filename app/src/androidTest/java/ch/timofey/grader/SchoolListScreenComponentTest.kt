@@ -3,9 +3,17 @@ package ch.timofey.grader
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.longClick
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performGesture
+import androidx.compose.ui.test.performTouchInput
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.timofey.grader.db.domain.school.School
@@ -66,7 +74,10 @@ class SchoolListScreenComponentTest {
             }
         }
         // Look for a test tag "schoolCard_Test School"
-        composeTestRule.onNodeWithTag("schoolCard_Test School").performClick()
+        composeTestRule.onNodeWithText("Test School").assertIsDisplayed().performTouchInput {
+            longClick()
+        }
+        composeTestRule.onNodeWithTag("deleteIcon_Test School").assertIsDisplayed().performClick()
         composeTestRule.waitForIdle()
         assertTrue("Expected OnItemClickDelete event for 'Test School'", eventCalled)    }
 }
