@@ -17,6 +17,24 @@ android {
             keyPassword "123456"
             keyAlias "key0"
         }*/
+        /* Run: keytool -genkey -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
+            and update string below for you to be able to make a signed release build.
+            Then run  gradle assembleRelease and gradle bundleRelease
+         */
+        create("release") {
+            // Check if the required properties are defined in gradle.properties or local.properties
+            if (project.hasProperty("MYAPP_RELEASE_STORE_FILE")) {
+                storeFile = file("/Users/samuelmuggli/Code/Grader-App")
+                storePassword = project.property("MYAPP_RELEASE_STORE_PASSWORD") as String
+                keyAlias = project.property("MYAPP_RELEASE_KEY_ALIAS") as String
+                keyPassword = project.property("MYAPP_RELEASE_KEY_PASSWORD") as String
+            } else {
+                println("Release signing keystore not found. Using debug signing for the release build type.")
+                // Fallback to debug signing if release keys are not provided.
+                // This is useful for developers who just want to run the app.
+                // Note: The CI/CD server MUST have the properties defined.
+            }
+        }
         getByName("debug") {
 
         }
@@ -60,16 +78,19 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
+        release {
+            signingConfig = signingConfigs.getByName("release")
+        }
         getByName("debug") {
             versionNameSuffix = ":debug"
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         compose = true

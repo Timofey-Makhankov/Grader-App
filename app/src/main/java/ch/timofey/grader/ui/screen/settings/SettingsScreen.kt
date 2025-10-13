@@ -83,6 +83,22 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
+import android.content.Context
+import android.provider.OpenableColumns
+
+fun getFileName(context: Context, uri: Uri): String? {
+    var fileName: String? = null
+    context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            val displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (displayNameIndex != -1) {
+                fileName = cursor.getString(displayNameIndex)
+            }
+        }
+    }
+    return fileName
+}
+
 
 @Composable
 fun SettingsScreen(
@@ -116,9 +132,14 @@ fun SettingsScreen(
     val createBackup =
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
             if (uri == null) return@rememberLauncherForActivityResult
-            Log.d("SettingsScreen", uri.pathSegments[1])
+            val filename = getFileName(context, uri)
+            if (filename == null) {
+                Log.e("SettingsScreen", "Could not retrieve filename from Uri.")
+                return@rememberLauncherForActivityResult
+            }
+
             context.contentResolver.openOutputStream(uri)?.use { file: OutputStream ->
-                onEvent(SettingsEvent.OnCreateBackupFile(file, uri.pathSegments[1].split(":")[1]))
+                onEvent(SettingsEvent.OnCreateBackupFile(file, filename))
             }
         }
     LaunchedEffect(key1 = true) {
