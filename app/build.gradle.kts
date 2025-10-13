@@ -1,6 +1,6 @@
 plugins {
-    id ("com.android.application")
-    id ("org.jetbrains.kotlin.android")
+    id ("com.android.application") version ("8.13.0")
+    id ("org.jetbrains.kotlin.android") version ("2.1.0")
     id ("org.jetbrains.kotlin.plugin.serialization") version ("1.9.0")
     id ("org.jetbrains.kotlin.plugin.parcelize")
     id ("dagger.hilt.android.plugin")
@@ -96,11 +96,10 @@ composeCompiler {
 
 dependencies {
     implementation ("androidx.test:monitor:1.7.2")
-    val compose_ui_version = "1.7.6"
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation ("androidx.activity:activity-compose:1.9.3")
-    implementation ("androidx.compose.ui:ui:$compose_ui_version")
-    implementation ("androidx.compose.ui:ui-tooling-preview:$compose_ui_version")
+    implementation ("androidx.compose.ui:ui:1.7.6")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.7.6")
     implementation ("androidx.core:core-ktx:1.15.0")
     implementation ("androidx.appcompat:appcompat:1.7.0")
     implementation ("androidx.appcompat:appcompat-resources:1.7.0")
@@ -123,12 +122,12 @@ dependencies {
 
     androidTestImplementation ("androidx.test.ext:junit:1.2.1")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:$compose_ui_version")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.7.6")
 
     implementation( platform("androidx.compose:compose-bom:2024.12.01") )
 
-    debugImplementation ("androidx.compose.ui:ui-tooling:$compose_ui_version")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest:$compose_ui_version")
+    debugImplementation ("androidx.compose.ui:ui-tooling:1.7.6")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.7.6")
 
     implementation ("androidx.compose.material:material-icons-extended")
 
@@ -137,15 +136,13 @@ dependencies {
     implementation ("androidx.compose.material3:material3-window-size-class:1.3.1")
 
     // Navigation
-    val nav_version = "2.8.5"
-    implementation ("androidx.navigation:navigation-compose:$nav_version")
+    implementation ("androidx.navigation:navigation-compose:2.8.5")
 
     // ROOM Database
-    val room_version = "2.6.1"
-    implementation ("androidx.room:room-runtime:$room_version")
-    ksp ("androidx.room:room-compiler:$room_version")
-    implementation ("androidx.room:room-ktx:$room_version")
-    testImplementation ("androidx.room:room-testing:$room_version")
+    implementation ("androidx.room:room-runtime:2.6.1")
+    ksp ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    testImplementation ("androidx.room:room-testing:2.6.1")
 
     // Dagger - Hilt
     implementation ("com.google.dagger:hilt-android:2.53.1")
@@ -165,9 +162,8 @@ dependencies {
     implementation ("androidx.core:core-splashscreen:1.0.1")
 
     // Pager and Indicators - Accompanist
-    val accompanist_version = "0.36.0"
-    implementation ("com.google.accompanist:accompanist-pager:$accompanist_version")
-    implementation ("com.google.accompanist:accompanist-pager-indicators:$accompanist_version")
+    implementation ("com.google.accompanist:accompanist-pager:0.36.0")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.36.0")
 
     // DataStore Preferences
     implementation ("androidx.datastore:datastore:1.1.1")
