@@ -22,12 +22,12 @@ android {
         }
     }
     namespace = "ch.timofey.grader"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ch.timofey.grader"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 123
         versionName = "0.12.3-Beta"
 
@@ -36,11 +36,13 @@ android {
             useSupportLibrary = true
         }
 
-        resourceConfigurations += listOf("en", "de", "ru")
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
+        androidResources {
+            localeFilters.addAll(listOf("en", "de", "ru"))
         }
+    }
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 
     sourceSets.named("androidTest") {

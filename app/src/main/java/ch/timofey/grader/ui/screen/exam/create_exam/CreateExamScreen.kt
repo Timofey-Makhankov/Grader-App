@@ -1,6 +1,5 @@
 package ch.timofey.grader.ui.screen.exam.create_exam
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,11 +10,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.CalendarLocale
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,7 +25,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -48,13 +44,11 @@ import ch.timofey.grader.ui.components.atom.icons.CalendarToday
 import ch.timofey.grader.ui.components.organisms.AppBar
 import ch.timofey.grader.ui.theme.GraderTheme
 import ch.timofey.grader.ui.theme.spacing
-import ch.timofey.grader.type.SnackBarMessage
 import ch.timofey.grader.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import ch.timofey.grader.R
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +61,13 @@ fun CreateExamScreen(
     snackBarHostState: SnackbarHostState
 ) {
     val openDialog = remember { mutableStateOf(isDialogOpen) }
-    val datePickerState =  DatePickerState(locale = CalendarLocale(state.dateFormatting.language, state.dateFormatting.country))
+
+    val locale = Locale.Builder()
+        .setLanguage(state.dateFormatting.language)
+        .setRegion(state.dateFormatting.country)
+        .build()
+
+    val datePickerState =  DatePickerState(locale = locale)
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
             when (event) {
