@@ -1,7 +1,9 @@
+import java.util.Properties
+
 plugins {
     id ("com.android.application") version ("8.13.0")
     id ("org.jetbrains.kotlin.android") version ("2.1.0")
-    id ("org.jetbrains.kotlin.plugin.serialization") version ("1.9.0")
+    id ("org.jetbrains.kotlin.plugin.serialization") version ("2.1.0")
     id ("org.jetbrains.kotlin.plugin.parcelize")
     id ("dagger.hilt.android.plugin")
     id ("com.google.devtools.ksp")
@@ -17,23 +19,30 @@ android {
             keyPassword "123456"
             keyAlias "key0"
         }*/
-        /* Run: keytool -genkey -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
+        /* Run: keytool -genkey -v -keystore my-release-key.keystore -alias release-key -keyalg RSA -keysize 2048 -validity 10000
             and update string below for you to be able to make a signed release build.
-            Then run  gradle assembleRelease and gradle bundleRelease
+            Also add these Variables to build.gradle.kts:
+            ## Keystore properties for release signing. DO NOT COMMIT THIS FILE.
+            keystore=/Path/to/keystore/generated/above.keystore
+            storePassword=
+            keyAlias=release-key
+            keyPassword=
+
+            Then run  gradle assembleRelease and gradle bundleRelease to Build the release APK and Realse Version for Playstore etc..
          */
-        create("release") {
-            // Check if the required properties are defined in gradle.properties or local.properties
-            if (project.hasProperty("MYAPP_RELEASE_STORE_FILE")) {
-                storeFile = file("/Users/samuelmuggli/Code/Grader-App")
-                storePassword = project.property("MYAPP_RELEASE_STORE_PASSWORD") as String
-                keyAlias = project.property("MYAPP_RELEASE_KEY_ALIAS") as String
-                keyPassword = project.property("MYAPP_RELEASE_KEY_PASSWORD") as String
-            } else {
-                println("Release signing keystore not found. Using debug signing for the release build type.")
-                // Fallback to debug signing if release keys are not provided.
-                // This is useful for developers who just want to run the app.
-                // Note: The CI/CD server MUST have the properties defined.
+        var localProps = Properties()
+        val localPropsFile = File("local.properties")
+        if (localPropsFile.exists() && localPropsFile.isFile) {
+            localPropsFile.inputStream().use {
+                localProps.load(it)
             }
+        }
+
+        create("release") {
+                storeFile = file(localProps.getProperty("keystore"))
+                storePassword = localProps.getProperty("storePassword")
+                keyAlias = localProps.getProperty("keyAlias")
+                keyPassword = localProps.getProperty("keyPassword")
         }
         getByName("debug") {
 
@@ -72,13 +81,11 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles (
+            proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
-        }
-        release {
+            // Point to Config
             signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
@@ -86,11 +93,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(25)
     }
     buildFeatures {
         compose = true
@@ -118,14 +125,14 @@ composeCompiler {
 }
 
 dependencies {
-    implementation ("androidx.test:monitor:1.7.2")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-    implementation ("androidx.activity:activity-compose:1.9.3")
-    implementation ("androidx.compose.ui:ui:1.7.6")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.7.6")
-    implementation ("androidx.core:core-ktx:1.15.0")
-    implementation ("androidx.appcompat:appcompat:1.7.0")
-    implementation ("androidx.appcompat:appcompat-resources:1.7.0")
+    implementation ("androidx.test:monitor:1.8.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
+    implementation ("androidx.activity:activity-compose:1.11.0")
+    implementation ("androidx.compose.ui:ui:1.9.3")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.9.3")
+    implementation ("androidx.core:core-ktx:1.17.0")
+    implementation ("androidx.appcompat:appcompat:1.7.1")
+    implementation ("androidx.appcompat:appcompat-resources:1.7.1")
 
 
     // Unit Testing
@@ -135,31 +142,31 @@ dependencies {
     debugImplementation ("io.github.serpro69:kotlin-faker:1.16.0")
 
     //Mockito framework
-    testImplementation ("org.mockito:mockito-core:5.14.2")
+    testImplementation ("org.mockito:mockito-core:5.20.0")
     //mockito-kotlin
-    testImplementation ("org.mockito.kotlin:mockito-kotlin:5.4.0")
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:6.1.0")
 
     // Android Testing
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4")
-    androidTestImplementation ( platform("androidx.compose:compose-bom:2024.12.01") )
+    androidTestImplementation ( platform("androidx.compose:compose-bom:2025.10.00") )
 
-    androidTestImplementation ("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.7.6")
+    androidTestImplementation ("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.7.0")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.9.3")
 
-    implementation( platform("androidx.compose:compose-bom:2024.12.01") )
+    implementation( platform("androidx.compose:compose-bom:2025.10.00") )
 
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.7.6")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.7.6")
+    debugImplementation ("androidx.compose.ui:ui-tooling:1.9.3")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.9.3")
 
     implementation ("androidx.compose.material:material-icons-extended")
 
     // Material 3
-    implementation ("androidx.compose.material3:material3:1.3.1")
-    implementation ("androidx.compose.material3:material3-window-size-class:1.3.1")
+    implementation ("androidx.compose.material3:material3:1.4.0")
+    implementation ("androidx.compose.material3:material3-window-size-class:1.4.0")
 
     // Navigation
-    implementation ("androidx.navigation:navigation-compose:2.8.5")
+    implementation ("androidx.navigation:navigation-compose:2.9.5")
 
     // ROOM Database
     implementation ("androidx.room:room-runtime:2.6.1")
@@ -168,15 +175,15 @@ dependencies {
     testImplementation ("androidx.room:room-testing:2.6.1")
 
     // Dagger - Hilt
-    implementation ("com.google.dagger:hilt-android:2.53.1")
+    implementation ("com.google.dagger:hilt-android:2.51.1")
 
-    ksp ("com.google.dagger:dagger-compiler:2.53.1") // Dagger compiler
-    ksp ("com.google.dagger:hilt-compiler:2.53.1")   // Hilt compiler
+    ksp ("com.google.dagger:dagger-compiler:2.51.1") // Dagger compiler
+    ksp ("com.google.dagger:hilt-compiler:2.51.1")   // Hilt compiler
 
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.3.0")
 
     // MVVM
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
 
     // system bars customization
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
@@ -189,20 +196,20 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.36.0")
 
     // DataStore Preferences
-    implementation ("androidx.datastore:datastore:1.1.1")
+    implementation ("androidx.datastore:datastore:1.1.7")
 
     // Jetpack Glance
     //implementation "androidx.glance:glance:1.0.0"
     implementation ("androidx.glance:glance-appwidget:1.1.1")
     implementation ("androidx.glance:glance-material3:1.1.1")
 
-    implementation ("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8")
-    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
     //implementation "org.jetbrains.dokka:android-documentation-plugin:1.9.0"
 
-    implementation ("com.google.code.gson:gson:2.11.0")
+    implementation ("com.google.code.gson:gson:2.13.2")
 }
 
 hilt {

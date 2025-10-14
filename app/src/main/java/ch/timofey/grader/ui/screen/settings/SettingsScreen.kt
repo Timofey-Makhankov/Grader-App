@@ -226,11 +226,11 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
-                    value = Locale(state.language.tag).displayLanguage, title = stringResource(R.string.language)
+                    value = Locale.forLanguageTag(state.language.tag).displayLanguage, title = stringResource(R.string.language)
                 ) { afterSelection ->
                     AppLanguage.entries.filter { value -> value != state.language }
                         .forEach { appLanguage ->
-                            DropdownMenuItem(text = { Text(text = Locale(appLanguage.tag).displayLanguage) },
+                            DropdownMenuItem(text = { Text(text = Locale.forLanguageTag(appLanguage.tag).displayLanguage) },
                                 onClick = {
                                     onEvent(SettingsEvent.OnLanguageChange(appLanguage))
                                     afterSelection()
@@ -240,19 +240,20 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
                     enable = false,
-                    value = if (state.dateFormat != DateFormatting.DEFAULT) Locale(
-                        state.dateFormat.language, state.dateFormat.country
-                    ).displayName else stringResource(R.string.follow_system), title = stringResource(R.string.date_format)
+                    value = if (state.dateFormat != DateFormatting.DEFAULT) Locale.Builder()
+                        .setLanguage(state.dateFormat.language)    .setRegion(state.dateFormat.country)
+                        .build().displayName else stringResource(R.string.follow_system),
+                    title = stringResource(R.string.date_format)
                 ) { afterSelection ->
                     DateFormatting.entries.filter { value -> value != state.dateFormat }
                         .forEach { format ->
                             DropdownMenuItem(text = {
                                 Text(
-                                    text = Locale(
-                                        format.language, format.country
-                                    ).displayName
+                                    text = Locale.Builder()
+                                        .setLanguage(format.language)            .setRegion(format.country)
+                                        .build().displayName
                                 )
-                            }, onClick = {
+                            },  onClick = {
                                 onEvent(SettingsEvent.OnDateFormatChange(format))
                                 afterSelection()
                             })
