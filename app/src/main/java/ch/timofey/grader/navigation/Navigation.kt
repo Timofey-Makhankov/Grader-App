@@ -5,12 +5,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -79,7 +78,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -147,7 +146,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -185,7 +184,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -222,7 +221,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -239,7 +238,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -257,7 +256,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -274,7 +273,7 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
             )
         }
@@ -293,18 +292,11 @@ fun Navigation(
                 state = state,
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
-                onPopBackStack = { data -> showSnackBarUponPopBackStack(navController, data) },
+                onPopBackStack = { navController.popBackStack() },
                 snackBarHostState = snackBarHostState
             )
         }
     }
-}
-
-private fun showSnackBarUponPopBackStack(navController: NavController, data: SnackbarVisuals?) {
-    if (data != null) {
-        navController.previousBackStackEntry?.savedStateHandle?.set("show-snackBar", data)
-    }
-    navController.popBackStackSafe()
 }
 
 private fun NavController.popBackStackSafe(): Boolean =

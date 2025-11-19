@@ -202,7 +202,7 @@ fun ModuleListScreen(
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                item {
+                item(key = "header") {
                     if (state.locationsTitles.isNotEmpty()) {
                         BreadCrumb(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
@@ -294,7 +294,8 @@ private fun ModuleListScreenPreview() {
                         description = LoremIpsum(20).values.joinToString(""),
                         teacherFirstname = "",
                         teacherLastname = ""
-                    ), Module(
+                    ),
+                    Module(
                         id = UUID.randomUUID(),
                         divisionId = UUID.randomUUID(),
                         name = LoremIpsum(3).values.joinToString(""),
@@ -303,7 +304,8 @@ private fun ModuleListScreenPreview() {
                         teacherLastname = "",
                         isSelected = true,
 
-                        ), Module(
+                        ),
+                    Module(
                         id = UUID.randomUUID(),
                         divisionId = UUID.randomUUID(),
                         name = LoremIpsum(3).values.joinToString(""),
@@ -311,7 +313,8 @@ private fun ModuleListScreenPreview() {
                         teacherFirstname = "",
                         teacherLastname = ""
                     )
-                ), locationsTitles = listOf("school item", "division item", "Modules")
+                ),
+                locationsTitles = listOf("school item", "division item", "Modules")
             ),
             onEvent = {},
             uiEvent = emptyFlow(),

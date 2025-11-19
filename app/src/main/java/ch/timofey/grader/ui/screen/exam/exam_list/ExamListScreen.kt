@@ -196,7 +196,7 @@ fun ExamListScreen(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                item {
+                item(key = "header") {
                     if (state.locationsTitles.isNotEmpty()) {
                         BreadCrumb(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
