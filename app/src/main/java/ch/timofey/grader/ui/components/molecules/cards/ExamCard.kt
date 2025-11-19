@@ -116,7 +116,7 @@ fun ExamCard(
                 overflow = TextOverflow.Ellipsis
             )
             AnimatedVisibility(
-                visible = isOpen
+                visible = isOpen, label = R.string.exam_taken.toString()
             ) {
                 Text(
                     modifier = Modifier
@@ -164,7 +164,7 @@ fun ExamCard(
                     style = MaterialTheme.typography.labelLarge, text = stringResource(id = R.string.weight) + " ${exam.weight}"
                 )
             }
-            AnimatedVisibility(visible = isOpen) {
+            AnimatedVisibility(visible = isOpen, label = R.string.action_buttons.toString()) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
                     Row {
                         IconButton(onClick = onEditClick) {

@@ -209,7 +209,7 @@ fun DivisionListScreen(
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                item(key = 0) {
+                item(key = "header") {
                     if (state.locationTitles.isNotEmpty()) {
                         BreadCrumb(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
@@ -307,14 +307,16 @@ private fun DivisionListScreenPreview() {
                         schoolYear = 2023,
                         schoolId = UUID.randomUUID(),
                         grade = 0.0
-                    ), Division(
+                    ),
+                    Division(
                         id = UUID.randomUUID(),
                         name = "Semester 2",
                         description = "Lorem Impsum",
                         schoolYear = 2002,
                         schoolId = UUID.randomUUID(),
                         grade = 0.0
-                    ), Division(
+                    ),
+                    Division(
                         id = UUID.randomUUID(),
                         name = "Semester 3",
                         description = "Lorem Impsum",
@@ -322,7 +324,8 @@ private fun DivisionListScreenPreview() {
                         schoolId = UUID.randomUUID(),
                         grade = 0.0
                     )
-                ), locationTitles = listOf("Given School Name", "Divisions")
+                ),
+                locationTitles = listOf("Given School Name", "Divisions")
             ),
             onEvent = {},
             uiEvent = emptyFlow(),

@@ -83,6 +83,22 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
+import android.content.Context
+import android.provider.OpenableColumns
+
+fun getFileName(context: Context, uri: Uri): String? {
+    var fileName: String? = null
+    context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            val displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (displayNameIndex != -1) {
+                fileName = cursor.getString(displayNameIndex)
+            }
+        }
+    }
+    return fileName
+}
+
 
 @Composable
 fun SettingsScreen(
@@ -116,9 +132,14 @@ fun SettingsScreen(
     val createBackup =
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
             if (uri == null) return@rememberLauncherForActivityResult
-            Log.d("SettingsScreen", uri.pathSegments[1])
+            val filename = getFileName(context, uri)
+            if (filename == null) {
+                Log.e("SettingsScreen", "Could not retrieve filename from Uri.")
+                return@rememberLauncherForActivityResult
+            }
+
             context.contentResolver.openOutputStream(uri)?.use { file: OutputStream ->
-                onEvent(SettingsEvent.OnCreateBackupFile(file, uri.pathSegments[1].split(":")[1]))
+                onEvent(SettingsEvent.OnCreateBackupFile(file, filename))
             }
         }
     LaunchedEffect(key1 = true) {
@@ -205,11 +226,11 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
-                    value = Locale(state.language.tag).displayLanguage, title = stringResource(R.string.language)
+                    value = Locale.forLanguageTag(state.language.tag).displayLanguage, title = stringResource(R.string.language)
                 ) { afterSelection ->
                     AppLanguage.entries.filter { value -> value != state.language }
                         .forEach { appLanguage ->
-                            DropdownMenuItem(text = { Text(text = Locale(appLanguage.tag).displayLanguage) },
+                            DropdownMenuItem(text = { Text(text = Locale.forLanguageTag(appLanguage.tag).displayLanguage) },
                                 onClick = {
                                     onEvent(SettingsEvent.OnLanguageChange(appLanguage))
                                     afterSelection()
@@ -219,19 +240,20 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 DropDownMenu(
                     enable = false,
-                    value = if (state.dateFormat != DateFormatting.DEFAULT) Locale(
-                        state.dateFormat.language, state.dateFormat.country
-                    ).displayName else stringResource(R.string.follow_system), title = stringResource(R.string.date_format)
+                    value = if (state.dateFormat != DateFormatting.DEFAULT) Locale.Builder()
+                        .setLanguage(state.dateFormat.language)    .setRegion(state.dateFormat.country)
+                        .build().displayName else stringResource(R.string.follow_system),
+                    title = stringResource(R.string.date_format)
                 ) { afterSelection ->
                     DateFormatting.entries.filter { value -> value != state.dateFormat }
                         .forEach { format ->
                             DropdownMenuItem(text = {
                                 Text(
-                                    text = Locale(
-                                        format.language, format.country
-                                    ).displayName
+                                    text = Locale.Builder()
+                                        .setLanguage(format.language)            .setRegion(format.country)
+                                        .build().displayName
                                 )
-                            }, onClick = {
+                            },  onClick = {
                                 onEvent(SettingsEvent.OnDateFormatChange(format))
                                 afterSelection()
                             })

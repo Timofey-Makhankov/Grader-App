@@ -198,7 +198,7 @@ fun SchoolListScreen(
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                item {
+                item(key = "header") {
                     BreadCrumb(
                         modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium),
                         locationTitles = listOf("Home")

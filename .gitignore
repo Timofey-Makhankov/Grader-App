@@ -19,3 +19,6 @@ keystore.jks
 local.properties
 /.idea/
 
+/my-release-key.keystore
+
+release-key.keystore
