@@ -1,24 +1,37 @@
+# ------------------------------------
+# 1. IDE and Local Workspace Files
+# ------------------------------------
 *.iml
 *.iws
-.gradle
-/local.properties
-/.idea/modules
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
+.DS_Store
+.kotlin
+
+# Android Studio / IntelliJ Specific Files
+.idea
+# Specific files within .idea that often leak configuration
 /.idea/workspace.xml
+/.idea/modules.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-/app/release
-.DS_Store
+/.idea/caches
+/.idea/libraries
+/.idea/modules
+
+# ------------------------------------
+# 2. Gradle and Build Output
+# ------------------------------------
+.gradle
 /build
+/app/release
 /captures
 .externalNativeBuild
 .cxx
+
+# ------------------------------------
+# 3. Security and Local Configuration
+# ------------------------------------
+/local.properties
+# Keystore files must NOT be version controlled
 keystore.jks
-local.properties
-/.idea/
-
 /my-release-key.keystore
-
 release-key.keystore
