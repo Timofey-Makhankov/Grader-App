@@ -118,7 +118,7 @@ class CreateExamViewModel @Inject constructor(
                                         AppCompatDelegate.getApplicationLocales().get(0)!!
                                     )
                                 ),
-                                isSelected = true,
+                                isSelected = false,
                                 moduleId = UUID.fromString(moduleId)
                             )
                         )
